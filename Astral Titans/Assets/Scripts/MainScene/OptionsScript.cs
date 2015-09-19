@@ -27,6 +27,6 @@ public class OptionsScript : MonoBehaviour {
 
     void OnMouseDown()
     {
-        System.Console.WriteLine("Options");
+        Application.LoadLevel("options_scene");
     }
 }
