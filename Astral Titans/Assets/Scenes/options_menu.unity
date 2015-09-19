@@ -212,7 +212,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 100
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -233,8 +233,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 152133889}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 203, y: 93, z: -10}
+  m_LocalScale: {x: 19.8249607, y: 19.4108925, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -420,8 +420,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 379714067}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.1500001, y: 1.60000002, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 124, y: 128, z: 0}
+  m_LocalScale: {x: 19.8249607, y: 19.4108925, z: 1}
   m_Children: []
   m_Father: {fileID: 988250913}
   m_RootOrder: 0
@@ -578,8 +578,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 722966282}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.79593658, y: -4.39377117, z: 0}
-  m_LocalScale: {x: .340000004, y: .25, z: 1.38999999}
+  m_LocalPosition: {x: 12, y: 11, z: 0}
+  m_LocalScale: {x: 6.74048662, y: 4.85272312, z: 1.38999999}
   m_Children: []
   m_Father: {fileID: 596612129}
   m_RootOrder: 0
@@ -931,8 +931,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1633960953}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.49000001, y: -2.94000006, z: 0}
-  m_LocalScale: {x: 1.34425211, y: 1.11964154, z: 1}
+  m_LocalPosition: {x: 201, y: 90, z: 0}
+  m_LocalScale: {x: 26.6497459, y: 21.733242, z: 1}
   m_Children: []
   m_Father: {fileID: 1356794283}
   m_RootOrder: 0
@@ -1011,8 +1011,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1650359737}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.44000006, y: -.889999986, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 118, y: 79, z: 0}
+  m_LocalScale: {x: 19.8249607, y: 19.4108925, z: 1}
   m_Children: []
   m_Father: {fileID: 761261234}
   m_RootOrder: 0
@@ -1231,7 +1231,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 2
   m_RenderMode: 1
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 152133893}
   m_PlaneDistance: 100
   m_PixelPerfect: 1
   m_ReceivesEvents: 1
