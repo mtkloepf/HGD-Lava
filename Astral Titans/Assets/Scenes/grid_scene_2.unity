@@ -153,11 +153,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnThis: {fileID: 466852, guid: e31db15dc88d8a74e88f651dd16c684f, type: 2}
-  tile: {fileID: 0}
   tiles:
   - {fileID: 409086, guid: f7f5b0beea3f81443beceb5c25b6624b, type: 2}
-  - {fileID: 409086, guid: f7f5b0beea3f81443beceb5c25b6624b, type: 2}
-  - {fileID: 409086, guid: f7f5b0beea3f81443beceb5c25b6624b, type: 2}
+  - {fileID: 492660, guid: a2d2d8f3e027886459495c44d0e6b4be, type: 2}
+  - {fileID: 461554, guid: 13cc483797259d445bcc56b1edf715bb, type: 2}
   width: 12
   height: 12
   x: 12
@@ -176,7 +175,6 @@ GameObject:
   - 92: {fileID: 1659266807}
   - 124: {fileID: 1659266806}
   - 81: {fileID: 1659266805}
-  - 114: {fileID: 1659266810}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -251,16 +249,3 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &1659266810
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1659266804}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30e8b55f4fd59414bba8b10c3f81d1fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  xVel: 1
-  yVel: 1

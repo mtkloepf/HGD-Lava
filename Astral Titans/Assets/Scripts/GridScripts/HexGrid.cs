@@ -4,6 +4,7 @@ using System.Collections;
 public class HexGrid : MonoBehaviour {
 
     public Transform spawnThis;
+    public Transform tile;
     public Transform[] tiles = new Transform[3];
 
     public int width;

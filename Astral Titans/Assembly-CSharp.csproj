@@ -45,6 +45,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\CameraMovement.cs" />
      <Compile Include="Assets\Scripts\GridScripts\ChangeHexColor.cs" />
      <Compile Include="Assets\Scripts\GridScripts\HexGrid.cs" />
      <Compile Include="Assets\Scripts\MainScene\EncyclopediaScript.cs" />
