@@ -3,13 +3,40 @@ using System.Collections;
 
 public class UnitScript : MonoBehaviour {
 
+	public static UnitScript instance;
+
 	public Vector2 position = Vector2.zero;
 	public bool focus = false;
 	public int mapSize = 11;
+	public int player;
+	public bool hasMoved;
 	
 	// Use this for initialization
 	void Start () {
 		position = new Vector2 (0, 0);
+	}
+
+	public void updateTurn() {
+		hasMoved = false;
+	}
+
+	// Gets the player of the unit
+	public int getPlayer() {
+		return player;
+	}
+
+	// Sets the player of the unit. p should be 1 or 2
+	public void setPlayer(int p) {
+		player = p;
+	}
+
+	// Moves the player to a hex, if the player has not moved yet.
+	public void move(HexScript hex) {
+		if (!hasMoved) {
+			position = hex.getPosition ();
+			transform.position = hex.transform.position;
+			hasMoved = true;
+		}
 	}
 
 	// Sets the position of the unit to a vector
@@ -46,7 +73,9 @@ public class UnitScript : MonoBehaviour {
 
 	// Selects the unit and sets it to be focused in the game manager
 	void OnMouseDown() {
-		GameManagerScript.instance.selectFocus (this);
-		Debug.Log ("Player selected");
+		if (GameManagerScript.instance.getTurn () == player) {
+			GameManagerScript.instance.selectFocus (this);
+			Debug.Log ("Player selected");
+		}
 	}
 }

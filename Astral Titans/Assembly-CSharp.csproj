@@ -46,8 +46,11 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\GridScripts\CameraMovement.cs" />
+     <Compile Include="Assets\Scripts\GridScripts\EndTurnScript.cs" />
      <Compile Include="Assets\Scripts\GridScripts\GameManagerScript.cs" />
      <Compile Include="Assets\Scripts\GridScripts\HexScript.cs" />
+     <Compile Include="Assets\Scripts\GridScripts\P1Unit.cs" />
+     <Compile Include="Assets\Scripts\GridScripts\P2Unit.cs" />
      <Compile Include="Assets\Scripts\GridScripts\UnitScript.cs" />
      <Compile Include="Assets\Scripts\MainScene\EncyclopediaScript.cs" />
      <Compile Include="Assets\Scripts\MainScene\NewSkirmishScript.cs" />
@@ -56,6 +59,7 @@
      <Compile Include="Assets\Scripts\OldScripts\ChangeHexColor.cs" />
      <Compile Include="Assets\Scripts\OldScripts\HexGrid.cs" />
      <Compile Include="Assets\Scripts\OptionsMenu\BackToMainMenu.cs" />
+     <Compile Include="Assets\TurnIndicatorScript.cs" />
  <Reference Include="UnityEngine.Networking">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
  </Reference>
