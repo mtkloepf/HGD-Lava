@@ -25,6 +25,7 @@ public class GameManagerScript : MonoBehaviour {
 
 	// Clicking on a unit will make it focused
 	UnitScript focusedUnit;
+	HexScript focusedHex;
 	
 	void Awake() {
 		instance = this;
@@ -73,6 +74,7 @@ public class GameManagerScript : MonoBehaviour {
 			focusedUnit.move (hex);
 			// Sets the focused unit to be null
 			focusedUnit = null;
+			focusedHex.setFocus (false);
 		}
 	}
 
@@ -116,6 +118,12 @@ public class GameManagerScript : MonoBehaviour {
 	// Set's a unit to be the current unit in focus
 	public void selectFocus(UnitScript unit) {
 		focusedUnit = unit;
+		if (!focusedUnit.hasMoved) {
+			List<HexScript> mapRow = map [(int)unit.getPosition ().x];
+			HexScript hex = mapRow [(int)focusedUnit.getPosition ().y];
+			focusedHex = hex;
+			focusedHex.setFocus (true);
+		}
 		Debug.Log ("unit selected");
 	}
 }

@@ -34,7 +34,10 @@ public class UnitScript : MonoBehaviour {
 	public void move(HexScript hex) {
 		if (!hasMoved) {
 			position = hex.getPosition ();
-			transform.position = hex.transform.position;
+			transform.position = new Vector3 (
+				hex.transform.position.x,
+				hex.transform.position.y,
+				hex.transform.position.z - 5f);
 			hasMoved = true;
 		}
 	}

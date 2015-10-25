@@ -4,10 +4,16 @@ using System.Collections;
 public class HexScript : MonoBehaviour {
 
 	public Vector2 position = Vector2.zero;
+	public Sprite defaultSprite;
+	public Sprite blueSprite;
+
+
+	SpriteRenderer render;
+	bool focus = false;
 	
 	// Use this for initialization
 	void Start () {
-		
+		render = GetComponent<SpriteRenderer> ();
 	}
 	
 	// Update is called once per frame
@@ -28,12 +34,21 @@ public class HexScript : MonoBehaviour {
 	
 	void OnMouseEnter() {
 		// TODO: Indicate that the mouse is in the current hex by changing the image
-		SpriteRenderer renderer = GetComponent<SpriteRenderer> ();
-		renderer.material.color = Color.red;
+//		render.sprite = blueSprite;
 	}
 	
 	void OnMouseExit() {
 		// TODO: Indicate that the mouse has left the hex by reverting the image
+//		render.sprite = defaultSprite;
+	}
+
+	public void setFocus (bool focused) {
+		this.focus = focused;
+		if (focused) {
+			render.sprite = blueSprite;
+		} else {
+			render.sprite = defaultSprite;
+		}
 	}
 	
 	// Moves the currently focused unit to this hex
