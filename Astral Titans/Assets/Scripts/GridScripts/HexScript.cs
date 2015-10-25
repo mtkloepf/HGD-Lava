@@ -28,6 +28,8 @@ public class HexScript : MonoBehaviour {
 	
 	void OnMouseEnter() {
 		// TODO: Indicate that the mouse is in the current hex by changing the image
+		SpriteRenderer renderer = GetComponent<SpriteRenderer> ();
+		renderer.material.color = Color.red;
 	}
 	
 	void OnMouseExit() {
