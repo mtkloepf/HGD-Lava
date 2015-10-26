@@ -36,8 +36,6 @@ public class GameManagerScript : MonoBehaviour {
 		generateMap();
 		generateUnits();
 		turn = 1;
-		endTurn ();
-		endTurn ();
 	}
 	
 	// Update is called once per frame
@@ -45,7 +43,13 @@ public class GameManagerScript : MonoBehaviour {
 
 	}
 
+	// Updates the colors of the hexes
 	void updateHexes() {
+		foreach (List<HexScript> hexlist in map) {
+			foreach (HexScript hex in hexlist) {
+				hex.setFocus (false);
+			}
+		}
 		foreach (UnitScript unit in units) {
 			if (unit.hasMoved && unit.getPlayer() == turn) {
 				// make hex red
@@ -53,9 +57,15 @@ public class GameManagerScript : MonoBehaviour {
 				HexScript hex = mapRow [(int)unit.getPosition ().y];
 				hex.makeRed ();
 			}
+			else if (!unit.hasMoved && unit.getPlayer() == turn) {
+				List<HexScript> mapRow = map [(int)unit.getPosition ().x];
+				HexScript hex = mapRow [(int)unit.getPosition ().y];
+				hex.makeGreen ();
+			}
 		}
 	}
 
+	// Gets the turn
 	public int getTurn() {
 		return turn;
 	}
@@ -74,6 +84,8 @@ public class GameManagerScript : MonoBehaviour {
 			turn = 1;
 		}
 
+		updateHexes ();
+
 		Debug.Log ("Turn ended");
 	}
 
@@ -86,12 +98,16 @@ public class GameManagerScript : MonoBehaviour {
 
 		// Makes sure there is currently a focused unit
 		if (focusedUnit != null) {
-			// Sets the unit's new position
-			focusedUnit.move (hex);
-			// Sets the focused unit to be null
-			focusedUnit = null;
-			focusedHex.setFocus (false);
+
+			if (euclideanDist (focusedUnit, hex) <= 1.1f) {
+				// Sets the unit's new position
+				focusedUnit.move (hex);
+				// Sets the focused unit to be null
+				focusedUnit = null;
+				focusedHex.setFocus (false);
+			}
 		}
+
 		updateHexes ();
 	}
 
@@ -138,12 +154,45 @@ public class GameManagerScript : MonoBehaviour {
 		units.Add (unit);
 	}
 
+	// Finds the euclidean distance between two hexes
+	float euclideanDist(HexScript hex1, HexScript hex2) {
+		float x1 = hex1.getTransformPosition().x;
+		float x2 = hex2.getTransformPosition ().x;
+		float y1 = hex1.getTransformPosition ().y;
+		float y2 = hex2.getTransformPosition ().y;
+		float delx = x1 - x2;
+		float dely = y1 - y2;
+
+		float dist = Mathf.Sqrt (delx * delx + dely * dely);
+		return dist;
+	}
+
+	// Finds the euclidean distance between a unit and a hex
+	float euclideanDist(UnitScript unit, HexScript hex) {
+		float x1 = unit.getTransformPosition().x;
+		float x2 = hex.getTransformPosition ().x;
+		float y1 = unit.getTransformPosition ().y;
+		float y2 = hex.getTransformPosition ().y;
+		float delx = x1 - x2;
+		float dely = y1 - y2;
+				
+		float dist = Mathf.Sqrt (delx * delx + dely * dely);
+		return dist;
+	}
+
 	// Set's a unit to be the current unit in focus
 	public void selectFocus(UnitScript unit) {
 		focusedUnit = unit;
 		if (!unit.hasMoved) {
 			List<HexScript> mapRow = map [(int)unit.getPosition ().x];
 			HexScript hex = mapRow [(int)unit.getPosition ().y];
+			foreach (List<HexScript> hexList in map) {
+				foreach (HexScript adjHex in hexList) {
+						if (euclideanDist(adjHex, hex) <= 1.1f) {
+						adjHex.setFocus (true);
+					}
+				}
+			}
 			focusedHex = hex;
 			Debug.Log("Focused hex: " + hex.getPosition().ToString());
 			hex.setFocus (true);

@@ -65,6 +65,12 @@ public class UnitScript : MonoBehaviour {
 		return position;
 	}
 
+	// Returns the position of the transform
+	public Vector2 getTransformPosition() {
+		Vector2 pos = new Vector2 (transform.position.x, transform.position.y);
+		return pos;
+	}
+
 	// Sets the unit to be focused.
 	// NOTE: I am not sure if this is necessary. We
 	//       may want to remove it later

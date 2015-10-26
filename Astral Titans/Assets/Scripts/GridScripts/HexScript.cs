@@ -16,6 +16,7 @@ public class HexScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		render = GetComponent<SpriteRenderer> ();
+		render.sprite = defaultSprite;
 	}
 	
 	// Update is called once per frame
@@ -44,6 +45,7 @@ public class HexScript : MonoBehaviour {
 //		render.sprite = defaultSprite;
 	}
 
+	// Sets the focus of the hex
 	public void setFocus (bool focused) {
 		this.focus = focused;
 		if (focused) {
@@ -53,12 +55,25 @@ public class HexScript : MonoBehaviour {
 		}
 	}
 
+	// Makes the hex red, indicating that that unit has already moved
 	public void makeRed() {
 		render.sprite = redSprite;
 	}
 
+	// Makes the hex green, indicating that that unit may still move
+	public void makeGreen() {
+		render.sprite = greenSprite;
+	}
+
+	// Makes the hex the default color
 	public void makeDefault() {
 		render.sprite = defaultSprite;
+	}
+
+	// Gets the position of the transform of the hex
+	public Vector2 getTransformPosition() {
+		Vector2 pos = new Vector2 (transform.position.x, transform.position.y);
+		return pos;
 	}
 	
 	// Moves the currently focused unit to this hex
