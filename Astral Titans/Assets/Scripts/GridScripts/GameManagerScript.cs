@@ -36,11 +36,24 @@ public class GameManagerScript : MonoBehaviour {
 		generateMap();
 		generateUnits();
 		turn = 1;
+		endTurn ();
+		endTurn ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
+	}
+
+	void updateHexes() {
+		foreach (UnitScript unit in units) {
+			if (unit.hasMoved && unit.getPlayer() == turn) {
+				// make hex red
+				List<HexScript> mapRow = map [(int)unit.getPosition ().x];
+				HexScript hex = mapRow [(int)unit.getPosition ().y];
+				hex.makeRed ();
+			}
+		}
 	}
 
 	public int getTurn() {
@@ -51,6 +64,9 @@ public class GameManagerScript : MonoBehaviour {
 	public void endTurn() {
 		foreach (UnitScript unit in units) {
 			unit.updateTurn();
+			List<HexScript> mapRow = map [(int)unit.getPosition ().x];
+			HexScript hex = mapRow [(int)unit.getPosition ().y];
+			hex.makeDefault ();
 		}
 		if (turn == 1) {
 			turn = 2;
@@ -76,6 +92,7 @@ public class GameManagerScript : MonoBehaviour {
 			focusedUnit = null;
 			focusedHex.setFocus (false);
 		}
+		updateHexes ();
 	}
 
 	// Create all of the hexes in the map
@@ -95,7 +112,6 @@ public class GameManagerScript : MonoBehaviour {
 				}
 				hex.setPosition(new Vector2((float) i , (float) j));
 				row.Add (hex);
-				Debug.Log ("Tile added at position: (" + hex.getPosition().x + ", " + hex.getPosition().y + ")");
 			}
 			map.Add(row);
 		}
@@ -108,21 +124,29 @@ public class GameManagerScript : MonoBehaviour {
 		UnitScript unit;
 		unit = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(0 - Mathf.Floor(mapSize/2), -0 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
 		units.Add(unit);
+		unit.move (map [0] [1]);
 		unit.setPlayer (1);
 
-		unit = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1 - Mathf.Floor(mapSize/2), -1 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
+		unit = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(0 - Mathf.Floor(mapSize/2), -0 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
+		units.Add(unit);
+		unit.move (map [2] [3]);
+		unit.setPlayer (1);
+
+		unit = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(4 - Mathf.Floor(mapSize/2), -5 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
 		unit.setPlayer (2);
+		unit.move (map [4] [5]);
 		units.Add (unit);
 	}
 
 	// Set's a unit to be the current unit in focus
 	public void selectFocus(UnitScript unit) {
 		focusedUnit = unit;
-		if (!focusedUnit.hasMoved) {
+		if (!unit.hasMoved) {
 			List<HexScript> mapRow = map [(int)unit.getPosition ().x];
-			HexScript hex = mapRow [(int)focusedUnit.getPosition ().y];
+			HexScript hex = mapRow [(int)unit.getPosition ().y];
 			focusedHex = hex;
-			focusedHex.setFocus (true);
+			Debug.Log("Focused hex: " + hex.getPosition().ToString());
+			hex.setFocus (true);
 		}
 		Debug.Log ("unit selected");
 	}

@@ -6,6 +6,8 @@ public class HexScript : MonoBehaviour {
 	public Vector2 position = Vector2.zero;
 	public Sprite defaultSprite;
 	public Sprite blueSprite;
+	public Sprite redSprite;
+	public Sprite greenSprite;
 
 
 	SpriteRenderer render;
@@ -49,6 +51,14 @@ public class HexScript : MonoBehaviour {
 		} else {
 			render.sprite = defaultSprite;
 		}
+	}
+
+	public void makeRed() {
+		render.sprite = redSprite;
+	}
+
+	public void makeDefault() {
+		render.sprite = defaultSprite;
 	}
 	
 	// Moves the currently focused unit to this hex

@@ -13,7 +13,7 @@ public class UnitScript : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		position = new Vector2 (0, 0);
+		hasMoved = false;
 	}
 
 	public void updateTurn() {
@@ -37,7 +37,7 @@ public class UnitScript : MonoBehaviour {
 			transform.position = new Vector3 (
 				hex.transform.position.x,
 				hex.transform.position.y,
-				hex.transform.position.z - 5f);
+				hex.transform.position.z - 10f);
 			hasMoved = true;
 		}
 	}
@@ -54,7 +54,10 @@ public class UnitScript : MonoBehaviour {
 	// and should be used whenever possible.
 	public void setPosition(HexScript hex) {
 		position = hex.getPosition ();
-		transform.position = hex.transform.position;
+		transform.position = new Vector3 (
+			hex.transform.position.x,
+			hex.transform.position.y,
+			hex.transform.position.z - 10f);
 	}
 
 	// Returns the position of the unit
