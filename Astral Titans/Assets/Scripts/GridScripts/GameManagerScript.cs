@@ -23,6 +23,9 @@ public class GameManagerScript : MonoBehaviour {
 	// List of all the units in the game
 	List <UnitScript> units = new List<UnitScript>();
 
+	// Set containing all hexes that a unit can move to
+	HashSet<HexScript> hexSet = new HashSet<HexScript>();
+
 	// Clicking on a unit will make it focused
 	UnitScript focusedUnit;
 	HexScript focusedHex;
@@ -91,27 +94,26 @@ public class GameManagerScript : MonoBehaviour {
 
 	// Moves a unit to a hex
 	public void moveCurrentUnit(HexScript hex) {
-		// TODO: Limit range of a unit's movement
-		// TODO: Zone of control
-		// TODO: Only allow unit's to be moved on their turn
+		// DONE: Limit range of a unit's movement
+		// DONE: Zone of control
+		// DONE: Only allow unit's to be moved on their turn
 		// TODO: Attacking
 
 		// Makes sure there is currently a focused unit
 		if (focusedUnit != null) {
-
-			if (euclideanDist (focusedUnit, hex) <= 1.1f) {
-				// Sets the unit's new position
-				focusedUnit.move (hex);
-				// Sets the focused unit to be null
+			// If the hex is in the set of moveable hexes, move to it
+			if (hexSet.Contains(hex)) {
+				focusedUnit.move(hex);
 				focusedUnit = null;
 				focusedHex.setFocus (false);
 			}
 		}
-
 		updateHexes ();
 	}
 
 	// Create all of the hexes in the map
+	// TODO: Create an implementation of this method that takes in a 2D array and generates a custom
+	//       map with different terrain.
 	void generateMap() {
 		map = new List<List<HexScript>>();
 		for (int i = 0; i < mapWidth; i++) {
@@ -134,7 +136,8 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	// Creates a unit for testing purposes. Additional units can be added if desired.
-	// TODO: Create a method to purchase a unit and place it at a desired location.
+	// TODO: Create a method to purchase a unit and place it at a desired location. This
+	//       will be a seperate method from this one. Eventually, we will not need this method anymore
 	void generateUnits() {
 
 		UnitScript unit;
@@ -180,18 +183,127 @@ public class GameManagerScript : MonoBehaviour {
 		return dist;
 	}
 
+	// Finds the adjacent hexes to a hex and adds them to an iterable Set
+	// The returns that set
+	HashSet<HexScript> findAdj(HexScript hex) {
+		int x = (int) hex.getPosition ().x;
+		int y = (int) hex.getPosition ().y;
+		HashSet<HexScript> set = new HashSet<HexScript> ();
+		// Note: The logic here is clunky and long, but it works and runs in O(1)! Hopefully
+		//       it won't need any changes.
+		Debug.Log ("map.Count: " + map.Count + " map[x].Count: " + map [x].Count);
+		Debug.Log ((y-2) + " <= y <= " + (y+2));
+		Debug.Log ((x - 1) + " <= x <= " + (x + 1));
+		if (y % 2 == 0) {
+			if (y - 2 >= 0) {
+				set.Add(map[x][y - 2]);
+			}
+			if (y - 1 >= 0) {
+				set.Add(map[x][y - 1]);
+			}
+			if (y + 1 < map[x].Count) {
+				set.Add(map[x][y + 1]);
+			}
+			if (y + 2 < map[x].Count) {
+				set.Add(map[x][y + 2]);
+			}
+			if (x - 1 >= 0) {
+				if (y + 1 < map[x].Count) {
+					set.Add(map[x - 1][y + 1]);
+				}
+				if (y - 1 >= 0) {
+					set.Add(map[x - 1][y - 1]);
+				}
+			}
+		}
+		if (y % 2 == 1) {
+			if (y - 2 >= 0) {
+				set.Add(map[x][y - 2]);
+			}
+			if (y - 1 >= 0) {
+				set.Add(map[x][y - 1]);
+			}
+			if (y + 1 < map[x].Count) {
+				set.Add(map[x][y + 1]);
+			}
+			if (y + 2 < map[x].Count) {
+				set.Add(map[x][y + 2]);
+			}
+			if (x + 1 < map.Count) {
+				if (y + 1 < map[x].Count) {
+					set.Add(map[x + 1][y + 1]);
+				}
+				if (y - 1 >= 0) {
+					set.Add(map[x + 1][y - 1]);
+				}
+			}
+		}
+		return set;
+	}
+
+	// Recursively finds the hexes that a unit can move to given
+	// a starting hex and a movement distance
+	// TODO: Account for terrain
+	// DONE: Account for Zone of Control
+	// TODO: Write an implementation of the A* algorithm to find the best path
+	void findMovement(int movement, HexScript location, bool moved) {
+		bool stopped = false;
+		bool adjToEnemy = false;
+		HashSet<HexScript> adjSet = findAdj (location);
+		hexSet.Add (location);
+		if (movement == 0) {} 
+		else {
+			foreach (HexScript adjHex in adjSet){
+				foreach (UnitScript enemy in units) {
+					if (enemy.getPlayer() != turn) {
+						if (moved && enemy.getPosition() == adjHex.getPosition ()) {
+							stopped = true;
+							break;
+						}
+						if (!moved && enemy.getPosition () == adjHex.getPosition ()) {
+							adjToEnemy = true;
+							break;
+						}
+					}
+				}
+			}
+			if (adjToEnemy) {
+				foreach (HexScript adjHex in adjSet) {
+					bool adj = false;
+					foreach (UnitScript enemy in units) {
+						if (enemy.getPlayer () != turn) {
+							if ((enemy.getPosition () == adjHex.getPosition ())) {
+								adj = true;
+							}
+						}
+					}
+					if (!adj) {
+						findMovement (movement - 1, adjHex, true);
+					}
+				}
+			}
+			else if (!stopped) {
+				foreach (HexScript adjHex in adjSet) {
+					findMovement (movement - 1, adjHex, true);
+				}
+			}
+		}
+	}
+
 	// Set's a unit to be the current unit in focus
 	public void selectFocus(UnitScript unit) {
 		focusedUnit = unit;
 		if (!unit.hasMoved) {
 			List<HexScript> mapRow = map [(int)unit.getPosition ().x];
 			HexScript hex = mapRow [(int)unit.getPosition ().y];
-			foreach (List<HexScript> hexList in map) {
-				foreach (HexScript adjHex in hexList) {
-						if (euclideanDist(adjHex, hex) <= 1.1f) {
-						adjHex.setFocus (true);
-					}
-				}
+
+			// Reinitialize the hexSet to an empty set
+			hexSet = new HashSet<HexScript>();
+			// Populate the hexSet with moveable hexes
+			findMovement (3, (map[(int)focusedUnit.getPosition().x])[(int)focusedUnit.getPosition ().y], false);
+			// For each moveable hex, indicate that it is moveable
+			foreach (HexScript moveable in hexSet) {
+				moveable.setFocus (true);
 			}
 			focusedHex = hex;
 			Debug.Log("Focused hex: " + hex.getPosition().ToString());
