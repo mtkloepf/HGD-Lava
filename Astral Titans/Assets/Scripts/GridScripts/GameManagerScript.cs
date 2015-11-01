@@ -39,6 +39,8 @@ public class GameManagerScript : MonoBehaviour {
 		generateMap();
 		generateUnits();
 		turn = 1;
+		endTurn ();
+		endTurn ();
 	}
 	
 	// Update is called once per frame
@@ -129,6 +131,7 @@ public class GameManagerScript : MonoBehaviour {
 					hex = ((GameObject)Instantiate(TilePrefab, new Vector3(i * 0.9f - Mathf.Floor(mapSize/2), -j/4f + Mathf.Floor(mapSize/2), 1), Quaternion.Euler(new Vector3()))).GetComponent<HexScript>();
 				}
 				hex.setPosition(new Vector2((float) i , (float) j));
+				hex.startRenderer ();
 				row.Add (hex);
 			}
 			map.Add(row);
@@ -139,49 +142,52 @@ public class GameManagerScript : MonoBehaviour {
 	// TODO: Create a method to purchase a unit and place it at a desired location. This
 	//       will be a seperate method from this one. Eventually, we will not need this method anymore
 	void generateUnits() {
-
 		UnitScript unit;
+
 		unit = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(0 - Mathf.Floor(mapSize/2), -0 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
 		units.Add(unit);
 		unit.move (map [0] [1]);
+		unit.startRenderer ();
+		unit.setType (UnitScript.Types.InfantryH);
 		unit.setPlayer (1);
 
 		unit = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(0 - Mathf.Floor(mapSize/2), -0 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
 		units.Add(unit);
 		unit.move (map [2] [3]);
+		unit.startRenderer ();
+		unit.setType (UnitScript.Types.HeavyTankH);
 		unit.setPlayer (1);
 
 		unit = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(4 - Mathf.Floor(mapSize/2), -5 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
 		unit.setPlayer (2);
+		Debug.Log (unit.GetType ());
+		Debug.Log (unit.GetInstanceID());
+		unit.startRenderer ();
+		unit.setType (UnitScript.Types.HeavyTankA);
 		unit.move (map [4] [5]);
+		units.Add (unit);
+		unit = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(4 - Mathf.Floor(mapSize/2), -5 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
+		unit.setPlayer (2);
+		unit.startRenderer ();
+		unit.setType (UnitScript.Types.InfantryA);
+		unit.move (map [2] [5]);
+		units.Add (unit);
+
+		unit = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(4 - Mathf.Floor(mapSize/2), -5 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
+		unit.setPlayer (2);
+		unit.startRenderer ();
+		unit.setType (UnitScript.Types.InfantryA);
+		unit.move (map [3] [5]);
+		units.Add (unit);
+
+		unit = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(4 - Mathf.Floor(mapSize/2), -5 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
+		unit.setPlayer (2);
+		unit.startRenderer ();
+		unit.setType (UnitScript.Types.HeavyTankA);
+		unit.move (map [1] [5]);
 		units.Add (unit);
 	}
 
-	// Finds the euclidean distance between two hexes
-	float euclideanDist(HexScript hex1, HexScript hex2) {
-		float x1 = hex1.getTransformPosition().x;
-		float x2 = hex2.getTransformPosition ().x;
-		float y1 = hex1.getTransformPosition ().y;
-		float y2 = hex2.getTransformPosition ().y;
-		float delx = x1 - x2;
-		float dely = y1 - y2;
-
-		float dist = Mathf.Sqrt (delx * delx + dely * dely);
-		return dist;
-	}
-
-	// Finds the euclidean distance between a unit and a hex
-	float euclideanDist(UnitScript unit, HexScript hex) {
-		float x1 = unit.getTransformPosition().x;
-		float x2 = hex.getTransformPosition ().x;
-		float y1 = unit.getTransformPosition ().y;
-		float y2 = hex.getTransformPosition ().y;
-		float delx = x1 - x2;
-		float dely = y1 - y2;
-				
-		float dist = Mathf.Sqrt (delx * delx + dely * dely);
-		return dist;
-	}
 
 	// Finds the adjacent hexes to a hex and adds them to an iterable Set
 	// The returns that set
@@ -300,7 +306,7 @@ public class GameManagerScript : MonoBehaviour {
 			// Reinitialize the hexSet to an empty set
 			hexSet = new HashSet<HexScript>();
 			// Populate the hexSet with moveable hexes
-			findMovement (3, (map[(int)focusedUnit.getPosition().x])[(int)focusedUnit.getPosition ().y], false);
+			findMovement (focusedUnit.getMovement (), (map[(int)focusedUnit.getPosition().x])[(int)focusedUnit.getPosition ().y], false);
 			// For each moveable hex, indicate that it is moveable
 			foreach (HexScript moveable in hexSet) {
 				moveable.setFocus (true);

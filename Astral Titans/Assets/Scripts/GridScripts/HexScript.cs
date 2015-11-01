@@ -24,6 +24,10 @@ public class HexScript : MonoBehaviour {
 		
 	}
 
+	public void startRenderer() {
+		render = GetComponent<SpriteRenderer> ();
+	}
+
 	// Sets the position of the hex.
 	public void setPosition (Vector2 v2) {
 		position = v2;

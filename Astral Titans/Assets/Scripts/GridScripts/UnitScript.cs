@@ -3,21 +3,156 @@ using System.Collections;
 
 public class UnitScript : MonoBehaviour {
 
+	readonly int InfantryHHealth = 5;
+	readonly int InfantryAHealth = 5;
+	readonly int HeavyTankHHealth = 10;
+	readonly int HeavyTankAHealth = 10;
+	readonly int InfantryHAttack = 2;
+	readonly int InfantryAAttack = 2;
+	readonly int HeavyTankHAttack = 3;
+	readonly int HeavyTankAAttack = 3;
+	readonly int InfantryHMovement = 3;
+	readonly int InfantryAMovement = 3;
+	readonly int HeavyTankHMovement = 2;
+	readonly int HeavyTankAMovement = 2;
+	public Sprite InfantryHSprite;
+	public Sprite InfantryASprite;
+	public Sprite HeavyTankHSprite;
+	public Sprite HeavyTankASprite;
+
 	public static UnitScript instance;
+	SpriteRenderer render;
 
 	public Vector2 position = Vector2.zero;
 	public bool focus = false;
 	public int mapSize = 11;
 	public int player;
 	public bool hasMoved;
+
+	int attack;
+	int maxHealth;
+	int health;
+	int maxMovement;
+	int movement;
 	
 	// Use this for initialization
 	void Start () {
 		hasMoved = false;
+		render = GetComponent<SpriteRenderer> ();
+		Debug.Log (render.GetType ());
+//		render.sprite = InfantryHSprite;
+
+//		setType (Types.HeavyTankA);
+	}
+
+	public void startRenderer() {
+		render = GetComponent<SpriteRenderer> ();
 	}
 
 	public void updateTurn() {
 		hasMoved = false;
+	}
+
+	public enum Types { InfantryH, InfantryA, HeavyTankH, HeavyTankA};
+
+	// Set the unit type
+	public void setType(Types type) {
+		switch (type) {
+		
+		case Types.InfantryH:
+			attack = InfantryHAttack;
+			maxHealth = InfantryHHealth;
+			health = InfantryHHealth;
+			maxMovement = InfantryHMovement;
+			movement = InfantryHMovement;
+			render.sprite = InfantryHSprite;
+			Debug.Log ("Human Infantry");
+			break;
+		
+		case Types.InfantryA:
+			attack = InfantryAAttack;
+			maxHealth = InfantryAHealth;
+			health = InfantryAHealth;
+			maxMovement = InfantryAMovement;
+			movement = InfantryAMovement;
+			render.sprite = InfantryASprite;
+			Debug.Log ("Alien Infantry");
+			break;
+
+		case Types.HeavyTankH:
+			attack = HeavyTankHAttack;
+			maxHealth = HeavyTankHHealth;
+			health = maxHealth;
+			maxMovement = HeavyTankHMovement;
+			movement = maxMovement;
+			render.sprite = HeavyTankHSprite;
+			Debug.Log ("Human Heavy Tank");
+			break;
+
+		case Types.HeavyTankA:
+			attack = HeavyTankAAttack;
+			maxHealth = HeavyTankAHealth;
+			health = maxHealth;
+			maxMovement = HeavyTankAMovement;
+			movement = maxMovement;
+			render.sprite = HeavyTankASprite;
+			Debug.Log ("Alien Heavy Tank");
+			break;
+
+		default:
+			Debug.Log ("Default case");
+			break;
+		}
+	}
+
+	// Set the unit type
+	public void setType(string type) {
+		switch (type) {
+			
+		case "infantryH":
+			attack = InfantryHAttack;
+			maxHealth = InfantryHHealth;
+			health = InfantryHHealth;
+			maxMovement = InfantryHMovement;
+			movement = InfantryHMovement;
+			this.render.sprite = InfantryHSprite;
+			Debug.Log ("Human Infantry");
+			break;
+			
+		case "infantryA":
+			attack = InfantryAAttack;
+			maxHealth = InfantryAHealth;
+			health = InfantryAHealth;
+			maxMovement = InfantryAMovement;
+			movement = InfantryAMovement;
+			this.render.sprite = InfantryASprite;
+			Debug.Log ("Alien Infantry");
+			break;
+			
+		case "heavyH":
+			attack = HeavyTankHAttack;
+			maxHealth = HeavyTankHHealth;
+			health = maxHealth;
+			maxMovement = HeavyTankHMovement;
+			movement = maxMovement;
+			this.render.sprite = HeavyTankHSprite;
+			Debug.Log ("Human Heavy Tank");
+			break;
+			
+		case "heavyA":
+			attack = HeavyTankAAttack;
+			maxHealth = HeavyTankAHealth;
+			health = maxHealth;
+			maxMovement = HeavyTankAMovement;
+			movement = maxMovement;
+			this.render.sprite = HeavyTankASprite;
+			Debug.Log ("Alien Heavy Tank");
+			break;
+			
+		default:
+			Debug.Log ("Default case");
+			break;
+		}
 	}
 
 	// Gets the player of the unit
@@ -28,6 +163,10 @@ public class UnitScript : MonoBehaviour {
 	// Sets the player of the unit. p should be 1 or 2
 	public void setPlayer(int p) {
 		player = p;
+	}
+
+	public int getMovement() {
+		return movement;
 	}
 
 	// Moves the player to a hex, if the player has not moved yet.
