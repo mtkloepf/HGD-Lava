@@ -132,6 +132,7 @@ public class GameManagerScript : MonoBehaviour {
 				}
 				hex.setPosition(new Vector2((float) i , (float) j));
 				hex.startRenderer ();
+				hex.setType (HexScript.HexEnum.desert);
 				row.Add (hex);
 			}
 			map.Add(row);
@@ -284,15 +285,45 @@ public class GameManagerScript : MonoBehaviour {
 						}
 					}
 					if (!adj) {
-						findMovement (movement - 1, adjHex, true);
+						int cost;
+						focusedUnit.terrainMap.TryGetValue(adjHex.getType (), out cost);
+						if (movement - cost >= 0) {
+							findMovement (movement - cost, adjHex, true);
+						}
 					}
 				}
 			}
 			else if (!stopped) {
 				foreach (HexScript adjHex in adjSet) {
-					findMovement (movement - 1, adjHex, true);
+					int cost;
+					focusedUnit.terrainMap.TryGetValue(adjHex.getType(), out cost);
+					if (movement - cost >= 0) {
+						findMovement (movement - cost, adjHex, true);
+					}
 				}
 			}
+		}
+	}
+
+	// Attacks another unit. This is currently extremely primitive.
+	// TODO: Animations
+	// TODO: Decide on a combat system and implement it
+	// TODO: Limit units to attacking once per turn
+	public void attack(UnitScript unit) {
+		if (focusedUnit != null) {
+			Debug.Log (focusedUnit.getPosition () + " attacked " + unit.getPosition ());
+
+			// Reduces the attacked units health by the attacking units attack
+			unit.setHealth (unit.getHealth () - focusedUnit.getAttack ());
+
+			// If the unit is out of health, destroy it
+			if (unit.getHealth() <= 0) {
+				unit.destroy ();
+				units.Remove(unit);
+				Destroy (unit);
+			}
+		} else {
+			Debug.Log ("No unit currently focused...");
 		}
 	}
 
@@ -300,8 +331,9 @@ public class GameManagerScript : MonoBehaviour {
 	public void selectFocus(UnitScript unit) {
 		focusedUnit = unit;
 		if (!unit.hasMoved) {
+			updateHexes ();
 			List<HexScript> mapRow = map [(int)unit.getPosition ().x];
-			HexScript hex = mapRow [(int)unit.getPosition ().y];
+			HexScript curHex = mapRow [(int)unit.getPosition ().y];
 
 			// Reinitialize the hexSet to an empty set
 			hexSet = new HashSet<HexScript>();
@@ -311,9 +343,9 @@ public class GameManagerScript : MonoBehaviour {
 			foreach (HexScript moveable in hexSet) {
 				moveable.setFocus (true);
 			}
-			focusedHex = hex;
-			Debug.Log("Focused hex: " + hex.getPosition().ToString());
-			hex.setFocus (true);
+			focusedHex = curHex;
+			Debug.Log("Focused hex: " + curHex.getPosition().ToString());
+			curHex.setFocus (true);
 		}
 		Debug.Log ("unit selected");
 	}

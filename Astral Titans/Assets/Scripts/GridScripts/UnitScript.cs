@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class UnitScript : MonoBehaviour {
 
@@ -19,6 +20,8 @@ public class UnitScript : MonoBehaviour {
 	public Sprite InfantryASprite;
 	public Sprite HeavyTankHSprite;
 	public Sprite HeavyTankASprite;
+
+	public SortedDictionary<HexScript.HexEnum, int> terrainMap = new SortedDictionary<HexScript.HexEnum, int>();
 
 	public static UnitScript instance;
 	SpriteRenderer render;
@@ -53,6 +56,10 @@ public class UnitScript : MonoBehaviour {
 		hasMoved = false;
 	}
 
+	public void destroy() {
+		Destroy (gameObject);
+	}
+
 	public enum Types { InfantryH, InfantryA, HeavyTankH, HeavyTankA};
 
 	// Set the unit type
@@ -66,6 +73,10 @@ public class UnitScript : MonoBehaviour {
 			maxMovement = InfantryHMovement;
 			movement = InfantryHMovement;
 			render.sprite = InfantryHSprite;
+			terrainMap.Add(HexScript.HexEnum.forest, 1);
+			terrainMap.Add(HexScript.HexEnum.mountain, 2);
+			terrainMap.Add(HexScript.HexEnum.plains, 1);
+			terrainMap.Add(HexScript.HexEnum.desert, 2);
 			Debug.Log ("Human Infantry");
 			break;
 		
@@ -76,6 +87,10 @@ public class UnitScript : MonoBehaviour {
 			maxMovement = InfantryAMovement;
 			movement = InfantryAMovement;
 			render.sprite = InfantryASprite;
+			terrainMap.Add(HexScript.HexEnum.forest, 1);
+			terrainMap.Add(HexScript.HexEnum.mountain, 2);
+			terrainMap.Add(HexScript.HexEnum.plains, 1);
+			terrainMap.Add(HexScript.HexEnum.desert, 2);
 			Debug.Log ("Alien Infantry");
 			break;
 
@@ -86,6 +101,10 @@ public class UnitScript : MonoBehaviour {
 			maxMovement = HeavyTankHMovement;
 			movement = maxMovement;
 			render.sprite = HeavyTankHSprite;
+			terrainMap.Add(HexScript.HexEnum.forest, 2);
+			terrainMap.Add(HexScript.HexEnum.mountain, 2);
+			terrainMap.Add(HexScript.HexEnum.plains, 1);
+			terrainMap.Add(HexScript.HexEnum.desert, 1);
 			Debug.Log ("Human Heavy Tank");
 			break;
 
@@ -96,59 +115,13 @@ public class UnitScript : MonoBehaviour {
 			maxMovement = HeavyTankAMovement;
 			movement = maxMovement;
 			render.sprite = HeavyTankASprite;
+			terrainMap.Add(HexScript.HexEnum.forest, 2);
+			terrainMap.Add(HexScript.HexEnum.mountain, 2);
+			terrainMap.Add(HexScript.HexEnum.plains, 1);
+			terrainMap.Add(HexScript.HexEnum.desert, 1);
 			Debug.Log ("Alien Heavy Tank");
 			break;
 
-		default:
-			Debug.Log ("Default case");
-			break;
-		}
-	}
-
-	// Set the unit type
-	public void setType(string type) {
-		switch (type) {
-			
-		case "infantryH":
-			attack = InfantryHAttack;
-			maxHealth = InfantryHHealth;
-			health = InfantryHHealth;
-			maxMovement = InfantryHMovement;
-			movement = InfantryHMovement;
-			this.render.sprite = InfantryHSprite;
-			Debug.Log ("Human Infantry");
-			break;
-			
-		case "infantryA":
-			attack = InfantryAAttack;
-			maxHealth = InfantryAHealth;
-			health = InfantryAHealth;
-			maxMovement = InfantryAMovement;
-			movement = InfantryAMovement;
-			this.render.sprite = InfantryASprite;
-			Debug.Log ("Alien Infantry");
-			break;
-			
-		case "heavyH":
-			attack = HeavyTankHAttack;
-			maxHealth = HeavyTankHHealth;
-			health = maxHealth;
-			maxMovement = HeavyTankHMovement;
-			movement = maxMovement;
-			this.render.sprite = HeavyTankHSprite;
-			Debug.Log ("Human Heavy Tank");
-			break;
-			
-		case "heavyA":
-			attack = HeavyTankAAttack;
-			maxHealth = HeavyTankAHealth;
-			health = maxHealth;
-			maxMovement = HeavyTankAMovement;
-			movement = maxMovement;
-			this.render.sprite = HeavyTankASprite;
-			Debug.Log ("Alien Heavy Tank");
-			break;
-			
 		default:
 			Debug.Log ("Default case");
 			break;
@@ -165,6 +138,7 @@ public class UnitScript : MonoBehaviour {
 		player = p;
 	}
 
+	// Gets the remaining number of hexes the player can move this turn
 	public int getMovement() {
 		return movement;
 	}
@@ -179,13 +153,6 @@ public class UnitScript : MonoBehaviour {
 				hex.transform.position.z - 10f);
 			hasMoved = true;
 		}
-	}
-
-	// Sets the position of the unit to a vector
-	// TODO: Modify this to allow for the offset of hexes
-	public void setPosition(Vector2 v2) {
-		position = v2;
-		transform.position = new Vector3(this.position.x - Mathf.Floor(mapSize/2), -this.position.y + Mathf.Floor(mapSize/2), -9);
 	}
 
 	// Sets the position of the unit to a hex.
@@ -210,6 +177,21 @@ public class UnitScript : MonoBehaviour {
 		return pos;
 	}
 
+	// Sets the health
+	public void setHealth(int health) {
+		this.health = health;
+	}
+
+	// Gets the health
+	public int getHealth() {
+		return health;
+	}
+
+	// Gets the attack
+	public int getAttack() {
+		return attack;
+	}
+
 	// Sets the unit to be focused.
 	// NOTE: I am not sure if this is necessary. We
 	//       may want to remove it later
@@ -227,6 +209,8 @@ public class UnitScript : MonoBehaviour {
 		if (GameManagerScript.instance.getTurn () == player) {
 			GameManagerScript.instance.selectFocus (this);
 			Debug.Log ("Player selected");
+		} else {
+			GameManagerScript.instance.attack(this);
 		}
 	}
 }

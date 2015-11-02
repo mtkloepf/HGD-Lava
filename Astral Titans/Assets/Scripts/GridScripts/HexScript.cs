@@ -9,6 +9,9 @@ public class HexScript : MonoBehaviour {
 	public Sprite redSprite;
 	public Sprite greenSprite;
 
+	public enum HexEnum{plains, forest, mountain, desert};
+	HexEnum type = HexEnum.plains;
+
 
 	SpriteRenderer render;
 	bool focus = false;
@@ -26,6 +29,16 @@ public class HexScript : MonoBehaviour {
 
 	public void startRenderer() {
 		render = GetComponent<SpriteRenderer> ();
+	}
+
+	// Gets the type of terrain
+	public HexEnum getType() {
+		return type;
+	}
+
+	// Sets the type of terrain
+	public void setType(HexEnum type) {
+		this.type = type;
 	}
 
 	// Sets the position of the hex.
@@ -57,6 +70,11 @@ public class HexScript : MonoBehaviour {
 		} else {
 			render.sprite = defaultSprite;
 		}
+	}
+
+	// Says if the hex is focused
+	public bool getFocus() {
+		return focus;
 	}
 
 	// Makes the hex red, indicating that that unit has already moved
