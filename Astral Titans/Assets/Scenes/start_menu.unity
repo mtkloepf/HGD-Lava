@@ -992,7 +992,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 28772ca7904d56045989d6893fdf2eb0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d14bda8b32868464f8dd3b835cab1dcf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!4 &1952489681
 Transform:
@@ -1031,4 +1031,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mouseExited: {fileID: 21300000, guid: 28772ca7904d56045989d6893fdf2eb0, type: 3}
-  mouseEntered: {fileID: 21300000, guid: e25ed7045ac2b524a833934e4814c4c3, type: 3}
+  mouseEntered: {fileID: 21300000, guid: d14bda8b32868464f8dd3b835cab1dcf, type: 3}
