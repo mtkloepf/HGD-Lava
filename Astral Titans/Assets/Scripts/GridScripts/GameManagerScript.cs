@@ -132,7 +132,7 @@ public class GameManagerScript : MonoBehaviour {
 				}
 				hex.setPosition(new Vector2((float) i , (float) j));
 				hex.startRenderer ();
-				hex.setType (HexScript.HexEnum.desert);
+				hex.setType (HexScript.HexEnum.plains);
 				row.Add (hex);
 			}
 			map.Add(row);
@@ -161,8 +161,6 @@ public class GameManagerScript : MonoBehaviour {
 
 		unit = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(4 - Mathf.Floor(mapSize/2), -5 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
 		unit.setPlayer (2);
-		Debug.Log (unit.GetType ());
-		Debug.Log (unit.GetInstanceID());
 		unit.startRenderer ();
 		unit.setType (UnitScript.Types.HeavyTankA);
 		unit.move (map [4] [5]);

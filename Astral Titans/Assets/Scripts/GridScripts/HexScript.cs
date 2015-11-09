@@ -8,6 +8,10 @@ public class HexScript : MonoBehaviour {
 	public Sprite blueSprite;
 	public Sprite redSprite;
 	public Sprite greenSprite;
+	public Sprite plainSprite;
+	public Sprite forestSprite;
+	public Sprite mountainSprite;
+	public Sprite desertSprite;
 
 	public enum HexEnum{plains, forest, mountain, desert};
 	HexEnum type = HexEnum.plains;
@@ -19,7 +23,7 @@ public class HexScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		render = GetComponent<SpriteRenderer> ();
-		render.sprite = defaultSprite;
+		render.color = Color.white;
 	}
 	
 	// Update is called once per frame
@@ -39,6 +43,28 @@ public class HexScript : MonoBehaviour {
 	// Sets the type of terrain
 	public void setType(HexEnum type) {
 		this.type = type;
+		switch (type) {
+
+		case HexEnum.desert:
+			render.sprite = desertSprite;
+			break;
+
+		case HexEnum.plains:
+			render.sprite = plainSprite;
+			break;
+
+		case HexEnum.forest:
+			render.sprite = forestSprite;
+			break;
+
+		case HexEnum.mountain:
+			render.sprite = mountainSprite;
+			break;
+
+		default:
+			render.sprite = defaultSprite;
+			break;
+		}
 	}
 
 	// Sets the position of the hex.
@@ -66,9 +92,10 @@ public class HexScript : MonoBehaviour {
 	public void setFocus (bool focused) {
 		this.focus = focused;
 		if (focused) {
-			render.sprite = blueSprite;
+//			render.color = Color.blue;
+			render.color = new Color(0f, 0f, 1f, 0.9f);
 		} else {
-			render.sprite = defaultSprite;
+			render.color = Color.white;
 		}
 	}
 
@@ -79,17 +106,19 @@ public class HexScript : MonoBehaviour {
 
 	// Makes the hex red, indicating that that unit has already moved
 	public void makeRed() {
-		render.sprite = redSprite;
+		render.color = Color.red;
+		render.color = new Color (1, 0, 0, 0.9f);
 	}
 
 	// Makes the hex green, indicating that that unit may still move
 	public void makeGreen() {
-		render.sprite = greenSprite;
+		render.color = Color.green;
+		render.color = new Color (0, 1, 0, 0.9f);
 	}
 
 	// Makes the hex the default color
 	public void makeDefault() {
-		render.sprite = defaultSprite;
+		render.color = Color.white;
 	}
 
 	// Gets the position of the transform of the hex

@@ -93,6 +93,10 @@ MonoBehaviour:
   blueSprite: {fileID: 21300000, guid: 450642a33e7d07a4cbea2e13c8071686, type: 3}
   redSprite: {fileID: 21300000, guid: b1988bb3e541ffc42b2c168379c6fe14, type: 3}
   greenSprite: {fileID: 21300000, guid: 6f64992aeb4c73e4ea7ab2de73855a9c, type: 3}
+  plainSprite: {fileID: 21300000, guid: 109b2cb603631473cb50564483798994, type: 3}
+  forestSprite: {fileID: 21300000, guid: e315093f5c4ac4b36858be6471bde09c, type: 3}
+  mountainSprite: {fileID: 21300000, guid: 36165b0275a234d79aeeb4f2401495cf, type: 3}
+  desertSprite: {fileID: 21300000, guid: 157e09ba3e89c4442a8911bd078c8cbb, type: 3}
 --- !u!212 &21292216
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -153,6 +157,26 @@ Prefab:
       propertyPath: greenSprite
       value: 
       objectReference: {fileID: 21300000, guid: 6f64992aeb4c73e4ea7ab2de73855a9c,
+        type: 3}
+    - target: {fileID: 0}
+      propertyPath: plainSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 109b2cb603631473cb50564483798994,
+        type: 3}
+    - target: {fileID: 0}
+      propertyPath: forestSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e315093f5c4ac4b36858be6471bde09c,
+        type: 3}
+    - target: {fileID: 0}
+      propertyPath: mountainSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 36165b0275a234d79aeeb4f2401495cf,
+        type: 3}
+    - target: {fileID: 0}
+      propertyPath: desertSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 157e09ba3e89c4442a8911bd078c8cbb,
         type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
