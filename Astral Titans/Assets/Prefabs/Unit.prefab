@@ -9,8 +9,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 438890}
   - 114: {fileID: 11434316}
-  - 58: {fileID: 5837622}
   - 212: {fileID: 21257432}
+  - 60: {fileID: 6043674}
   m_Layer: 0
   m_Name: Unit
   m_TagString: Untagged
@@ -30,8 +30,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!58 &5837622
-CircleCollider2D:
+--- !u!60 &6043674
+PolygonCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -41,8 +41,14 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: .5
+  m_Points:
+    m_Paths:
+    - - {x: -.150744915, y: .267810404}
+      - {x: .140922308, y: .266499579}
+      - {x: .311697125, y: .010649085}
+      - {x: .164263725, y: -.263464212}
+      - {x: -.157085419, y: -.263463736}
+      - {x: -.305006742, y: .000348925591}
 --- !u!114 &11434316
 MonoBehaviour:
   m_ObjectHideFlags: 1
