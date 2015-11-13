@@ -3,8 +3,8 @@ using System.Collections;
 
 public class CameraMovement : MonoBehaviour {
 
-    public int xVel;
-    public int yVel;
+    public float xVel;
+    public float yVel;
 
 	// Use this for initialization
 	void Start () {
@@ -13,27 +13,22 @@ public class CameraMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-	    if (Input.GetKeyDown("w")) {
-            Debug.Log("w");
+	    if (Input.GetKey("w")) {
             Vector3 position = this.transform.position;
             position.y += yVel;
             this.transform.position = position;
         }
-        if (Input.GetKeyDown("a")) {
-            Debug.Log("a");
+        if (Input.GetKey("a")) {
             Vector3 position = this.transform.position;
             position.x -= xVel;
             this.transform.position = position;
         }
-        if (Input.GetKeyDown("s")) {
-            Debug.Log("s");
+        if (Input.GetKey("s")) {
             Vector3 position = this.transform.position;
             position.y -= yVel;
             this.transform.position = position;
         }
-        if (Input.GetKeyDown("d")) {
-            Debug.Log("d");
+        if (Input.GetKey("d")) {
             Vector3 position = this.transform.position;
             position.x += xVel;
             this.transform.position = position;
