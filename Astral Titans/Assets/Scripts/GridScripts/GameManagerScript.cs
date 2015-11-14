@@ -10,7 +10,6 @@ public class GameManagerScript : MonoBehaviour {
 	public GameObject UserPlayerPrefab;
 	public GameObject EndTurn;
 	public GameObject AIPlayerPrefab;
-//	public GameObject TurnIndicator;
 	public GameObject CardPrefab;
 	public TurnIndicatorScript TurnIndicator;
         public GameObject UI;
@@ -99,8 +98,6 @@ public class GameManagerScript : MonoBehaviour {
 
 		updateHexes ();
                 TurnIndicator.updateTurn(turn);
-
-		Debug.Log ("Turn ended");
 	}
 
 	// Moves a unit to a hex
@@ -222,9 +219,6 @@ public class GameManagerScript : MonoBehaviour {
 		HashSet<HexScript> set = new HashSet<HexScript> ();
 		// Note: The logic here is clunky and long, but it works and runs in O(1)! Hopefully
 		//       it won't need any changes.
-		Debug.Log ("map.Count: " + map.Count + " map[x].Count: " + map [x].Count);
-		Debug.Log ((y-2) + " <= y <= " + (y+2));
-		Debug.Log ((x - 1) + " <= x <= " + (x + 1));
 		if (y % 2 == 0) {
 			if (y - 2 >= 0) {
 				set.Add(map[x][y - 2]);
@@ -381,7 +375,6 @@ public class GameManagerScript : MonoBehaviour {
 		} else if (focusedCard != null) {
 			placeUnit (hex);
 		}
-
 	}
 
 	public void placeUnit(HexScript hex) {

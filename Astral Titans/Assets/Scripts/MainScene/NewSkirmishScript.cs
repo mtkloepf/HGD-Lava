@@ -27,6 +27,7 @@ public class NewSkirmishScript : MonoBehaviour {
 
     void OnMouseDown()
     {
+      Application.LoadLevel("grid_scene");
 
         System.Console.WriteLine("NewSkirmish");
     }

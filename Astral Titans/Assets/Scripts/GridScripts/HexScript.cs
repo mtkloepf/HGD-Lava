@@ -71,7 +71,6 @@ public class HexScript : MonoBehaviour {
 	// Sets the position of the hex.
 	public void setPosition (Vector2 v2) {
 		position = v2;
-		Debug.Log ("New position: " + getPosition ().x + ", " + getPosition ().y);
 	}
 
 	// Returns the position of the hex
@@ -132,6 +131,5 @@ public class HexScript : MonoBehaviour {
 	void OnMouseDown() {
 		Vector2 v = new Vector2 (position.x, position.y);
 		GameManagerScript.instance.hexClicked(this);
-		Debug.Log ("Tile clicked at: " + v.x + ", " + v.y);
 	}
 }
