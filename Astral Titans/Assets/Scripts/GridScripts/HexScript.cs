@@ -19,6 +19,7 @@ public class HexScript : MonoBehaviour {
 
 	SpriteRenderer render;
 	bool focus = false;
+        bool occupied = false;
 	
 	// Use this for initialization
 	void Start () {

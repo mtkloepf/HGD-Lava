@@ -147,7 +147,7 @@ public class UnitScript : MonoBehaviour {
 			transform.position = new Vector3 (
 				hex.transform.position.x,
 				hex.transform.position.y,
-				hex.transform.position.z - 10f);
+				hex.transform.position.z-1f);
 			hasMoved = true;
 		}
 	}
@@ -160,7 +160,7 @@ public class UnitScript : MonoBehaviour {
 		transform.position = new Vector3 (
 			hex.transform.position.x,
 			hex.transform.position.y,
-			hex.transform.position.z - 10f);
+			hex.transform.position.z-1f);
 	}
 
 	// Returns the position of the unit

@@ -10,7 +10,8 @@ public class GameManagerScript : MonoBehaviour {
 	public GameObject UserPlayerPrefab;
 	public GameObject EndTurn;
 	public GameObject AIPlayerPrefab;
-	public GameObject TurnIndicator;
+	public TurnIndicatorScript TurnIndicator;
+        public GameObject UI;
 
 	public int mapSize = 11;
 	public int mapWidth = 10;
@@ -36,11 +37,12 @@ public class GameManagerScript : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {		
+           UI.GetComponentInChildren<Canvas>().enabled = false;
 		generateMap();
 		generateUnits();
 		turn = 1;
-		endTurn ();
-		endTurn ();
+		//endTurn ();
+		//endTurn ();
 	}
 	
 	// Update is called once per frame
@@ -90,6 +92,7 @@ public class GameManagerScript : MonoBehaviour {
 		}
 
 		updateHexes ();
+                TurnIndicator.updateTurn(turn);
 
 		Debug.Log ("Turn ended");
 	}
@@ -371,4 +374,17 @@ public class GameManagerScript : MonoBehaviour {
 		}
 		Debug.Log ("unit selected");
 	}
+
+        public void togglePauseMenu() {
+           if (UI.GetComponentInChildren<Canvas>().enabled)
+           {
+              UI.GetComponentInChildren<Canvas>().enabled = false;
+              Time.timeScale = 1;
+           }
+           else
+           {
+              UI.GetComponentInChildren<Canvas>().enabled = true;
+              Time.timeScale = 0;
+           }
+        }
 }
