@@ -309,16 +309,40 @@ public class GameManagerScript : MonoBehaviour {
 	// TODO: Limit units to attacking once per turn
 	public void attack(UnitScript unit) {
 		if (focusedUnit != null) {
-			Debug.Log (focusedUnit.getPosition () + " attacked " + unit.getPosition ());
+			bool adj = false;
+			List<HexScript> focMapRow = map [(int)focusedUnit.getPosition ().x];
+			HexScript focHex = focMapRow [(int)focusedUnit.getPosition ().y];
 
-			// Reduces the attacked units health by the attacking units attack
-			unit.setHealth (unit.getHealth () - focusedUnit.getAttack ());
+			List<HexScript> curMapRow = map [(int)(unit.getPosition ().x)];
+			HexScript curHex = curMapRow [(int)unit.getPosition ().y];
 
-			// If the unit is out of health, destroy it
-			if (unit.getHealth() <= 0) {
-				unit.destroy ();
-				units.Remove(unit);
-				Destroy (unit);
+
+			HashSet<HexScript> adjHexes = findAdj (curHex);
+			foreach (HexScript hex in adjHexes) {
+				if (hex == focHex) {
+					adj = true;
+				}
+			}
+			if (adj) {
+				Debug.Log (focusedUnit.getPosition () + " attacked " + unit.getPosition ());
+
+				int h = unit.getHealth ();
+
+				// Reduces the attacked units health by the attacking units attack
+				unit.setHealth ((int)(unit.getHealth () - 
+				                (focusedUnit.getAttack () * (1 - unit.getDefense ()/100))));
+
+				Debug.Log ("Attack: " + focusedUnit.getAttack() + 
+				           "\nDefense: " + unit.getDefense () + 
+				           "\nPrevious health: " + h + 
+				           "\nResulting health lost: " + (focusedUnit.getAttack () * (1 - unit.getDefense ()/100)));
+
+				// If the unit is out of health, destroy it
+				if (unit.getHealth() <= 0) {
+					unit.destroy ();
+					units.Remove(unit);
+					Destroy (unit);
+				}
 			}
 		} else {
 			Debug.Log ("No unit currently focused...");

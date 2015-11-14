@@ -3,17 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class UnitScript : MonoBehaviour {
-
-	readonly int InfantryHHealth = 5;
-	readonly int InfantryAHealth = 5;
-	readonly int HeavyTankHHealth = 10;
-	readonly int HeavyTankAHealth = 10;
-	readonly int InfantryHAttack = 2;
-	readonly int InfantryAAttack = 2;
-	readonly int HeavyTankHAttack = 3;
-	readonly int HeavyTankAAttack = 3;
-	readonly int InfantryHMovement = 3;
-	readonly int InfantryAMovement = 3;
+	
+	readonly int InfantryHAttack = 20;
+	readonly int InfantryAAttack = 20;
+	readonly int HeavyTankHAttack = 30;
+	readonly int HeavyTankAAttack = 30;
+	readonly float InfantryHDef = 10;
+	readonly float InfantryADef = 10;
+	readonly float HeavyTankHDef = 40;
+	readonly float HeavyTankADef = 40;
+	readonly int InfantryHMovement = 4;
+	readonly int InfantryAMovement = 4;
 	readonly int HeavyTankHMovement = 2;
 	readonly int HeavyTankAMovement = 2;
 	public Sprite InfantryHSprite;
@@ -33,10 +33,11 @@ public class UnitScript : MonoBehaviour {
 	public bool hasMoved;
 
 	int attack;
-	int maxHealth;
-	int health;
+	int maxHealth = 100;
+	int health = 100;
 	int maxMovement;
 	int movement;
+	float defense;
 	
 	// Use this for initialization
 	void Start () {
@@ -68,10 +69,9 @@ public class UnitScript : MonoBehaviour {
 		
 		case Types.InfantryH:
 			attack = InfantryHAttack;
-			maxHealth = InfantryHHealth;
-			health = InfantryHHealth;
 			maxMovement = InfantryHMovement;
 			movement = InfantryHMovement;
+			defense = InfantryHDef;
 			render.sprite = InfantryHSprite;
 			terrainMap.Add(HexScript.HexEnum.forest, 1);
 			terrainMap.Add(HexScript.HexEnum.mountain, 2);
@@ -82,10 +82,9 @@ public class UnitScript : MonoBehaviour {
 		
 		case Types.InfantryA:
 			attack = InfantryAAttack;
-			maxHealth = InfantryAHealth;
-			health = InfantryAHealth;
 			maxMovement = InfantryAMovement;
 			movement = InfantryAMovement;
+			defense = InfantryADef;
 			render.sprite = InfantryASprite;
 			terrainMap.Add(HexScript.HexEnum.forest, 1);
 			terrainMap.Add(HexScript.HexEnum.mountain, 2);
@@ -96,10 +95,9 @@ public class UnitScript : MonoBehaviour {
 
 		case Types.HeavyTankH:
 			attack = HeavyTankHAttack;
-			maxHealth = HeavyTankHHealth;
-			health = maxHealth;
 			maxMovement = HeavyTankHMovement;
 			movement = maxMovement;
+			defense = HeavyTankHDef;
 			render.sprite = HeavyTankHSprite;
 			terrainMap.Add(HexScript.HexEnum.forest, 2);
 			terrainMap.Add(HexScript.HexEnum.mountain, 2);
@@ -110,10 +108,9 @@ public class UnitScript : MonoBehaviour {
 
 		case Types.HeavyTankA:
 			attack = HeavyTankAAttack;
-			maxHealth = HeavyTankAHealth;
-			health = maxHealth;
 			maxMovement = HeavyTankAMovement;
 			movement = maxMovement;
+			defense = HeavyTankADef;
 			render.sprite = HeavyTankASprite;
 			terrainMap.Add(HexScript.HexEnum.forest, 2);
 			terrainMap.Add(HexScript.HexEnum.mountain, 2);
@@ -190,6 +187,11 @@ public class UnitScript : MonoBehaviour {
 	// Gets the attack
 	public int getAttack() {
 		return attack;
+	}
+
+	// Gets the defense
+	public float getDefense() {
+		return defense;
 	}
 
 	// Sets the unit to be focused.
