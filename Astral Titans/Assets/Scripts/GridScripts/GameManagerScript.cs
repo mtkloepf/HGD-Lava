@@ -10,13 +10,10 @@ public class GameManagerScript : MonoBehaviour {
 	public GameObject UserPlayerPrefab;
 	public GameObject EndTurn;
 	public GameObject AIPlayerPrefab;
-<<<<<<< HEAD
-	public GameObject TurnIndicator;
+//	public GameObject TurnIndicator;
 	public GameObject CardPrefab;
-=======
 	public TurnIndicatorScript TurnIndicator;
         public GameObject UI;
->>>>>>> dec0d9defe508a77040ba50d93f97c8bf88e1fb2
 
 	public int mapSize = 11;
 	public int mapWidth = 10;

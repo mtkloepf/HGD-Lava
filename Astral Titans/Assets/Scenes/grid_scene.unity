@@ -472,13 +472,9 @@ MonoBehaviour:
   UserPlayerPrefab: {fileID: 141682, guid: bf224fe4562cd4d62a8ff92bd33e9cba, type: 2}
   EndTurn: {fileID: 730845727}
   AIPlayerPrefab: {fileID: 192788, guid: d6fd6a501be0b41759b375f2ccaa802f, type: 2}
-<<<<<<< HEAD
-  TurnIndicator: {fileID: 0}
   CardPrefab: {fileID: 126346, guid: 7bf111481acb847f3912d756ff7da26f, type: 2}
-=======
   TurnIndicator: {fileID: 1732480990}
   UI: {fileID: 1049846610}
->>>>>>> dec0d9defe508a77040ba50d93f97c8bf88e1fb2
   mapSize: 4
   mapWidth: 5
   mapHeight: 12
@@ -536,8 +532,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 175008dbe09e57f4ca428915ecb540cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  game: {fileID: 1001863767}
-  music: {fileID: 818705005}
 --- !u!1 &1091906384
 GameObject:
   m_ObjectHideFlags: 0
@@ -946,8 +940,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9750c3b2d3ec94975b195d19b28f4835, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 21300000, guid: b26c73cf7278d4a93ae2763ae9325c88, type: 3}
-  player2: {fileID: 21300000, guid: 3ca82c9fb21f24003801e04c6cfad26a, type: 3}
 --- !u!212 &1732480991
 SpriteRenderer:
   m_ObjectHideFlags: 0
