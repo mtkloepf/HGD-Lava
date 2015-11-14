@@ -11,6 +11,7 @@ public class GameManagerScript : MonoBehaviour {
 	public GameObject EndTurn;
 	public GameObject AIPlayerPrefab;
 	public GameObject TurnIndicator;
+	public GameObject CardPrefab;
 
 	public int mapSize = 11;
 	public int mapWidth = 10;
@@ -22,6 +23,8 @@ public class GameManagerScript : MonoBehaviour {
 	List <List<HexScript>> map = new List<List<HexScript>>();
 	// List of all the units in the game
 	List <UnitScript> units = new List<UnitScript>();
+	// List of the cards in a hand
+	List<CardScript> hand = new List<CardScript> ();
 
 	// Set containing all hexes that a unit can move to
 	HashSet<HexScript> hexSet = new HashSet<HexScript>();
@@ -29,6 +32,7 @@ public class GameManagerScript : MonoBehaviour {
 	// Clicking on a unit will make it focused
 	UnitScript focusedUnit;
 	HexScript focusedHex;
+	CardScript focusedCard;
 	
 	void Awake() {
 		instance = this;
@@ -38,6 +42,7 @@ public class GameManagerScript : MonoBehaviour {
 	void Start () {		
 		generateMap();
 		generateUnits();
+		generateCards ();
 		turn = 1;
 		endTurn ();
 		endTurn ();
@@ -165,6 +170,7 @@ public class GameManagerScript : MonoBehaviour {
 		unit.setType (UnitScript.Types.HeavyTankA);
 		unit.move (map [4] [5]);
 		units.Add (unit);
+
 		unit = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(4 - Mathf.Floor(mapSize/2), -5 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
 		unit.setPlayer (2);
 		unit.startRenderer ();
@@ -185,6 +191,22 @@ public class GameManagerScript : MonoBehaviour {
 		unit.setType (UnitScript.Types.HeavyTankA);
 		unit.move (map [1] [5]);
 		units.Add (unit);
+	}
+
+	void generateCards() {
+		CardScript card;
+
+		card = ((GameObject)Instantiate (CardPrefab, new Vector3 (0, -1.5f, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
+
+		hand.Add (card);
+
+		card = ((GameObject)Instantiate (CardPrefab, new Vector3 (1f, -1.5f, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
+		
+		hand.Add (card);
+
+		card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1f, -1.5f, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
+		
+		hand.Add (card);
 	}
 
 
@@ -347,6 +369,39 @@ public class GameManagerScript : MonoBehaviour {
 		} else {
 			Debug.Log ("No unit currently focused...");
 		}
+	}
+
+	public void hexClicked(HexScript hex) {
+		if (focusedUnit != null) {
+			moveCurrentUnit (hex);
+		} else if (focusedCard != null) {
+			placeUnit (hex);
+		}
+
+	}
+
+	public void placeUnit(HexScript hex) {
+		int x = (int)(hex.getPosition ().x);
+		int y = (int)(hex.getPosition ().y);
+
+		UnitScript unit;
+
+		unit = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(4 - Mathf.Floor(mapSize/2), -5 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
+		unit.setPlayer (turn);
+		unit.startRenderer ();
+		unit.setType (UnitScript.Types.HeavyTankA);
+		unit.move (map [x] [y]);
+		units.Add (unit);
+
+		focusedCard = null;
+
+
+	}
+
+	public void selectCard(CardScript card) {
+		focusedUnit = null;
+		updateHexes ();
+		focusedCard = card;
 	}
 
 	// Set's a unit to be the current unit in focus

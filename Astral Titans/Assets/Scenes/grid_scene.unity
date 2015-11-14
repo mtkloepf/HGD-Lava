@@ -242,6 +242,7 @@ MonoBehaviour:
   EndTurn: {fileID: 730845727}
   AIPlayerPrefab: {fileID: 192788, guid: d6fd6a501be0b41759b375f2ccaa802f, type: 2}
   TurnIndicator: {fileID: 0}
+  CardPrefab: {fileID: 126346, guid: 7bf111481acb847f3912d756ff7da26f, type: 2}
   mapSize: 4
   mapWidth: 5
   mapHeight: 12

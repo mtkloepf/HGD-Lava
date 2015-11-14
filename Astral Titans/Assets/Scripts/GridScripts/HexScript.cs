@@ -130,7 +130,7 @@ public class HexScript : MonoBehaviour {
 	// Moves the currently focused unit to this hex
 	void OnMouseDown() {
 		Vector2 v = new Vector2 (position.x, position.y);
-		GameManagerScript.instance.moveCurrentUnit(this);
+		GameManagerScript.instance.hexClicked(this);
 		Debug.Log ("Tile clicked at: " + v.x + ", " + v.y);
 	}
 }
