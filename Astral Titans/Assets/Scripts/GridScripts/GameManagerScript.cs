@@ -43,9 +43,10 @@ public class GameManagerScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {		
            UI.GetComponentInChildren<Canvas>().enabled = false;
-		generateMap();
+		//generateMap();
+                generateRandomMap();
 		generateUnits();
-		generateCards();
+		//generateCards();
 		turn = 1;
 	}
 	
@@ -147,7 +148,6 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
         // Randomly generate a map
-        //TODO: finish the random aspect of it
         void generateRandomMap() {
            map = new List<List<HexScript>>();
            for (int i = 0; i < mapWidth; i++) {
@@ -169,8 +169,42 @@ public class GameManagerScript : MonoBehaviour {
                  hex.setPosition(new Vector2((float) i , (float) j));
                  hex.startRenderer();
 
+                 //Randomization of hexes to add
+                 int tileNumber = Random.Range(0, 4);
 
+                 // Generate a plains
+                 if(tileNumber == 0) {
+                    hex.setType (HexScript.HexEnum.plains,
+                          SpriteManager.plainsSprite, 
+                          SpriteManager.redPlainsSprite,
+                          SpriteManager.bluePlainsSprite);
+                 }
+                 // Generate a desert
+                 else if(tileNumber == 1) {
+                    hex.setType (HexScript.HexEnum.plains,
+                          SpriteManager.desertSprite, 
+                          SpriteManager.redDesertSprite,
+                          SpriteManager.blueDesertSprite);
+                 }
+                 // Generate water
+                 else if(tileNumber == 2) {
+                    hex.setType (HexScript.HexEnum.plains,
+                          SpriteManager.waterSprite, 
+                          SpriteManager.redWaterSprite,
+                          SpriteManager.blueWaterSprite);
+                 }
+                 // Generate a mountain
+                 else if(tileNumber == 3) {
+                    hex.setType (HexScript.HexEnum.plains,
+                          SpriteManager.mountainSprite, 
+                          SpriteManager.redMountainSprite,
+                          SpriteManager.blueMountainSprite);
+                 }
+                 row.Add(hex);
               }
+              map.Add(row);
+           }
+        }
 
 	// Creates a unit for testing purposes. Additional units can be added if desired.
 	// TODO: Create a method to purchase a unit and place it at a desired location. This

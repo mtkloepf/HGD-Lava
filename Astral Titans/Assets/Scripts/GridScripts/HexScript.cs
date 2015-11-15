@@ -56,12 +56,12 @@ public class HexScript : MonoBehaviour {
 	}
 	
         void OnMouseEnter() {
-           if(!getFocus())
+           if(!getFocus() && render.sprite != redSprite)
 		render.sprite = blueSprite;
 	}
 	
         void OnMouseExit() {
-           if(!getFocus())
+           if(!getFocus() && render.sprite != redSprite)
 		render.sprite = standardSprite;
 	}
 
