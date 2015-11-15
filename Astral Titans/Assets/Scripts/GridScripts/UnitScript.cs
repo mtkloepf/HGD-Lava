@@ -73,7 +73,7 @@ public class UnitScript : MonoBehaviour {
 			movement = InfantryHMovement;
 			defense = InfantryHDef;
 			render.sprite = InfantryHSprite;
-			terrainMap.Add(HexScript.HexEnum.forest, 1);
+			terrainMap.Add(HexScript.HexEnum.water, 1);
 			terrainMap.Add(HexScript.HexEnum.mountain, 2);
 			terrainMap.Add(HexScript.HexEnum.plains, 1);
 			terrainMap.Add(HexScript.HexEnum.desert, 2);
@@ -86,7 +86,7 @@ public class UnitScript : MonoBehaviour {
 			movement = InfantryAMovement;
 			defense = InfantryADef;
 			render.sprite = InfantryASprite;
-			terrainMap.Add(HexScript.HexEnum.forest, 1);
+			terrainMap.Add(HexScript.HexEnum.water, 1);
 			terrainMap.Add(HexScript.HexEnum.mountain, 2);
 			terrainMap.Add(HexScript.HexEnum.plains, 1);
 			terrainMap.Add(HexScript.HexEnum.desert, 2);
@@ -99,7 +99,7 @@ public class UnitScript : MonoBehaviour {
 			movement = maxMovement;
 			defense = HeavyTankHDef;
 			render.sprite = HeavyTankHSprite;
-			terrainMap.Add(HexScript.HexEnum.forest, 2);
+			terrainMap.Add(HexScript.HexEnum.water, 2);
 			terrainMap.Add(HexScript.HexEnum.mountain, 2);
 			terrainMap.Add(HexScript.HexEnum.plains, 1);
 			terrainMap.Add(HexScript.HexEnum.desert, 1);
@@ -112,7 +112,7 @@ public class UnitScript : MonoBehaviour {
 			movement = maxMovement;
 			defense = HeavyTankADef;
 			render.sprite = HeavyTankASprite;
-			terrainMap.Add(HexScript.HexEnum.forest, 2);
+			terrainMap.Add(HexScript.HexEnum.water, 2);
 			terrainMap.Add(HexScript.HexEnum.mountain, 2);
 			terrainMap.Add(HexScript.HexEnum.plains, 1);
 			terrainMap.Add(HexScript.HexEnum.desert, 1);

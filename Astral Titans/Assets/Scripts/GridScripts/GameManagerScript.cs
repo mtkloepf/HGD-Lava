@@ -13,6 +13,7 @@ public class GameManagerScript : MonoBehaviour {
 	public GameObject CardPrefab;
 	public TurnIndicatorScript TurnIndicator;
         public GameObject UI;
+        public SpriteManagerScript SpriteManager;
 
 	public int mapSize = 11;
 	public int mapWidth = 10;
@@ -44,10 +45,8 @@ public class GameManagerScript : MonoBehaviour {
            UI.GetComponentInChildren<Canvas>().enabled = false;
 		generateMap();
 		generateUnits();
-		generateCards ();
+		generateCards();
 		turn = 1;
-		//endTurn ();
-		//endTurn ();
 	}
 	
 	// Update is called once per frame
@@ -72,7 +71,6 @@ public class GameManagerScript : MonoBehaviour {
 			else if (!unit.hasMoved && unit.getPlayer() == turn) {
 				List<HexScript> mapRow = map [(int)unit.getPosition ().x];
 				HexScript hex = mapRow [(int)unit.getPosition ().y];
-				hex.makeGreen ();
 			}
 		}
 	}
@@ -138,12 +136,41 @@ public class GameManagerScript : MonoBehaviour {
 				}
 				hex.setPosition(new Vector2((float) i , (float) j));
 				hex.startRenderer ();
-				hex.setType (HexScript.HexEnum.plains);
+				hex.setType (HexScript.HexEnum.plains,
+                                SpriteManager.plainsSprite, 
+                                SpriteManager.redPlainsSprite,
+                                SpriteManager.bluePlainsSprite);
 				row.Add (hex);
 			}
 			map.Add(row);
 		}
 	}
+
+        // Randomly generate a map
+        //TODO: finish the random aspect of it
+        void generateRandomMap() {
+           map = new List<List<HexScript>>();
+           for (int i = 0; i < mapWidth; i++) {
+              List<HexScript> row = new List<HexScript>();
+              for(int j = 0; j < mapHeight; j++) {
+                 HexScript hex;
+                 if (j % 2 == 1) {
+                    hex = ((GameObject)Instantiate(TilePrefab, 
+                             new Vector3(i * 0.9f + 0.45f - Mathf.Floor(mapSize/2), 
+                                -(j + 0f)/4f + Mathf.Floor(mapSize/2), 1), 
+                             Quaternion.Euler(new Vector3()))).GetComponent<HexScript>();
+                 }
+                 else {
+                    hex = ((GameObject)Instantiate(TilePrefab, 
+                             new Vector3(i * 0.9f - Mathf.Floor(mapSize/2), 
+                                -j/4f + Mathf.Floor(mapSize/2), 1), 
+                             Quaternion.Euler(new Vector3()))).GetComponent<HexScript>();
+                 }
+                 hex.setPosition(new Vector2((float) i , (float) j));
+                 hex.startRenderer();
+
+
+              }
 
 	// Creates a unit for testing purposes. Additional units can be added if desired.
 	// TODO: Create a method to purchase a unit and place it at a desired location. This

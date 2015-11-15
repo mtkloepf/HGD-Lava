@@ -366,6 +366,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27209c9cf8f8b4dd2a5645b68bd0b05e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &954289404
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 954289406}
+  - 114: {fileID: 954289405}
+  m_Layer: 0
+  m_Name: SpriteManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &954289405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 954289404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e23e0c0a29e16ef4085d2a0762cc4b70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  desertSprite: {fileID: 21300000, guid: 157e09ba3e89c4442a8911bd078c8cbb, type: 3}
+  redDesertSprite: {fileID: 21300000, guid: 5d393e038f16d457fbdc4288424e50ae, type: 3}
+  blueDesertSprite: {fileID: 21300000, guid: 24262ca7a56b9422ba08f073336bb3e6, type: 3}
+  plainsSprite: {fileID: 21300000, guid: 109b2cb603631473cb50564483798994, type: 3}
+  redPlainsSprite: {fileID: 21300000, guid: 3737460dadfb949889cfa797aceae355, type: 3}
+  bluePlainsSprite: {fileID: 21300000, guid: 5740cc2a982e541ad8ee41a456c43e65, type: 3}
+  waterSprite: {fileID: 21300000, guid: e315093f5c4ac4b36858be6471bde09c, type: 3}
+  redWaterSprite: {fileID: 21300000, guid: 23d715ac6c2b741f29f95452d464c5e2, type: 3}
+  blueWaterSprite: {fileID: 21300000, guid: 01352de2994064c37a4b80e6d8552264, type: 3}
+  mountainSprite: {fileID: 21300000, guid: 36165b0275a234d79aeeb4f2401495cf, type: 3}
+  redMountainSprite: {fileID: 21300000, guid: d3d861da0646a4aa6a9795b3fdeb0956, type: 3}
+  blueMountainSprite: {fileID: 21300000, guid: b9372bdef18c045939a1b777871f487d, type: 3}
+--- !u!4 &954289406
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 954289404}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -.215137243, y: -.0355770402, z: .443359375}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1001863768}
+  m_RootOrder: 0
 --- !u!1 &966863356
 GameObject:
   m_ObjectHideFlags: 0
@@ -391,8 +442,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 966863356}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.79999995, z: 7}
-  m_LocalScale: {x: 7.51664352, y: .400000006, z: 1}
+  m_LocalPosition: {x: .0199999996, y: 1.79999995, z: 7}
+  m_LocalScale: {x: 7.57136965, y: .400000006, z: 1}
   m_Children:
   - {fileID: 730845731}
   - {fileID: 1732480989}
@@ -475,6 +526,7 @@ MonoBehaviour:
   CardPrefab: {fileID: 126346, guid: 7bf111481acb847f3912d756ff7da26f, type: 2}
   TurnIndicator: {fileID: 1732480990}
   UI: {fileID: 1049846610}
+  SpriteManager: {fileID: 954289405}
   mapSize: 4
   mapWidth: 5
   mapHeight: 12
@@ -488,7 +540,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 954289406}
   m_Father: {fileID: 0}
   m_RootOrder: 1
 --- !u!1 &1049846610

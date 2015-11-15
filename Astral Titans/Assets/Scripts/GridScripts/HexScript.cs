@@ -4,18 +4,12 @@ using System.Collections;
 public class HexScript : MonoBehaviour {
 
 	public Vector2 position = Vector2.zero;
-	public Sprite defaultSprite;
-	public Sprite blueSprite;
+	public Sprite standardSprite;
 	public Sprite redSprite;
-	public Sprite greenSprite;
-	public Sprite plainSprite;
-	public Sprite forestSprite;
-	public Sprite mountainSprite;
-	public Sprite desertSprite;
+	public Sprite blueSprite;
 
-	public enum HexEnum{plains, forest, mountain, desert};
+	public enum HexEnum{plains, water, mountain, desert};
 	HexEnum type = HexEnum.plains;
-
 
 	SpriteRenderer render;
 	bool focus = false;
@@ -23,8 +17,7 @@ public class HexScript : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		render = GetComponent<SpriteRenderer> ();
-		render.color = Color.white;
+           startRenderer();
 	}
 	
 	// Update is called once per frame
@@ -42,30 +35,14 @@ public class HexScript : MonoBehaviour {
 	}
 
 	// Sets the type of terrain
-	public void setType(HexEnum type) {
+	public void setType(HexEnum type, Sprite standard, 
+              Sprite red, Sprite blue) {
 		this.type = type;
-		switch (type) {
+                standardSprite = standard;
+                redSprite = red;
+                blueSprite = blue;
 
-		case HexEnum.desert:
-			render.sprite = desertSprite;
-			break;
-
-		case HexEnum.plains:
-			render.sprite = plainSprite;
-			break;
-
-		case HexEnum.forest:
-			render.sprite = forestSprite;
-			break;
-
-		case HexEnum.mountain:
-			render.sprite = mountainSprite;
-			break;
-
-		default:
-			render.sprite = defaultSprite;
-			break;
-		}
+                render.sprite = standardSprite;
 	}
 
 	// Sets the position of the hex.
@@ -78,24 +55,23 @@ public class HexScript : MonoBehaviour {
 		return position;
 	}
 	
-	void OnMouseEnter() {
-		// TODO: Indicate that the mouse is in the current hex by changing the image
-//		render.sprite = blueSprite;
+        void OnMouseEnter() {
+           if(!getFocus())
+		render.sprite = blueSprite;
 	}
 	
-	void OnMouseExit() {
-		// TODO: Indicate that the mouse has left the hex by reverting the image
-//		render.sprite = defaultSprite;
+        void OnMouseExit() {
+           if(!getFocus())
+		render.sprite = standardSprite;
 	}
 
 	// Sets the focus of the hex
 	public void setFocus (bool focused) {
 		this.focus = focused;
 		if (focused) {
-//			render.color = Color.blue;
-			render.color = new Color(0f, 0f, 1f, 0.9f);
+                        render.sprite = blueSprite;
 		} else {
-			render.color = Color.white;
+                        render.sprite = standardSprite;
 		}
 	}
 
@@ -106,19 +82,12 @@ public class HexScript : MonoBehaviour {
 
 	// Makes the hex red, indicating that that unit has already moved
 	public void makeRed() {
-		render.color = Color.red;
-		render.color = new Color (1, 0, 0, 0.9f);
-	}
-
-	// Makes the hex green, indicating that that unit may still move
-	public void makeGreen() {
-		render.color = Color.green;
-		render.color = new Color (0, 1, 0, 0.9f);
+           render.sprite = redSprite;
 	}
 
 	// Makes the hex the default color
 	public void makeDefault() {
-		render.color = Color.white;
+		render.sprite = standardSprite;
 	}
 
 	// Gets the position of the transform of the hex
