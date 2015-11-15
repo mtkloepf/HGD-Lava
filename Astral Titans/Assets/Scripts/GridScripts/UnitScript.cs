@@ -41,9 +41,6 @@ public class UnitScript : MonoBehaviour {
 		hasMoved = false;
                 startRenderer();
 		Debug.Log (render.GetType ());
-//		render.sprite = InfantryHSprite;
-
-//		setType (Types.HeavyTankA);
 	}
 
 	public void startRenderer() {
@@ -62,7 +59,7 @@ public class UnitScript : MonoBehaviour {
 
 	// Set the unit type
 	public void setType(Types type, Sprite sprite) {
-                unitSprite = sprite;
+        unitSprite = sprite;
 		switch (type) {
 		
 		case Types.InfantryH:
