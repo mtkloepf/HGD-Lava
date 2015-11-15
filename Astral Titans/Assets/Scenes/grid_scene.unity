@@ -405,7 +405,7 @@ MonoBehaviour:
   mountainSprite: {fileID: 21300000, guid: 36165b0275a234d79aeeb4f2401495cf, type: 3}
   redMountainSprite: {fileID: 21300000, guid: d3d861da0646a4aa6a9795b3fdeb0956, type: 3}
   blueMountainSprite: {fileID: 21300000, guid: b9372bdef18c045939a1b777871f487d, type: 3}
-  infantryHSprite: {fileID: 21300000, guid: bf1590193f2ab724991cdb1eaa200371, type: 3}
+  infantryHSprite: {fileID: 21300000, guid: 162d513a333ca1544914ca5b19a31ce9, type: 3}
   heavyTankHSprite: {fileID: 21300000, guid: bc02c03bda521b541b1bb49a10a24e22, type: 3}
   infantryASprite: {fileID: 21300000, guid: fb99905a91661484a896ec250ccd1dc5, type: 3}
   heavyTankASprite: {fileID: 21300000, guid: 0e0680dde81664c489a35b99e86a73c0, type: 3}
@@ -524,7 +524,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TilePrefab: {fileID: 192788, guid: d6fd6a501be0b41759b375f2ccaa802f, type: 2}
-  UserPlayerPrefab: {fileID: 141682, guid: bf224fe4562cd4d62a8ff92bd33e9cba, type: 2}
+  HumanInfantryPrefab: {fileID: 183284, guid: fab91d8358865ef4ca58c3e1d7719218, type: 2}
+  HumanTankPrefab: {fileID: 0}
+  AlienInfantryPrefab: {fileID: 0}
+  AlienTankPrefab: {fileID: 0}
   EndTurn: {fileID: 730845727}
   AIPlayerPrefab: {fileID: 192788, guid: d6fd6a501be0b41759b375f2ccaa802f, type: 2}
   CardPrefab: {fileID: 126346, guid: 7bf111481acb847f3912d756ff7da26f, type: 2}
@@ -730,78 +733,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1358916800}
---- !u!1 &1390994187
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1390994190}
-  - 212: {fileID: 1390994189}
-  - 95: {fileID: 1390994188}
-  m_Layer: 0
-  m_Name: Spr H infantry
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!95 &1390994188
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1390994187}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 8627f86f547fc2142a98dcc4dfc8f215, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
---- !u!212 &1390994189
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1390994187}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 0
-  m_ProbeAnchor: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 0
-  m_ImportantGI: 0
-  m_AutoUVMaxDistance: .5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 162d513a333ca1544914ca5b19a31ce9, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
---- !u!4 &1390994190
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1390994187}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
 --- !u!1 &1526082048
 GameObject:
   m_ObjectHideFlags: 0
