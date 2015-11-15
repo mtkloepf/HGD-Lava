@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 301b81ffd843d4fb1867127633deb92b
+timeCreated: 1447548362
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - defaultSprite: {fileID: 21300000, guid: 109b2cb603631473cb50564483798994, type: 3}
+  - blueSprite: {instanceID: 0}
+  - redSprite: {instanceID: 0}
+  - desertSprite: {fileID: 21300000, guid: 157e09ba3e89c4442a8911bd078c8cbb, type: 3}
+  - plainSprite: {fileID: 21300000, guid: 109b2cb603631473cb50564483798994, type: 3}
+  - waterSprite: {fileID: 21300000, guid: e315093f5c4ac4b36858be6471bde09c, type: 3}
+  - mountainSprite: {fileID: 21300000, guid: 36165b0275a234d79aeeb4f2401495cf, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

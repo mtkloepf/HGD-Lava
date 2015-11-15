@@ -16,10 +16,7 @@ public class UnitScript : MonoBehaviour {
 	readonly int InfantryAMovement = 4;
 	readonly int HeavyTankHMovement = 2;
 	readonly int HeavyTankAMovement = 2;
-	public Sprite InfantryHSprite;
-	public Sprite InfantryASprite;
-	public Sprite HeavyTankHSprite;
-	public Sprite HeavyTankASprite;
+        public Sprite unitSprite;
 
 	public SortedDictionary<HexScript.HexEnum, int> terrainMap = new SortedDictionary<HexScript.HexEnum, int>();
 
@@ -42,7 +39,7 @@ public class UnitScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		hasMoved = false;
-		render = GetComponent<SpriteRenderer> ();
+                startRenderer();
 		Debug.Log (render.GetType ());
 //		render.sprite = InfantryHSprite;
 
@@ -64,7 +61,8 @@ public class UnitScript : MonoBehaviour {
 	public enum Types { InfantryH, InfantryA, HeavyTankH, HeavyTankA};
 
 	// Set the unit type
-	public void setType(Types type) {
+	public void setType(Types type, Sprite sprite) {
+                unitSprite = sprite;
 		switch (type) {
 		
 		case Types.InfantryH:
@@ -72,7 +70,7 @@ public class UnitScript : MonoBehaviour {
 			maxMovement = InfantryHMovement;
 			movement = InfantryHMovement;
 			defense = InfantryHDef;
-			render.sprite = InfantryHSprite;
+			render.sprite = unitSprite;
 			terrainMap.Add(HexScript.HexEnum.water, 1);
 			terrainMap.Add(HexScript.HexEnum.mountain, 2);
 			terrainMap.Add(HexScript.HexEnum.plains, 1);
@@ -85,7 +83,7 @@ public class UnitScript : MonoBehaviour {
 			maxMovement = InfantryAMovement;
 			movement = InfantryAMovement;
 			defense = InfantryADef;
-			render.sprite = InfantryASprite;
+			render.sprite = unitSprite;
 			terrainMap.Add(HexScript.HexEnum.water, 1);
 			terrainMap.Add(HexScript.HexEnum.mountain, 2);
 			terrainMap.Add(HexScript.HexEnum.plains, 1);
@@ -98,7 +96,7 @@ public class UnitScript : MonoBehaviour {
 			maxMovement = HeavyTankHMovement;
 			movement = maxMovement;
 			defense = HeavyTankHDef;
-			render.sprite = HeavyTankHSprite;
+			render.sprite = unitSprite;
 			terrainMap.Add(HexScript.HexEnum.water, 2);
 			terrainMap.Add(HexScript.HexEnum.mountain, 2);
 			terrainMap.Add(HexScript.HexEnum.plains, 1);
@@ -111,7 +109,7 @@ public class UnitScript : MonoBehaviour {
 			maxMovement = HeavyTankAMovement;
 			movement = maxMovement;
 			defense = HeavyTankADef;
-			render.sprite = HeavyTankASprite;
+			render.sprite = unitSprite;
 			terrainMap.Add(HexScript.HexEnum.water, 2);
 			terrainMap.Add(HexScript.HexEnum.mountain, 2);
 			terrainMap.Add(HexScript.HexEnum.plains, 1);
@@ -143,11 +141,7 @@ public class UnitScript : MonoBehaviour {
 	// Moves the player to a hex, if the player has not moved yet.
 	public void move(HexScript hex) {
 		if (!hasMoved) {
-			position = hex.getPosition ();
-			transform.position = new Vector3 (
-				hex.transform.position.x,
-				hex.transform.position.y,
-				hex.transform.position.z-1f);
+			setPosition(hex);
 			hasMoved = true;
 		}
 	}

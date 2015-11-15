@@ -3,6 +3,7 @@ using System.Collections;
 
 public class SpriteManagerScript : MonoBehaviour {
 
+        //Hex Sprites
 	public Sprite desertSprite;
 	public Sprite redDesertSprite;
 	public Sprite blueDesertSprite;
@@ -15,5 +16,12 @@ public class SpriteManagerScript : MonoBehaviour {
 	public Sprite mountainSprite;
 	public Sprite redMountainSprite;
 	public Sprite blueMountainSprite;
+        
+        // Human Unit Sprites
+	public Sprite infantryHSprite;
+	public Sprite heavyTankHSprite;
 
+        // Alien Unit Sprites
+	public Sprite infantryASprite;
+	public Sprite heavyTankASprite;
 }

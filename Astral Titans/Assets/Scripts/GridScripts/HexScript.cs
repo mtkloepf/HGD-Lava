@@ -9,7 +9,7 @@ public class HexScript : MonoBehaviour {
 	public Sprite blueSprite;
 
 	public enum HexEnum{plains, water, mountain, desert};
-	HexEnum type = HexEnum.plains;
+	HexEnum type = HexEnum.plains; //Default to plains
 
 	SpriteRenderer render;
 	bool focus = false;
@@ -25,6 +25,7 @@ public class HexScript : MonoBehaviour {
 		
 	}
 
+        // Start the sprite renderer
 	public void startRenderer() {
 		render = GetComponent<SpriteRenderer> ();
 	}
@@ -38,12 +39,19 @@ public class HexScript : MonoBehaviour {
 	public void setType(HexEnum type, Sprite standard, 
               Sprite red, Sprite blue) {
 		this.type = type;
+                if(type == HexEnum.mountain || 
+                      type == HexEnum.water) occupied = true;
                 standardSprite = standard;
                 redSprite = red;
                 blueSprite = blue;
 
                 render.sprite = standardSprite;
 	}
+
+        // Returns if a hex cannot be traveled to
+        public bool getOccupied() {
+           return occupied;
+        }
 
 	// Sets the position of the hex.
 	public void setPosition (Vector2 v2) {
@@ -55,11 +63,13 @@ public class HexScript : MonoBehaviour {
 		return position;
 	}
 	
+        // Mouse is hovered over a hex
         void OnMouseEnter() {
            if(!getFocus() && render.sprite != redSprite)
 		render.sprite = blueSprite;
 	}
 	
+        // Mouse leaves a hovered hex
         void OnMouseExit() {
            if(!getFocus() && render.sprite != redSprite)
 		render.sprite = standardSprite;
@@ -67,7 +77,7 @@ public class HexScript : MonoBehaviour {
 
 	// Sets the focus of the hex
 	public void setFocus (bool focused) {
-		this.focus = focused;
+		focus = focused;
 		if (focused) {
                         render.sprite = blueSprite;
 		} else {
@@ -99,6 +109,7 @@ public class HexScript : MonoBehaviour {
 	// Moves the currently focused unit to this hex
 	void OnMouseDown() {
 		Vector2 v = new Vector2 (position.x, position.y);
-		GameManagerScript.instance.hexClicked(this);
+		bool occ = GameManagerScript.instance.hexClicked(this);
+                occupied = occ;
 	}
 }
