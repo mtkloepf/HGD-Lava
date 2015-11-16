@@ -17,12 +17,12 @@ public class GameManagerScript : MonoBehaviour {
 	public TurnIndicatorScript TurnIndicator;
 	public GameObject UI;
 	public SpriteManagerScript SpriteManager;
-	public bool paused = false;
 	public int mapSize = 11;
 	public int mapWidth = 10;
 	public int mapHeight = 40;
 	public int turn;
 	private GameObject musicSlider;
+	private bool paused = false;
 
 	// List of all the hexes
 	List <List<HexScript>> map = new List<List<HexScript>>();

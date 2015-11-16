@@ -534,6 +534,7 @@ MonoBehaviour:
   TurnIndicator: {fileID: 1732480990}
   UI: {fileID: 1049846610}
   SpriteManager: {fileID: 954289405}
+  paused: 0
   mapSize: 4
   mapWidth: 5
   mapHeight: 12
