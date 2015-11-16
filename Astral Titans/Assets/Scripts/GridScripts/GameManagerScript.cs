@@ -225,48 +225,36 @@ public class GameManagerScript : MonoBehaviour {
 		unit = ((GameObject)Instantiate(HumanInfantryPrefab, new Vector3(0 - Mathf.Floor(mapSize/2), -0 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
 		units.Add(unit);
 		unit.move (map [0] [1]);
-		unit.startRenderer ();
-		unit.setType (UnitScript.Types.InfantryH, 
-                      SpriteManager.infantryHSprite);
+		unit.setType (UnitScript.Types.InfantryH);
 		unit.setPlayer (1);
 
-		unit = ((GameObject)Instantiate(HumanInfantryPrefab, new Vector3(0 - Mathf.Floor(mapSize/2), -0 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
+		unit = ((GameObject)Instantiate(HumanTankPrefab, new Vector3(0 - Mathf.Floor(mapSize/2), -0 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
 		units.Add(unit);
 		unit.move (map [2] [3]);
-		unit.startRenderer ();
-		unit.setType (UnitScript.Types.HeavyTankH, 
-                      SpriteManager.heavyTankHSprite);
+		unit.setType (UnitScript.Types.HeavyTankH);
 		unit.setPlayer (1);
 
-		unit = ((GameObject)Instantiate(HumanInfantryPrefab, new Vector3(4 - Mathf.Floor(mapSize/2), -5 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
+		unit = ((GameObject)Instantiate(AlienTankPrefab, new Vector3(4 - Mathf.Floor(mapSize/2), -5 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
 		unit.setPlayer (2);
-		unit.startRenderer ();
-		unit.setType (UnitScript.Types.HeavyTankA, 
-                      SpriteManager.heavyTankASprite);
+		unit.setType (UnitScript.Types.HeavyTankA);
 		unit.move (map [4] [5]);
 		units.Add (unit);
 
-		unit = ((GameObject)Instantiate(HumanInfantryPrefab, new Vector3(4 - Mathf.Floor(mapSize/2), -5 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
+		unit = ((GameObject)Instantiate(AlienInfantryPrefab, new Vector3(4 - Mathf.Floor(mapSize/2), -5 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
 		unit.setPlayer (2);
-		unit.startRenderer ();
-		unit.setType (UnitScript.Types.InfantryA, 
-                      SpriteManager.infantryASprite);
+		unit.setType (UnitScript.Types.InfantryA);
 		unit.move (map [2] [5]);
 		units.Add (unit);
 
-		unit = ((GameObject)Instantiate(HumanInfantryPrefab, new Vector3(4 - Mathf.Floor(mapSize/2), -5 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
+		unit = ((GameObject)Instantiate(AlienInfantryPrefab, new Vector3(4 - Mathf.Floor(mapSize/2), -5 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
 		unit.setPlayer (2);
-		unit.startRenderer ();
-		unit.setType (UnitScript.Types.InfantryA, 
-                      SpriteManager.infantryASprite);
+		unit.setType (UnitScript.Types.InfantryA);
 		unit.move (map [3] [5]);
 		units.Add (unit);
 
-		unit = ((GameObject)Instantiate(HumanInfantryPrefab, new Vector3(4 - Mathf.Floor(mapSize/2), -5 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
+		unit = ((GameObject)Instantiate(AlienTankPrefab, new Vector3(4 - Mathf.Floor(mapSize/2), -5 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
 		unit.setPlayer (2);
-		unit.startRenderer ();
-		unit.setType (UnitScript.Types.HeavyTankA, 
-                      SpriteManager.heavyTankASprite);
+		unit.setType (UnitScript.Types.HeavyTankA);
 		unit.move (map [1] [5]);
 		units.Add (unit);
 	}
@@ -442,7 +430,7 @@ public class GameManagerScript : MonoBehaviour {
 
 				// If the unit is out of health, destroy it
 				if (unit.getHealth() <= 0) {
-					unit.destroy ();
+					unit.destroyUnit ();
 					units.Remove(unit);
 					Destroy (unit);
 				}
@@ -472,9 +460,7 @@ public class GameManagerScript : MonoBehaviour {
 
 		unit = ((GameObject)Instantiate(HumanInfantryPrefab, new Vector3(4 - Mathf.Floor(mapSize/2), -5 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
 		unit.setPlayer (turn);
-		unit.startRenderer ();
-		unit.setType (UnitScript.Types.HeavyTankA, 
-                      SpriteManager.heavyTankASprite);
+		unit.setType (UnitScript.Types.HeavyTankA);
 		unit.move (map [x] [y]);
 		units.Add (unit);
 
