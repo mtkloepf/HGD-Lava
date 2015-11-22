@@ -74,7 +74,6 @@ public class UnitScript : MonoBehaviour
 			terrainMap.Add (HexScript.HexEnum.mountain, 2);
 			terrainMap.Add (HexScript.HexEnum.plains, 1);
 			terrainMap.Add (HexScript.HexEnum.desert, 2);
-			Debug.Log ("Human Infantry");
 			break;
 		
 		case Types.InfantryA:
@@ -86,7 +85,6 @@ public class UnitScript : MonoBehaviour
 			terrainMap.Add (HexScript.HexEnum.mountain, 2);
 			terrainMap.Add (HexScript.HexEnum.plains, 1);
 			terrainMap.Add (HexScript.HexEnum.desert, 2);
-			Debug.Log ("Alien Infantry");
 			break;
 
 		case Types.HeavyTankH:
@@ -98,7 +96,6 @@ public class UnitScript : MonoBehaviour
 			terrainMap.Add (HexScript.HexEnum.mountain, 2);
 			terrainMap.Add (HexScript.HexEnum.plains, 1);
 			terrainMap.Add (HexScript.HexEnum.desert, 1);
-			Debug.Log ("Human Heavy Tank");
 			break;
 
 		case Types.HeavyTankA:
@@ -110,7 +107,6 @@ public class UnitScript : MonoBehaviour
 			terrainMap.Add (HexScript.HexEnum.mountain, 2);
 			terrainMap.Add (HexScript.HexEnum.plains, 1);
 			terrainMap.Add (HexScript.HexEnum.desert, 1);
-			Debug.Log ("Alien Heavy Tank");
 			break;
 
 		default:

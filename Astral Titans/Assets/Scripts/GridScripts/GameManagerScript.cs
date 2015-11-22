@@ -197,21 +197,21 @@ public class GameManagerScript : MonoBehaviour {
                  }
                  // Generate a desert
                  else if(tileNumber == 1) {
-                    hex.setType (HexScript.HexEnum.plains,
+                    hex.setType (HexScript.HexEnum.desert,
                           SpriteManager.desertSprite, 
                           SpriteManager.redDesertSprite,
                           SpriteManager.blueDesertSprite);
                  }
                  // Generate water
                  else if(tileNumber == 2) {
-                    hex.setType (HexScript.HexEnum.plains,
+                    hex.setType (HexScript.HexEnum.water,
                           SpriteManager.waterSprite, 
                           SpriteManager.redWaterSprite,
                           SpriteManager.blueWaterSprite);
                  }
                  // Generate a mountain
                  else if(tileNumber == 3) {
-                    hex.setType (HexScript.HexEnum.plains,
+                    hex.setType (HexScript.HexEnum.mountain,
                           SpriteManager.mountainSprite, 
                           SpriteManager.redMountainSprite,
                           SpriteManager.blueMountainSprite);

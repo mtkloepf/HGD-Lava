@@ -37,15 +37,15 @@ public class HexScript : MonoBehaviour {
 
 	// Sets the type of terrain
 	public void setType(HexEnum type, Sprite standard, 
-              Sprite red, Sprite blue) {
+        Sprite red, Sprite blue) {
 		this.type = type;
-                if(type == HexEnum.mountain || 
-                      type == HexEnum.water) occupied = true;
-                standardSprite = standard;
-                redSprite = red;
-                blueSprite = blue;
+        if(type == HexEnum.mountain || 
+		   type == HexEnum.water) occupied = true;
+        standardSprite = standard;
+        redSprite = red;
+        blueSprite = blue;
 
-                render.sprite = standardSprite;
+        render.sprite = standardSprite;
 	}
 
         // Returns if a hex cannot be traveled to
@@ -63,25 +63,25 @@ public class HexScript : MonoBehaviour {
 		return position;
 	}
 	
-        // Mouse is hovered over a hex
-        void OnMouseEnter() {
-           if(!getFocus() && render.sprite != redSprite)
-		render.sprite = blueSprite;
+    // Mouse is hovered over a hex
+    void OnMouseEnter() {
+    	if(!getFocus() && render.sprite != redSprite)
+			render.sprite = blueSprite;
 	}
 	
-        // Mouse leaves a hovered hex
-        void OnMouseExit() {
-           if(!getFocus() && render.sprite != redSprite)
-		render.sprite = standardSprite;
+    // Mouse leaves a hovered hex
+    void OnMouseExit() {
+        if(!getFocus() && render.sprite != redSprite)
+			render.sprite = standardSprite;
 	}
 
 	// Sets the focus of the hex
 	public void setFocus (bool focused) {
 		focus = focused;
 		if (focused) {
-                        render.sprite = blueSprite;
+        	render.sprite = blueSprite;
 		} else {
-                        render.sprite = standardSprite;
+            render.sprite = standardSprite;
 		}
 	}
 
@@ -110,6 +110,6 @@ public class HexScript : MonoBehaviour {
 	void OnMouseDown() {
 		Vector2 v = new Vector2 (position.x, position.y);
 		bool occ = GameManagerScript.instance.hexClicked(this);
-                occupied = occ;
+        occupied = occ;
 	}
 }
