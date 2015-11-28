@@ -541,7 +541,7 @@ MonoBehaviour:
   turn: 0
   p1Startx: 0
   p1Starty: 4
-  p2Startx: 5
+  p2Startx: 4
   p2Starty: 4
 --- !u!4 &1001863768
 Transform:
