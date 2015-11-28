@@ -72,6 +72,30 @@ public class GameManagerScript : MonoBehaviour {
 
 	}
 
+	public UnitScript getFocusedUnit() {
+		return focusedUnit;
+	}
+
+	public int getDeckCount() {
+		if (turn == 1) {
+			return deck1.deck.getSize ();
+		}
+		if (turn == 2) {
+			return deck2.deck.getSize ();
+		}
+		return 0;
+	}
+
+	public int getDiscardCount() {
+		if (turn == 1) {
+			return deck1.discardPile.getSize ();
+		}
+		if (turn == 2) {
+			return deck2.discardPile.getSize ();
+		}
+		return 0;
+	}
+
 	// Updates the colors of the hexes
 	void updateHexes() {
 		foreach (List<HexScript> hexlist in map) {
