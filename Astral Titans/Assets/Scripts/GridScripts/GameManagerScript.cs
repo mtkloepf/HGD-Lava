@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class GameManagerScript : MonoBehaviour {
+public class GameManagerScript : MonoBehaviour
+{
 
 	public static GameManagerScript instance;
 
@@ -32,9 +33,9 @@ public class GameManagerScript : MonoBehaviour {
 	public int p2Starty;
 
 	// List of all the hexes
-	List <List<HexScript>> map = new List<List<HexScript>>();
+	List <List<HexScript>> map = new List<List<HexScript>> ();
 	// List of all the units in the game
-	List <UnitScript> units = new List<UnitScript>();
+	List <UnitScript> units = new List<UnitScript> ();
 	// List of the cards in a hand
 	List<CardScript> hand = new List<CardScript> ();
 
@@ -43,24 +44,26 @@ public class GameManagerScript : MonoBehaviour {
 	DeckManager deck2 = new DeckManager ();
 
 	// Set containing all hexes that a unit can move to
-	HashSet<HexScript> hexSet = new HashSet<HexScript>();
+	HashSet<HexScript> hexSet = new HashSet<HexScript> ();
 
 	// Clicking on a unit will make it focused
 	UnitScript focusedUnit;
 	HexScript focusedHex;
 	CardScript focusedCard;
 	
-	void Awake() {
+	void Awake ()
+	{
 		instance = this;
 	}
 	
 	// Use this for initialization
-	void Start () {		
+	void Start ()
+	{		
 		musicSlider = GameObject.Find ("Slider");
 		UI.GetComponentInChildren<Canvas> ().enabled = false;
 		//generateMap();
-        generateRandomMap();
-		generateUnits();
+		generateRandomMap ();
+		generateUnits ();
 		generateDecks ();
 		deck1.deal ();
 //		generateCards();
@@ -68,15 +71,18 @@ public class GameManagerScript : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
 
 	}
 
-	public UnitScript getFocusedUnit() {
+	public UnitScript getFocusedUnit ()
+	{
 		return focusedUnit;
 	}
 
-	public int getDeckCount() {
+	public int getDeckCount ()
+	{
 		if (turn == 1) {
 			return deck1.deck.getSize ();
 		}
@@ -86,7 +92,8 @@ public class GameManagerScript : MonoBehaviour {
 		return 0;
 	}
 
-	public int getDiscardCount() {
+	public int getDiscardCount ()
+	{
 		if (turn == 1) {
 			return deck1.discardPile.getSize ();
 		}
@@ -97,21 +104,22 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	// Updates the colors of the hexes
-	void updateHexes() {
+	void updateHexes ()
+	{
 		foreach (List<HexScript> hexlist in map) {
 			foreach (HexScript hex in hexlist) {
 				hex.setFocus (false);
 			}
 		}
 		foreach (UnitScript unit in units) {
-			if (unit.hasMoved && unit.getPlayer() == turn) {
+			if (unit.hasMoved && unit.getPlayer () == turn) {
 				// make hex red
 				List<HexScript> mapRow = map [(int)unit.getPosition ().x];
 				HexScript hex = mapRow [(int)unit.getPosition ().y];
 				hex.makeRed ();
 			}
                         // DOES NOTHING AT THE MOMENT
-			else if (!unit.hasMoved && unit.getPlayer() == turn) {
+			else if (!unit.hasMoved && unit.getPlayer () == turn) {
 				List<HexScript> mapRow = map [(int)unit.getPosition ().x];
 				HexScript hex = mapRow [(int)unit.getPosition ().y];
 			}
@@ -119,14 +127,15 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	// Gets the turn
-	public int getTurn() {
+	public int getTurn ()
+	{
 		return turn;
 	}
 
 	// Call at the end of a turn to update the game.
-	public void endTurn()
+	public void endTurn ()
 	{
-		if(!paused) {
+		if (!paused) {
 			foreach (UnitScript unit in units) {
 				unit.updateTurn ();
 				List<HexScript> mapRow = map [(int)unit.getPosition ().x];
@@ -135,7 +144,7 @@ public class GameManagerScript : MonoBehaviour {
 			}
 			foreach (CardScript card in hand) {
 				if (card != null) {
-					card.destroyCard();
+					card.destroyCard ();
 				}
 //				Destroy (card);
 			}
@@ -148,16 +157,17 @@ public class GameManagerScript : MonoBehaviour {
 				deck1.deal ();
 			}
 
-			updateHexes();
+			updateHexes ();
 			drawCards ();
-			TurnIndicator.updateTurn(turn);
+			TurnIndicator.updateTurn (turn);
 
 
 		}
 	}
 
 	// Moves a unit to a hex
-	public void moveCurrentUnit(HexScript hex) {
+	public void moveCurrentUnit (HexScript hex)
+	{
 		// DONE: Limit range of a unit's movement
 		// DONE: Zone of control
 		// DONE: Only allow unit's to be moved on their turn
@@ -180,27 +190,27 @@ public class GameManagerScript : MonoBehaviour {
 	// Create all of the hexes in the map
 	// TODO: Create an implementation of this method that takes in a 2D array and generates a custom
 	//       map with different terrain.
-	void generateMap() {
-		map = new List<List<HexScript>>();
+	void generateMap ()
+	{
+		map = new List<List<HexScript>> ();
 		for (int i = 0; i < mapWidth; i++) {
-			List <HexScript> row = new List<HexScript>();
+			List <HexScript> row = new List<HexScript> ();
 			for (int j = 0; j < mapHeight; j++) {
 				HexScript hex;
 				// If else statements to create an offset, because we are using hexes.
 				// This needs polishing.
 				if (j % 2 == 1) {
-                                   hex = ((GameObject)Instantiate(TilePrefab, 
-                                            new Vector3(i * 0.9f + 0.45f - Mathf.Floor(mapSize/2), 
-                                               -(j + 0f)/4f + Mathf.Floor(mapSize/2), 1), 
-                                            Quaternion.Euler(new Vector3()))).GetComponent<HexScript>();
+					hex = ((GameObject)Instantiate (TilePrefab, 
+                                            new Vector3 (i * 0.9f + 0.45f - Mathf.Floor (mapSize / 2), 
+                                               -(j + 0f) / 4f + Mathf.Floor (mapSize / 2), 1), 
+                                            Quaternion.Euler (new Vector3 ()))).GetComponent<HexScript> ();
+				} else {
+					hex = ((GameObject)Instantiate (TilePrefab, 
+                                            new Vector3 (i * 0.9f - Mathf.Floor (mapSize / 2), 
+                                               -j / 4f + Mathf.Floor (mapSize / 2), 1), 
+                                            Quaternion.Euler (new Vector3 ()))).GetComponent<HexScript> ();
 				}
-				else {
-                                   hex = ((GameObject)Instantiate(TilePrefab, 
-                                            new Vector3(i * 0.9f - Mathf.Floor(mapSize/2), 
-                                               -j/4f + Mathf.Floor(mapSize/2), 1), 
-                                            Quaternion.Euler(new Vector3()))).GetComponent<HexScript>();
-				}
-				hex.setPosition(new Vector2((float) i , (float) j));
+				hex.setPosition (new Vector2 ((float)i, (float)j));
 				hex.startRenderer ();
 				hex.setType (HexScript.HexEnum.plains,
                                 SpriteManager.plainsSprite, 
@@ -208,78 +218,79 @@ public class GameManagerScript : MonoBehaviour {
                                 SpriteManager.bluePlainsSprite);
 				row.Add (hex);
 			}
-			map.Add(row);
+			map.Add (row);
 		}
 	}
 
-        // Randomly generate a map
-        void generateRandomMap() {
-           map = new List<List<HexScript>>();
-           for (int i = 0; i < mapWidth; i++) {
-              List<HexScript> row = new List<HexScript>();
-              for(int j = 0; j < mapHeight; j++) {
-                 HexScript hex;
-                 if (j % 2 == 1) {
-                    hex = ((GameObject)Instantiate(TilePrefab, 
-                             new Vector3(i * 0.9f + 0.45f - Mathf.Floor(mapSize/2), 
-                                -(j + 0f)/4f + Mathf.Floor(mapSize/2), 1), 
-                             Quaternion.Euler(new Vector3()))).GetComponent<HexScript>();
-                 }
-                 else {
-                    hex = ((GameObject)Instantiate(TilePrefab, 
-                             new Vector3(i * 0.9f - Mathf.Floor(mapSize/2), 
-                                -j/4f + Mathf.Floor(mapSize/2), 1), 
-                             Quaternion.Euler(new Vector3()))).GetComponent<HexScript>();
-                 }
-                 hex.setPosition(new Vector2((float) i , (float) j));
-                 hex.startRenderer();
+	// Randomly generate a map
+	void generateRandomMap ()
+	{
+		map = new List<List<HexScript>> ();
+		for (int i = 0; i < mapWidth; i++) {
+			List<HexScript> row = new List<HexScript> ();
+			for (int j = 0; j < mapHeight; j++) {
+				HexScript hex;
+				if (j % 2 == 1) {
+					hex = ((GameObject)Instantiate (TilePrefab, 
+                             new Vector3 (i * 0.9f + 0.45f - Mathf.Floor (mapSize / 2), 
+                                -(j + 0f) / 4f + Mathf.Floor (mapSize / 2), 1), 
+                             Quaternion.Euler (new Vector3 ()))).GetComponent<HexScript> ();
+				} else {
+					hex = ((GameObject)Instantiate (TilePrefab, 
+                             new Vector3 (i * 0.9f - Mathf.Floor (mapSize / 2), 
+                                -j / 4f + Mathf.Floor (mapSize / 2), 1), 
+                             Quaternion.Euler (new Vector3 ()))).GetComponent<HexScript> ();
+				}
+				hex.setPosition (new Vector2 ((float)i, (float)j));
+				hex.startRenderer ();
 
-                 //Randomization of hexes to add
-                 int tileNumber = Random.Range(0, 4);
+				//Randomization of hexes to add
+				int tileNumber = Random.Range (0, 4);
 
-                 // Generate a plains
-                 if(tileNumber == 0) {
-                    hex.setType (HexScript.HexEnum.plains,
+				// Generate a plains
+				if (tileNumber == 0) {
+					hex.setType (HexScript.HexEnum.plains,
                           SpriteManager.plainsSprite, 
                           SpriteManager.redPlainsSprite,
                           SpriteManager.bluePlainsSprite);
-                 }
+				}
                  // Generate a desert
-                 else if(tileNumber == 1) {
-                    hex.setType (HexScript.HexEnum.desert,
+                 else if (tileNumber == 1) {
+					hex.setType (HexScript.HexEnum.desert,
                           SpriteManager.desertSprite, 
                           SpriteManager.redDesertSprite,
                           SpriteManager.blueDesertSprite);
-                 }
+				}
                  // Generate water
-                 else if(tileNumber == 2) {
-                    hex.setType (HexScript.HexEnum.water,
+                 else if (tileNumber == 2) {
+					hex.setType (HexScript.HexEnum.water,
                           SpriteManager.waterSprite, 
                           SpriteManager.redWaterSprite,
                           SpriteManager.blueWaterSprite);
-                 }
+				}
                  // Generate a mountain
-                 else if(tileNumber == 3) {
-                    hex.setType (HexScript.HexEnum.mountain,
+                 else if (tileNumber == 3) {
+					hex.setType (HexScript.HexEnum.mountain,
                           SpriteManager.mountainSprite, 
                           SpriteManager.redMountainSprite,
                           SpriteManager.blueMountainSprite);
-                 }
-                 row.Add(hex);
-              }
-              map.Add(row);
-           }
-        }
+				}
+				row.Add (hex);
+			}
+			map.Add (row);
+		}
+	}
 
 	// Creates a unit for testing purposes. Additional units can be added if desired.
 	// TODO: Create a method to purchase a unit and place it at a desired location. This
 	//       will be a seperate method from this one. Eventually, we will not need this method anymore
-	void generateUnits() {
+	void generateUnits ()
+	{
 		UnitScript unit;
 
-		p1Base = placeUnit (map[p1Startx][p1Starty], UnitScript.Types.HeavyTankH);
+		p1Base = placeUnit (map [p1Startx] [p1Starty], UnitScript.Types.HeavyTankH);
 		p1Base.setPlayer (1);
-		p2Base = placeUnit (map[p2Startx][p2Starty], UnitScript.Types.HeavyTankA);
+		p2Base = placeUnit (map [p2Startx] [p2Starty], UnitScript.Types.HeavyTankA);
 		p2Base.setPlayer (2);
 
 //		unit = ((GameObject)Instantiate(HumanInfantryPrefab, new Vector3(0 - Mathf.Floor(mapSize/2), -0 + Mathf.Floor(mapSize/2), -1), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
@@ -320,48 +331,49 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	// Creates the starting decks.
-	void generateDecks() {
+	void generateDecks ()
+	{
 		CardCollection deck = new CardCollection ();
 		for (int i = 0; i < 7; i ++) {
-			deck.add(new CardScript().init(CardScript.CardType.Currency1));
+			deck.add (new CardScript ().init (CardScript.CardType.Currency1));
 		}
 		for (int i = 0; i < 2; i ++) {
 			deck.add (new CardScript ().init (CardScript.CardType.HumanInfantry));
 		}
 		for (int i = 0; i < 1; i++) {
-			deck.add (new CardScript().init (CardScript.CardType.HumanTank));
+			deck.add (new CardScript ().init (CardScript.CardType.HumanTank));
 		}
 		deck.shuffle ();
-		deck1.init (new CardCollection(), deck, new CardCollection());
+		deck1.init (new CardCollection (), deck, new CardCollection ());
 		deck = new CardCollection ();
 		for (int i = 0; i < 7; i ++) {
-			deck.add(new CardScript().init(CardScript.CardType.Currency1));
+			deck.add (new CardScript ().init (CardScript.CardType.Currency1));
 		}
 		for (int i = 0; i < 2; i ++) {
 			deck.add (new CardScript ().init (CardScript.CardType.AlienInfantry));
 		}
 		for (int i = 0; i < 1; i++) {
-			deck.add (new CardScript().init (CardScript.CardType.AlienTank));
+			deck.add (new CardScript ().init (CardScript.CardType.AlienTank));
 		}
 		deck.shuffle ();
-		deck2.init (new CardCollection(), deck, new CardCollection());
+		deck2.init (new CardCollection (), deck, new CardCollection ());
 	}
 
-	void drawCards() {
+	void drawCards ()
+	{
 		CardScript card;
 		float i = 0f;
 		if (turn == 1) {
 			foreach (CardScript playerCard in deck1.hand.getCards ()) {
-				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.78f + i/1.58f, -1.55f, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
-				card.startRenderer();
+				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.78f + i / 1.58f, -1.55f, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
+				card.startRenderer ();
 				card.setType (playerCard.getType ());
-				hand.Add(card);
+				hand.Add (card);
 				i ++;
 			}
-		}
-		else {
+		} else {
 			foreach (CardScript playerCard in deck2.hand.getCards ()) {
-				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.78f + i/1.58f, -1.55f, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
+				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.78f + i / 1.58f, -1.55f, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
 				card.startRenderer ();
 				card.setType (playerCard.getType ());
 				hand.Add (card);
@@ -370,7 +382,8 @@ public class GameManagerScript : MonoBehaviour {
 		}
 	}
 
-	void generateCards() {
+	void generateCards ()
+	{
 //		CardScript card;
 //
 //		card = ((GameObject)Instantiate (CardPrefab, new Vector3 (0, -1.5f, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
@@ -391,52 +404,52 @@ public class GameManagerScript : MonoBehaviour {
 	// The returns that set
 	HashSet<HexScript> findAdj (HexScript hex)
 	{
-		if(!paused) {
+		if (!paused) {
 			int x = (int)hex.getPosition ().x;
 			int y = (int)hex.getPosition ().y;
 			HashSet<HexScript> set = new HashSet<HexScript> ();
 			// Note: The logic here is clunky and long, but it works and runs in O(1)! Hopefully
 			//       it won't need any changes.
-			if(y % 2 == 0) {
+			if (y % 2 == 0) {
 				if (y - 2 >= 0) {
 					set.Add (map [x] [y - 2]);
 				}
-				if(y - 1 >= 0) {
+				if (y - 1 >= 0) {
 					set.Add (map [x] [y - 1]);
 				}
-				if(y + 1 < map [x].Count) {
+				if (y + 1 < map [x].Count) {
 					set.Add (map [x] [y + 1]);
 				}
 				if (y + 2 < map [x].Count) {
 					set.Add (map [x] [y + 2]);
 				}
-				if(x - 1 >= 0) {
-					if(y + 1 < map [x].Count) {
+				if (x - 1 >= 0) {
+					if (y + 1 < map [x].Count) {
 						set.Add (map [x - 1] [y + 1]);
 					}
-					if(y - 1 >= 0) {
+					if (y - 1 >= 0) {
 						set.Add (map [x - 1] [y - 1]);
 					}
 				}
 			}
-			if(y % 2 == 1) {
+			if (y % 2 == 1) {
 				if (y - 2 >= 0) {
 					set.Add (map [x] [y - 2]);
 				}
-				if(y - 1 >= 0) {
+				if (y - 1 >= 0) {
 					set.Add (map [x] [y - 1]);
 				}
-				if(y + 1 < map [x].Count) {
+				if (y + 1 < map [x].Count) {
 					set.Add (map [x] [y + 1]);
 				}
-				if(y + 2 < map [x].Count) {
+				if (y + 2 < map [x].Count) {
 					set.Add (map [x] [y + 2]);
 				}
-				if(x + 1 < map.Count) {
-					if(y + 1 < map [x].Count) {
+				if (x + 1 < map.Count) {
+					if (y + 1 < map [x].Count) {
 						set.Add (map [x + 1] [y + 1]);
 					}
-					if(y - 1 >= 0) {
+					if (y - 1 >= 0) {
 						set.Add (map [x + 1] [y - 1]);
 					}
 				}
@@ -459,21 +472,21 @@ public class GameManagerScript : MonoBehaviour {
 	// TODO: Write an implementation of the A* algorithm to find the best path
 	void findMovement (int movement, HexScript location, bool moved)
 	{
-		if(!paused) {
+		if (!paused) {
 			bool stopped = false;
 			bool adjToEnemy = false;
 			HashSet<HexScript> adjSet = findAdj (location);
 			hexSet.Add (location);
-			if(movement == 0) {
+			if (movement == 0) {
 			} else {
 				foreach (HexScript adjHex in adjSet) {
 					foreach (UnitScript enemy in units) {
-						if(enemy.getPlayer () != turn) {
-							if(moved && enemy.getPosition () == adjHex.getPosition ()) {
+						if (enemy.getPlayer () != turn) {
+							if (moved && enemy.getPosition () == adjHex.getPosition ()) {
 								stopped = true;
 								break;
 							}
-							if(!moved && enemy.getPosition () == adjHex.getPosition ()) {
+							if (!moved && enemy.getPosition () == adjHex.getPosition ()) {
 								adjToEnemy = true;
 								break;
 							}
@@ -557,8 +570,8 @@ public class GameManagerScript : MonoBehaviour {
 			} else {
 				Debug.Log ("No unit currently focused...");
 			}
-			if (p1Base.getHealth() <= 0 || p2Base.getHealth () <= 0) {
-				endGame();
+			if (p1Base.getHealth () <= 0 || p2Base.getHealth () <= 0) {
+				endGame ();
 			}
 
 		}
@@ -581,7 +594,8 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	// Used to place the player bases.
-	public UnitScript placeUnit(HexScript hex, UnitScript.Types type) {
+	public UnitScript placeUnit (HexScript hex, UnitScript.Types type)
+	{
 		if (!paused) {
 			int x = (int)(hex.getPosition ().x);
 			int y = (int)(hex.getPosition ().y);
@@ -591,28 +605,28 @@ public class GameManagerScript : MonoBehaviour {
 			unit = ((GameObject)Instantiate (HumanInfantryPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 			
 			switch (type) {
-			case UnitScript.Types.InfantryA :
+			case UnitScript.Types.InfantryA:
 				unit = ((GameObject)Instantiate (AlienInfantryPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 				unit.setType (UnitScript.Types.InfantryA);
 				unit.setPlayer (turn);
 				unit.move (map [x] [y]);
 				units.Add (unit);
 				break;
-			case UnitScript.Types.HeavyTankA :
+			case UnitScript.Types.HeavyTankA:
 				unit = ((GameObject)Instantiate (AlienTankPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 				unit.setType (UnitScript.Types.HeavyTankA);
 				unit.setPlayer (turn);
 				unit.move (map [x] [y]);
 				units.Add (unit);
 				break;
-			case UnitScript.Types.InfantryH :
+			case UnitScript.Types.InfantryH:
 				unit = ((GameObject)Instantiate (HumanInfantryPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 				unit.setType (UnitScript.Types.InfantryH);
 				unit.setPlayer (turn);
 				unit.move (map [x] [y]);
 				units.Add (unit);
 				break;
-			case UnitScript.Types.HeavyTankH :
+			case UnitScript.Types.HeavyTankH:
 				unit = ((GameObject)Instantiate (HumanTankPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 				unit.setType (UnitScript.Types.HeavyTankH);
 				unit.setPlayer (turn);
@@ -637,29 +651,29 @@ public class GameManagerScript : MonoBehaviour {
 
 			unit = ((GameObject)Instantiate (HumanInfantryPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 
-			switch (focusedCard.getType()) {
-			case CardScript.CardType.AlienInfantry :
+			switch (focusedCard.getType ()) {
+			case CardScript.CardType.AlienInfantry:
 				unit = ((GameObject)Instantiate (AlienInfantryPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 				unit.setType (UnitScript.Types.InfantryA);
 				unit.setPlayer (turn);
 				unit.move (map [x] [y]);
 				units.Add (unit);
 				break;
-			case CardScript.CardType.AlienTank :
+			case CardScript.CardType.AlienTank:
 				unit = ((GameObject)Instantiate (AlienTankPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 				unit.setType (UnitScript.Types.HeavyTankA);
 				unit.setPlayer (turn);
 				unit.move (map [x] [y]);
 				units.Add (unit);
 				break;
-			case CardScript.CardType.HumanInfantry :
+			case CardScript.CardType.HumanInfantry:
 				unit = ((GameObject)Instantiate (HumanInfantryPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 				unit.setType (UnitScript.Types.InfantryH);
 				unit.setPlayer (turn);
 				unit.move (map [x] [y]);
 				units.Add (unit);
 				break;
-			case CardScript.CardType.HumanTank :
+			case CardScript.CardType.HumanTank:
 				unit = ((GameObject)Instantiate (HumanTankPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 				unit.setType (UnitScript.Types.HeavyTankH);
 				unit.setPlayer (turn);
@@ -674,7 +688,7 @@ public class GameManagerScript : MonoBehaviour {
 //			unit.move (map [x] [y]);
 //			units.Add (unit);
 //			hand.Remove (focusedCard);
-			focusedCard.destroyCard();
+			focusedCard.destroyCard ();
 			Destroy (focusedCard);
 			focusedCard = null;
 		}
@@ -698,9 +712,7 @@ public class GameManagerScript : MonoBehaviour {
 						adj = true;
 					}
 				}
-			}
-
-			else if (getTurn () == 2) {
+			} else if (getTurn () == 2) {
 				List<HexScript> curMapRow = map [(int)(p2Base.getPosition ().x)];
 				HexScript curHex = curMapRow [(int)p2Base.getPosition ().y];
 				
@@ -776,12 +788,12 @@ public class GameManagerScript : MonoBehaviour {
 			switch (focusedCard.getType ()) {
 			case CardScript.CardType.Currency1:
 				// TODO: Add money to the player
-				focusedCard.destroyCard();
+				focusedCard.destroyCard ();
 				Destroy (focusedCard);
 				focusedCard = null;
 				break;
 			case CardScript.CardType.Currency2:
-				focusedCard.destroyCard();
+				focusedCard.destroyCard ();
 				Destroy (focusedCard);
 				focusedCard = null;
 				break;
@@ -817,9 +829,10 @@ public class GameManagerScript : MonoBehaviour {
 		}
 	}
 
-	public void endGame() {
+	public void endGame ()
+	{
 		Debug.Log ("Game Over!");
-		Application.LoadLevel("grid_scene");
+		Application.LoadLevel ("grid_scene");
 	}
 
 	public void togglePauseMenu ()
@@ -827,7 +840,7 @@ public class GameManagerScript : MonoBehaviour {
 		if (UI.GetComponentInChildren<Canvas> ().enabled) {
 			UI.GetComponentInChildren<Canvas> ().enabled = false;
 			paused = false;
-			musicSlider.SetActive(false);
+			musicSlider.SetActive (false);
 			Time.timeScale = 1;
 		} else {
 			UI.GetComponentInChildren<Canvas> ().enabled = true;
