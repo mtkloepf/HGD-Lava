@@ -1,44 +1,59 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CardScript : MonoBehaviour {
+public class CardScript : MonoBehaviour
+{
 
 	public Sprite HumanInfantry, AlienInfantry, HumanTank, AlienTank, Currency1, Currency2;
 	SpriteRenderer render;
 
-	public enum CardType {HumanInfantry, AlienInfantry, HumanTank, AlienTank, Currency1, Currency2};
+	public enum CardType
+	{
+		HumanInfantry,
+		AlienInfantry,
+		HumanTank,
+		AlienTank,
+		Currency1,
+		Currency2}
+	;
 
 	private CardType type;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		startRenderer ();
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
 	
 	}
 
-	public void destroyCard() {
-		if(render != null)
+	public void destroyCard ()
+	{
+		if (render != null)
 			render.sprite = null;
 		Destroy (this.gameObject, 1);
 	}
 
-	public void startRenderer() {
+	public void startRenderer ()
+	{
 		render = GetComponent<SpriteRenderer> ();
 //		render.sprite = HumanInfantry;
 	}
 
-	public CardScript init(CardType type) {
+	public CardScript init (CardType type)
+	{
 		this.type = type;
 //		startRenderer ();
 //		setType (type);
 		return this;
 	}
 
-	public void setType(CardType type) {
+	public void setType (CardType type)
+	{
 		this.type = type;
 		switch (type) {
 		case CardType.AlienInfantry:
@@ -64,11 +79,13 @@ public class CardScript : MonoBehaviour {
 		}
 	}
 
-	public CardType getType() {
+	public CardType getType ()
+	{
 		return type;
 	}
 
-	void OnMouseDown() {
+	void OnMouseDown ()
+	{
 		Debug.Log ("Card clicked of type: " + type);
 		GameManagerScript.instance.selectCard (this);
 	}

@@ -844,6 +844,7 @@ public class GameManagerScript : MonoBehaviour
 			Time.timeScale = 1;
 		} else {
 			UI.GetComponentInChildren<Canvas> ().enabled = true;
+			musicSlider.SetActive (true);
 			paused = true;
 			Time.timeScale = 0;
 		}

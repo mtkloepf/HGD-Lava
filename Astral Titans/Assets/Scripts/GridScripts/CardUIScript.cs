@@ -2,7 +2,8 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class CardUIScript : MonoBehaviour {
+public class CardUIScript : MonoBehaviour
+{
 
 	public GameManagerScript game;
 	public Text health;
@@ -14,16 +15,18 @@ public class CardUIScript : MonoBehaviour {
 	UnitScript unit;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 	
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
 		if (game.getFocusedUnit () != null) {
 			unit = game.getFocusedUnit ();
 			health.text = "" + unit.getHealth ();
-			attack.text =  "" + unit.getAttack ();
+			attack.text = "" + unit.getAttack ();
 			defense.text = "" + unit.getDefense ();
 			movement.text = "" + unit.getMovement ();
 		}
