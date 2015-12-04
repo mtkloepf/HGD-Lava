@@ -25,6 +25,7 @@ public class NewSkirmishScript : MonoBehaviour
 
 	void OnMouseExit ()
 	{
+		//hi
 		this.transform.GetComponent<UnityEngine.UI.Image> ().sprite = mouseExited;
 	}
 
