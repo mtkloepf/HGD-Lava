@@ -550,7 +550,7 @@ public class GameManagerScript : MonoBehaviour
 					Debug.Log (focusedUnit.getPosition () + " attacked " + unit.getPosition ());
 
 					int h = unit.getHealth ();
-
+					focusedUnit.attackEnemy ();
 					// Reduces the attacked units health by the attacking units attack
 					unit.setHealth ((int)(unit.getHealth () - 
 						(focusedUnit.getAttack () * (1 - unit.getDefense () / 100))));

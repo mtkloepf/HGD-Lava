@@ -200,6 +200,13 @@ public class UnitScript : MonoBehaviour
 	{
 		this.focus = focus;
 	}
+
+	public void attackEnemy ()
+	{
+		if (animator != null) {
+			animator.SetTrigger ("Attack");
+		}
+	}
 	
 	// Update is called once per frame
 	void Update ()
