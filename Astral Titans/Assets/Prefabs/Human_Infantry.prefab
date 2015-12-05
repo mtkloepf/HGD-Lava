@@ -1,17 +1,17 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &183284
+--- !u!1 &148456
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 402518}
-  - 212: {fileID: 21287974}
-  - 95: {fileID: 9506162}
-  - 114: {fileID: 11449868}
-  - 60: {fileID: 6040426}
+  - 4: {fileID: 456776}
+  - 212: {fileID: 21228130}
+  - 95: {fileID: 9508242}
+  - 114: {fileID: 11469192}
+  - 60: {fileID: 6001878}
   m_Layer: 0
   m_Name: Human_Infantry
   m_TagString: Untagged
@@ -19,24 +19,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &402518
+--- !u!4 &456776
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 183284}
+  m_GameObject: {fileID: 148456}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.99100006, y: -.131999999, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!60 &6040426
+--- !u!60 &6001878
 PolygonCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 183284}
+  m_GameObject: {fileID: 148456}
   m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -50,13 +50,13 @@ PolygonCollider2D:
       - {x: .164263725, y: -.263464212}
       - {x: -.157085419, y: -.263463736}
       - {x: -.305006742, y: .000348925591}
---- !u!95 &9506162
+--- !u!95 &9508242
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 183284}
+  m_GameObject: {fileID: 148456}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 8627f86f547fc2142a98dcc4dfc8f215, type: 2}
@@ -67,12 +67,12 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &11449868
+--- !u!114 &11469192
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 183284}
+  m_GameObject: {fileID: 148456}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 59fb5764d00b7461a99eaaf01fa71188, type: 3}
@@ -84,13 +84,12 @@ MonoBehaviour:
   mapSize: 11
   player: 0
   hasMoved: 0
-  health: 100
---- !u!212 &21287974
+--- !u!212 &21228130
 SpriteRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 183284}
+  m_GameObject: {fileID: 148456}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -103,7 +102,9 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -117,29 +118,8 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 0}
-      propertyPath: m_TagString
-      value: Untagged
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: unitSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 162d513a333ca1544914ca5b19a31ce9,
-        type: 3}
-    - target: {fileID: 0}
-      propertyPath: focus
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_UsedByEffector
-      value: 0
-      objectReference: {fileID: 0}
+    m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 183284}
+  m_RootGameObject: {fileID: 148456}
   m_IsPrefabParent: 1
