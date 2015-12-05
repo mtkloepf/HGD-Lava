@@ -1,11 +1,13 @@
 fileFormatVersion: 2
-guid: 48c270c085dfa6c48845c5e8c1da7101
-timeCreated: 1449287342
+guid: 2879c9a976c17d243af986594133c0bb
+timeCreated: 1449357160
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Idle A infantry_0
-    21300002: Idle A infantry_1
+    21300000: Alien_Infantry_0
+    21300002: Alien_Infantry_1
+    21300004: Idle_A_Inf_0
+    21300006: Idle_A_Inf_1
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -52,22 +54,22 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: Idle A infantry_0
+    - name: Idle_A_Inf_0
       rect:
         serializedVersion: 2
-        x: 14
+        x: 21
         y: 16
-        width: 25
+        width: 18
         height: 28
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Idle A infantry_1
+    - name: Idle_A_Inf_1
       rect:
         serializedVersion: 2
-        x: 76
+        x: 83
         y: 16
-        width: 25
+        width: 18
         height: 26
       alignment: 0
       pivot: {x: 0, y: 0}
