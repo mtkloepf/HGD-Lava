@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-guid: 6362219068f182c448e6c4e8c1d6323f
-timeCreated: 1447650874
+guid: 338ae0c1bbfc3cd41aad5cc599f65fd1
+timeCreated: 1449305702
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Dth H hvy tank_0
-    21300002: Dth H hvy tank_1
-    21300004: Dth H hvy tank_2
-    21300006: Dth H hvy tank_3
-    21300008: Dth H hvy tank_4
-    21300010: Dth H hvy tank_5
-    21300012: Dth H hvy tank_6
-    21300014: Dth H hvy tank_7
-    21300016: Dth H hvy tank_8
-    21300018: Dth H hvy tank_9
+    21300000: Dth H artillery_0
+    21300002: Dth H artillery_1
+    21300004: Dth H artillery_2
+    21300006: Dth H artillery_3
+    21300008: Dth H artillery_4
+    21300010: Dth H artillery_5
+    21300012: Dth H artillery_6
+    21300014: Dth H artillery_7
+    21300016: Dth H artillery_8
+    21300018: Dth H artillery_9
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -60,103 +60,103 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: Dth H hvy tank_0
+    - name: Dth H artillery_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 62
-        height: 62
+        x: 4
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth H hvy tank_1
+    - name: Dth H artillery_1
       rect:
         serializedVersion: 2
-        x: 62
-        y: 0
-        width: 62
-        height: 62
+        x: 66
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth H hvy tank_2
+    - name: Dth H artillery_2
       rect:
         serializedVersion: 2
-        x: 124
-        y: 0
-        width: 62
-        height: 62
+        x: 128
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth H hvy tank_3
+    - name: Dth H artillery_3
       rect:
         serializedVersion: 2
-        x: 186
-        y: 0
-        width: 62
-        height: 62
+        x: 190
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth H hvy tank_4
+    - name: Dth H artillery_4
       rect:
         serializedVersion: 2
-        x: 248
-        y: 0
-        width: 62
-        height: 62
+        x: 252
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth H hvy tank_5
+    - name: Dth H artillery_5
       rect:
         serializedVersion: 2
-        x: 310
-        y: 0
-        width: 62
-        height: 62
+        x: 314
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth H hvy tank_6
+    - name: Dth H artillery_6
       rect:
         serializedVersion: 2
-        x: 372
-        y: 0
-        width: 62
-        height: 62
+        x: 376
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth H hvy tank_7
+    - name: Dth H artillery_7
       rect:
         serializedVersion: 2
-        x: 434
-        y: 0
-        width: 62
-        height: 62
+        x: 438
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth H hvy tank_8
+    - name: Dth H artillery_8
       rect:
         serializedVersion: 2
-        x: 496
-        y: 0
-        width: 62
-        height: 62
+        x: 500
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth H hvy tank_9
+    - name: Dth H artillery_9
       rect:
         serializedVersion: 2
-        x: 558
-        y: 0
-        width: 62
-        height: 62
+        x: 563
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

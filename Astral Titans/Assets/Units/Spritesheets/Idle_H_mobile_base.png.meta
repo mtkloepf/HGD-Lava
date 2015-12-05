@@ -1,9 +1,12 @@
 fileFormatVersion: 2
-guid: d54a094e44b11e64e9fcfd80bd74e9f0
-timeCreated: 1445609449
+guid: 77a814f7b4a96824699700e466bda4c9
+timeCreated: 1449305861
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: Idle_H_mobile_base_0
+    21300002: Idle_H_mobile_base_1
+    21300004: Idle_H_mobile_base_2
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -30,7 +33,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 16
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -38,7 +41,7 @@ TextureImporter:
   rGBM: 0
   compressionQuality: 50
   allowsAlphaSplitting: 0
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -49,7 +52,37 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: Idle_H_mobile_base_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 4
+        width: 56
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Idle_H_mobile_base_1
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 4
+        width: 56
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Idle_H_mobile_base_2
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 4
+        width: 56
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
   assetBundleName: 
