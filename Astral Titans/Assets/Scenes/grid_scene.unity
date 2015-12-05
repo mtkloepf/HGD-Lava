@@ -638,8 +638,8 @@ MonoBehaviour:
   TilePrefab: {fileID: 192788, guid: d6fd6a501be0b41759b375f2ccaa802f, type: 2}
   HumanInfantryPrefab: {fileID: 183284, guid: fab91d8358865ef4ca58c3e1d7719218, type: 2}
   HumanTankPrefab: {fileID: 131696, guid: 9f4e170d7c57c224d8e6cc42e1ede122, type: 2}
-  AlienInfantryPrefab: {fileID: 196196, guid: 8d087eab6ae8a5b4786f668c3e834989, type: 2}
-  AlienTankPrefab: {fileID: 118910, guid: 0574238f4301b7348b524594196c0f85, type: 2}
+  AlienInfantryPrefab: {fileID: 171150, guid: 4c103c267c4072045ab4cee6a4985ae4, type: 2}
+  AlienTankPrefab: {fileID: 146144, guid: 2199020a42adee0488a4bbe97aadc77b, type: 2}
   EndTurn: {fileID: 730845727}
   AIPlayerPrefab: {fileID: 192788, guid: d6fd6a501be0b41759b375f2ccaa802f, type: 2}
   CardPrefab: {fileID: 126346, guid: 7bf111481acb847f3912d756ff7da26f, type: 2}

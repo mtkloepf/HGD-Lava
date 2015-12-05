@@ -46,8 +46,9 @@ public class UnitScript : MonoBehaviour
 		hasMoved = false;
 	}
 
-	public void destroyUnit() {
-		if(animator != null)
+	public void destroyUnit ()
+	{
+		if (animator != null)
 			animator.SetTrigger ("Death");
 		Destroy (this.gameObject, 1);
 	}
@@ -58,7 +59,8 @@ public class UnitScript : MonoBehaviour
 		InfantryA,
 		HeavyTankH,
 		HeavyTankA
-	};
+	}
+	;
 
 	// Set the unit type
 	public void setType (Types type)
