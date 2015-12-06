@@ -25,12 +25,19 @@ public class GameManagerScript : MonoBehaviour
 	private GameObject musicSlider;
 	private bool paused = false;
 
+	private float cardSpawnX = 0;
+	private float cardSpawnY = 0;
+
+
+
 	private UnitScript p1Base;
 	private UnitScript p2Base;
 	public int p1Startx;
 	public int p1Starty;
 	public int p2Startx;
 	public int p2Starty;
+	public float camVelX;
+	public float camVelY;
 
 	// List of all the hexes
 	List <List<HexScript>> map = new List<List<HexScript>> ();
@@ -73,7 +80,70 @@ public class GameManagerScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-
+		if (Input.GetKey ("w")) {
+			foreach (CardScript card in hand) {
+				if (card != null) {
+					Vector3 position = card.transform.position;
+					position.y += camVelY;
+					card.transform.position = position;
+				}
+			}
+			cardSpawnY += camVelY;
+		}
+		if (Input.GetKey ("a")) {
+			foreach (CardScript card in hand) {
+				if (card != null) {
+					Vector3 position = card.transform.position;
+					position.x -= camVelX;
+					card.transform.position = position;
+				}
+			}
+			cardSpawnX -= camVelX;
+		}
+		if (Input.GetKey ("s")) {
+			foreach (CardScript card in hand) {
+				if (card != null) {
+					Vector3 position = card.transform.position;
+					position.y -= camVelY;
+					card.transform.position = position;
+				}
+			}
+			cardSpawnY -= camVelY;
+		}
+		if (Input.GetKey ("d")) {
+			foreach (CardScript card in hand) {
+				if (card != null) {
+					Vector3 position = card.transform.position;
+					position.x += camVelX;
+					card.transform.position = position;
+				}
+			}
+			cardSpawnX += camVelX;
+		}
+//		foreach (CardScript card in hand) {
+//			if (card != null) {
+//				if (Input.GetKey ("w")) {
+//					Vector3 position = card.transform.position;
+//					position.y += camVelY;
+//					card.transform.position = position;
+//				}
+//				if (Input.GetKey ("a")) {
+//					Vector3 position = card.transform.position;
+//					position.x -= camVelX;
+//					card.transform.position = position;
+//				}
+//				if (Input.GetKey ("s")) {
+//					Vector3 position = card.transform.position;
+//					position.y -= camVelY;
+//					card.transform.position = position;
+//				}
+//				if (Input.GetKey ("d")) {
+//					Vector3 position = card.transform.position;
+//					position.x += camVelX;
+//					card.transform.position = position;
+//				}
+//			}
+//		}
 	}
 
 	public UnitScript getFocusedUnit ()
@@ -365,7 +435,7 @@ public class GameManagerScript : MonoBehaviour
 		float i = 0f;
 		if (turn == 1) {
 			foreach (CardScript playerCard in deck1.hand.getCards ()) {
-				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.78f + i / 1.58f, -1.55f, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
+				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.78f + i / 1.58f + cardSpawnX, -1.55f + cardSpawnY, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
 				card.startRenderer ();
 				card.setType (playerCard.getType ());
 				hand.Add (card);
@@ -373,7 +443,7 @@ public class GameManagerScript : MonoBehaviour
 			}
 		} else {
 			foreach (CardScript playerCard in deck2.hand.getCards ()) {
-				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.78f + i / 1.58f, -1.55f, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
+				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.78f + i / 1.58f + cardSpawnX, -1.55f + cardSpawnY, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
 				card.startRenderer ();
 				card.setType (playerCard.getType ());
 				hand.Add (card);
