@@ -22,6 +22,7 @@ public class CardScript : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+		transform.SetParent (GameObject.Find("CardManager").transform);
 		startRenderer ();
 	}
 	
