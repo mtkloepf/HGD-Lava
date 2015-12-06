@@ -17,7 +17,8 @@ public class HexScript : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-           startRenderer();
+		transform.SetParent (GameObject.Find("HexManager").transform);
+        startRenderer();
 	}
 	
 	// Update is called once per frame
