@@ -17,6 +17,11 @@ public class UnitScript : MonoBehaviour
 	readonly int InfantryAMovement = 4;
 	readonly int HeavyTankHMovement = 2;
 	readonly int HeavyTankAMovement = 2;
+
+	//Human Mobile Base
+	readonly int MobileBaseHMovement = 2;
+	readonly float MobileBaseHDef = 30;
+
 	public Sprite Sprite;
 	public SortedDictionary<HexScript.HexEnum, int> terrainMap = new SortedDictionary<HexScript.HexEnum, int> ();
 	public static UnitScript instance;
@@ -27,6 +32,7 @@ public class UnitScript : MonoBehaviour
 	public int mapSize = 11;
 	public int player;
 	public bool hasMoved;
+	public bool canAttack = true;
 	int attack;
 	int maxHealth = 100;
 	int health = 100;
@@ -58,7 +64,8 @@ public class UnitScript : MonoBehaviour
 		InfantryH,
 		InfantryA,
 		HeavyTankH,
-		HeavyTankA
+		HeavyTankA,
+		MobileBaseH
 	}
 	;
 
@@ -109,6 +116,18 @@ public class UnitScript : MonoBehaviour
 			terrainMap.Add (HexScript.HexEnum.mountain, 2);
 			terrainMap.Add (HexScript.HexEnum.plains, 1);
 			terrainMap.Add (HexScript.HexEnum.desert, 1);
+			break;
+
+		case Types.MobileBaseH:
+			attack = 0;
+			maxMovement = MobileBaseHMovement;
+			movement = maxMovement;
+			defense = MobileBaseHDef;
+			terrainMap.Add (HexScript.HexEnum.water, 1);
+			terrainMap.Add (HexScript.HexEnum.mountain, 1);
+			terrainMap.Add (HexScript.HexEnum.plains, 1);
+			terrainMap.Add (HexScript.HexEnum.desert, 1);
+			canAttack = false;
 			break;
 
 		default:
