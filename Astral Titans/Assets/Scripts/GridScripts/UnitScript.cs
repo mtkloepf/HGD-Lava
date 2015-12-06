@@ -32,7 +32,10 @@ public class UnitScript : MonoBehaviour
 	public int mapSize = 11;
 	public int player;
 	public bool hasMoved;
+
 	public bool canAttack = true;
+	public bool hasAttacked;
+
 	int attack;
 	int maxHealth = 100;
 	int health = 100;
@@ -45,11 +48,13 @@ public class UnitScript : MonoBehaviour
 	{
 		animator = GetComponent<Animator> ();
 		hasMoved = false;
+		hasAttacked = false;
 	}
 
 	public void updateTurn ()
 	{
 		hasMoved = false;
+		hasAttacked = false;
 	}
 
 	public void destroyUnit ()

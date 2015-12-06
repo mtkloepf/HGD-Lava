@@ -641,6 +641,8 @@ MonoBehaviour:
   EndTurn: {fileID: 730845727}
   AIPlayerPrefab: {fileID: 192788, guid: d6fd6a501be0b41759b375f2ccaa802f, type: 2}
   CardPrefab: {fileID: 183632, guid: 7bf111481acb847f3912d756ff7da26f, type: 2}
+  HumanMobileBasePrefab: {fileID: 158302, guid: 6c28e0921c316594ca168e8ed2b81437,
+    type: 2}
   TurnIndicator: {fileID: 1732480990}
   UI: {fileID: 1049846610}
   SpriteManager: {fileID: 954289405}
@@ -652,8 +654,6 @@ MonoBehaviour:
   p1Starty: 4
   p2Startx: 4
   p2Starty: 4
-  camVelX: .100000001
-  camVelY: .100000001
 --- !u!4 &1001863768
 Transform:
   m_ObjectHideFlags: 0
