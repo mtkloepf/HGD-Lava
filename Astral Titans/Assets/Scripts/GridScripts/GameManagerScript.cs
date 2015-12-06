@@ -249,9 +249,9 @@ public class GameManagerScript : MonoBehaviour
 				// If the hex is in the set of moveable hexes, move to it
 				if (hexSet.Contains (hex)) {
 					focusedUnit.move (hex);
-					focusedUnit = null;
-					focusedHex.setFocus (false);
 				}
+				focusedUnit = null;
+				focusedHex.setFocus (false);
 			}
 			updateHexes ();
 		}
@@ -601,7 +601,7 @@ public class GameManagerScript : MonoBehaviour
 	public void attack (UnitScript unit)
 	{
 		if (!paused) {
-			if (focusedUnit != null) {
+			if (focusedUnit != null && !focusedUnit.hasAttacked) {
 				bool adj = false;
 				List<HexScript> focMapRow = map [(int)focusedUnit.getPosition ().x];
 				HexScript focHex = focMapRow [(int)focusedUnit.getPosition ().y];
@@ -624,6 +624,7 @@ public class GameManagerScript : MonoBehaviour
 					// Reduces the attacked units health by the attacking units attack
 					unit.setHealth ((int)(unit.getHealth () - 
 						(focusedUnit.getAttack () * (1 - unit.getDefense () / 100))));
+					focusedUnit.hasAttacked = true;
 
 					Debug.Log ("Attack: " + focusedUnit.getAttack () + 
 						"\nDefense: " + unit.getDefense () + 
