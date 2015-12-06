@@ -522,6 +522,7 @@ public class GameManagerScript : MonoBehaviour
 					unit.setHealth ((int)(unit.getHealth () - 
 						(focusedUnit.getAttack () * (1 - unit.getDefense () / 100))));
 					focusedUnit.hasAttacked = true;
+					focusedUnit.hasMoved = true;
 
 					Debug.Log ("Attack: " + focusedUnit.getAttack () + 
 						"\nDefense: " + unit.getDefense () + 
@@ -534,6 +535,9 @@ public class GameManagerScript : MonoBehaviour
 						units.Remove (unit);
 						Destroy (unit);
 					}
+
+					focusedUnit.setFocus (false);
+					focusedUnit = null;
 				}
 			} else {
 				Debug.Log ("No unit currently focused...");
@@ -541,7 +545,7 @@ public class GameManagerScript : MonoBehaviour
 			if (p1Base.getHealth () <= 0 || p2Base.getHealth () <= 0) {
 				Invoke("endGame", 2.0f);
 			}
-
+			updateHexes ();
 		}
 	}
 
