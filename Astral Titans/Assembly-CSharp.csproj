@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\GridScripts\HexScript.cs" />
      <Compile Include="Assets\Scripts\GridScripts\MusicManager.cs" />
      <Compile Include="Assets\Scripts\GridScripts\Path.cs" />
+     <Compile Include="Assets\Scripts\GridScripts\PlayerScript.cs" />
      <Compile Include="Assets\Scripts\GridScripts\SpriteManagerScript.cs" />
      <Compile Include="Assets\Scripts\GridScripts\TurnIndicatorScript.cs" />
      <Compile Include="Assets\Scripts\GridScripts\UIManager.cs" />
