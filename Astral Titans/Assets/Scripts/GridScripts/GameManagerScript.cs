@@ -27,6 +27,11 @@ public class GameManagerScript : MonoBehaviour
 	private bool paused = false;
 	private float timer;
 
+	private float cardStartX = 0;
+	private float cardStartY = 0;
+	public float cardVelX;
+	public float cardVelY;
+
 
 	private UnitScript p1Base;
 	private UnitScript p2Base;
@@ -77,6 +82,46 @@ public class GameManagerScript : MonoBehaviour
 	void Update ()
 	{
 		timer = Time.deltaTime;
+
+		foreach (CardScript card in hand) {
+			if (card == null) {
+				continue;
+			}
+			if (Input.GetKey ("w")) {
+				Vector3 position = card.transform.position;
+				position.y += cardVelY;
+				card.transform.position = position;
+			}
+			if (Input.GetKey ("a")) {
+				Vector3 position = card.transform.position;
+				position.x -= cardVelX;
+				card.transform.position = position;
+			}
+			if (Input.GetKey ("s")) {
+				Vector3 position = card.transform.position;
+				position.y -= cardVelY;
+				card.transform.position = position;
+			}
+			if (Input.GetKey ("d")) {
+				Vector3 position = card.transform.position;
+				position.x += cardVelX;
+				card.transform.position = position;
+			}
+		}
+		
+		if (Input.GetKey ("w")) {
+			cardStartY += cardVelY;
+		}
+		if (Input.GetKey ("a")) {
+			cardStartX -= cardVelX;
+		}
+		if (Input.GetKey ("s")) {
+			cardStartY -= cardVelY;
+		}
+		if (Input.GetKey ("d")) {
+			cardStartX += cardVelX;
+		}
+
 	}
 
 	public UnitScript getFocusedUnit ()
@@ -332,7 +377,7 @@ public class GameManagerScript : MonoBehaviour
 		float i = 0f;
 		if (turn == 1) {
 			foreach (CardScript playerCard in deck1.hand.getCards ()) {
-				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.78f + i / 1.58f, -1.55f, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
+				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.7f + i / 1.66f + cardStartX, -1.45f + cardStartY, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
 				card.startRenderer ();
 				card.setType (playerCard.getType ());
 				hand.Add (card);
@@ -340,7 +385,7 @@ public class GameManagerScript : MonoBehaviour
 			}
 		} else {
 			foreach (CardScript playerCard in deck2.hand.getCards ()) {
-				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.78f + i / 1.58f, -1.55f, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
+				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.7f + i / 1.66f + cardStartX, -1.45f + cardStartY, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
 				card.startRenderer ();
 				card.setType (playerCard.getType ());
 				hand.Add (card);
