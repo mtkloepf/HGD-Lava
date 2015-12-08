@@ -6,6 +6,7 @@ public class CardScript : MonoBehaviour
 
 	public Sprite HumanInfantry, AlienInfantry, HumanTank, AlienTank, Currency1, Currency2;
 	SpriteRenderer render;
+	public int cost = 0;
 
 	public enum CardType
 	{
@@ -22,7 +23,7 @@ public class CardScript : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		transform.SetParent (GameObject.Find("CardManager").transform);
+		transform.SetParent (GameObject.Find ("CardManager").transform);
 		startRenderer ();
 	}
 	
@@ -42,14 +43,11 @@ public class CardScript : MonoBehaviour
 	public void startRenderer ()
 	{
 		render = GetComponent<SpriteRenderer> ();
-//		render.sprite = HumanInfantry;
 	}
 
 	public CardScript init (CardType type)
 	{
 		this.type = type;
-//		startRenderer ();
-//		setType (type);
 		return this;
 	}
 
@@ -59,9 +57,11 @@ public class CardScript : MonoBehaviour
 		switch (type) {
 		case CardType.AlienInfantry:
 			render.sprite = AlienInfantry;
+			cost = 3;
 			break;
 		case CardType.AlienTank:
 			render.sprite = AlienTank;
+			cost = 5;
 			break;
 		case CardType.Currency1:
 			render.sprite = Currency1;
@@ -71,9 +71,11 @@ public class CardScript : MonoBehaviour
 			break;
 		case CardType.HumanInfantry:
 			render.sprite = HumanInfantry;
+			cost = 3;
 			break;
 		case CardType.HumanTank:
 			render.sprite = HumanTank;
+			cost = 5;
 			break;
 		default:
 			break;
