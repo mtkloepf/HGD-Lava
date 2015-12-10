@@ -45,7 +45,6 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\HumanInfantryScript.cs" />
      <Compile Include="Assets\Revive.cs" />
      <Compile Include="Assets\Scripts\GridScripts\CameraMovement.cs" />
      <Compile Include="Assets\Scripts\GridScripts\CardCollection.cs" />
@@ -68,7 +67,6 @@
      <Compile Include="Assets\Scripts\MainScene\OptionsScript.cs" />
      <Compile Include="Assets\Scripts\MainScene\QuitScript.cs" />
      <Compile Include="Assets\Scripts\OptionsMenu\BackToMainMenu.cs" />
-     <Compile Include="Assets\Test.cs" />
  <Reference Include="UnityEngine.Advertisements">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/UnityEngine.Advertisements.dll</HintPath>
  </Reference>
