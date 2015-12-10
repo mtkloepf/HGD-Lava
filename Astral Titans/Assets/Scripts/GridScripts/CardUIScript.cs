@@ -12,6 +12,7 @@ public class CardUIScript : MonoBehaviour
 	public Text movement;
 	public Text deckCount;
 	public Text discardCount;
+	public Text currency;
 	UnitScript unit;
 
 	// Use this for initialization
@@ -30,6 +31,10 @@ public class CardUIScript : MonoBehaviour
 			defense.text = "" + unit.getDefense ();
 			movement.text = "" + unit.getMovement ();
 		}
+		if (game.turn == 1)
+			currency.text = "" + game.Player1.getCurrency ();
+		else
+			currency.text = "" + game.Player2.getCurrency ();
 		deckCount.text = "" + game.getDeckCount ();
 		discardCount.text = "" + game.getDiscardCount ();
 	}

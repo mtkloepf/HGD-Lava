@@ -6,7 +6,6 @@ public class TurnIndicatorScript : MonoBehaviour
 	public Sprite player1;
 	public Sprite player2;
 
-
 	// Use this for initialization
 	void Start ()
 	{
