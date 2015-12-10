@@ -352,6 +352,7 @@ public class GameManagerScript : MonoBehaviour
 		p1Base.setPlayer (1);
 		p2Base = placeUnit (map [p2Startx] [p2Starty], UnitScript.Types.MobileBaseA);
 		p2Base.setPlayer (2);
+		Debug.Log ("Spawned mobile base");
 	}
 
 	// Creates the starting decks.
@@ -566,9 +567,6 @@ public class GameManagerScript : MonoBehaviour
 	}
 
 	// Attacks another unit. This is currently extremely primitive.
-	// TODO: Animations
-	// TODO: Decide on a combat system and implement it
-	// TODO: Limit units to attacking once per turn
 	public void attack (UnitScript unit)
 	{
 		if (!paused) {
