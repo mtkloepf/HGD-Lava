@@ -719,7 +719,7 @@ public class GameManagerScript : MonoBehaviour
 
 			switch (focusedCard.getType ()) {
 			case CardScript.CardType.AlienInfantry:
-				if (focusedCard.cost <= Player1.getCurrency ()) {
+				if (focusedCard.cost <= Player2.getCurrency ()) {
 					unit = ((GameObject)Instantiate (AlienInfantryPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 					unit.setPlayer (turn);
 					unit.setType (UnitScript.Types.InfantryA);
@@ -730,7 +730,7 @@ public class GameManagerScript : MonoBehaviour
 				}
 				break;
 			case CardScript.CardType.AlienTank:
-				if (focusedCard.cost <= Player1.getCurrency ()) {
+				if (focusedCard.cost <= Player2.getCurrency ()) {
 					unit = ((GameObject)Instantiate (AlienTankPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 					unit.setPlayer (turn);
 					unit.setType (UnitScript.Types.HeavyTankA);
@@ -796,11 +796,10 @@ public class GameManagerScript : MonoBehaviour
 						adj = true;
 					}
 				}
-			} else if (getTurn () == 2) {
+			} else {
 				List<HexScript> curMapRow = map [(int)(p2Base.getPosition ().x)];
 				HexScript curHex = curMapRow [(int)p2Base.getPosition ().y];
-				
-				
+
 				HashSet<HexScript> adjHexes = findAdj (curHex);
 				foreach (HexScript focHex in adjHexes) {
 					if (hex == focHex) {
