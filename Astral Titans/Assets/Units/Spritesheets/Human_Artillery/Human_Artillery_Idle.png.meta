@@ -1,11 +1,17 @@
 fileFormatVersion: 2
-guid: 7bdd83c423129f64ca678557eba9a899
-timeCreated: 1449305839
+guid: 74d557f6fc9b07e4288355e94b3a1831
+timeCreated: 1449720010
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Idle_H_exosuit_0
-    21300002: Idle_H_exosuit_1
+    21300000: Idle H artillery_0
+    21300002: Idle H artillery_1
+    21300004: Idle H artillery_2
+    21300006: Idle H artillery_3
+    21300008: Human_Artillery_Idle_0
+    21300010: Human_Artillery_Idle_1
+    21300012: Human_Artillery_Idle_2
+    21300014: Human_Artillery_Idle_3
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -52,23 +58,43 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: Idle_H_exosuit_0
+    - name: Human_Artillery_Idle_0
       rect:
         serializedVersion: 2
-        x: 18
-        y: 10
-        width: 30
-        height: 41
+        x: 4
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Idle_H_exosuit_1
+    - name: Human_Artillery_Idle_1
       rect:
         serializedVersion: 2
-        x: 80
-        y: 10
-        width: 25
-        height: 35
+        x: 68
+        y: 19
+        width: 54
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Human_Artillery_Idle_2
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 19
+        width: 54
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Human_Artillery_Idle_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 19
+        width: 54
+        height: 29
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

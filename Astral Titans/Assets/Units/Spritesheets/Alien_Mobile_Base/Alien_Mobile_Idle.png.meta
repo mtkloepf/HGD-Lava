@@ -1,13 +1,17 @@
 fileFormatVersion: 2
-guid: 74d557f6fc9b07e4288355e94b3a1831
-timeCreated: 1449305809
+guid: 537f4ebc270b24deb9214e00d44c6126
+timeCreated: 1449719788
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Idle H artillery_0
-    21300002: Idle H artillery_1
-    21300004: Idle H artillery_2
-    21300006: Idle H artillery_3
+    21300000: A_Mobile_Base_0
+    21300002: A_Mobile_Base_1
+    21300004: A_Mobile_Base_2
+    21300006: A_Mobile_Base_3
+    21300008: Alien_Mobile_Idle_0
+    21300010: Alien_Mobile_Idle_1
+    21300012: Alien_Mobile_Idle_2
+    21300014: Alien_Mobile_Idle_3
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -54,43 +58,43 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: Idle H artillery_0
+    - name: Alien_Mobile_Idle_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 19
-        width: 54
-        height: 30
+        x: 6
+        y: 9
+        width: 48
+        height: 47
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Idle H artillery_1
+    - name: Alien_Mobile_Idle_1
       rect:
         serializedVersion: 2
         x: 68
-        y: 19
-        width: 54
-        height: 29
+        y: 10
+        width: 48
+        height: 47
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Idle H artillery_2
+    - name: Alien_Mobile_Idle_2
       rect:
         serializedVersion: 2
         x: 130
-        y: 19
-        width: 54
-        height: 27
+        y: 11
+        width: 48
+        height: 47
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Idle H artillery_3
+    - name: Alien_Mobile_Idle_3
       rect:
         serializedVersion: 2
         x: 192
-        y: 19
-        width: 54
-        height: 29
+        y: 10
+        width: 48
+        height: 47
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

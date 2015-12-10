@@ -1,19 +1,29 @@
 fileFormatVersion: 2
-guid: 86cefce6eb602534ba46f82b10e41e4c
-timeCreated: 1449300279
+guid: 338ae0c1bbfc3cd41aad5cc599f65fd1
+timeCreated: 1449720017
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Atk H exosuit_0
-    21300002: Atk H exosuit_1
-    21300004: Atk H exosuit_2
-    21300006: Atk H exosuit_3
-    21300008: Atk H exosuit_4
-    21300010: Atk H exosuit_5
-    21300012: Atk H exosuit_6
-    21300014: Atk H exosuit_7
-    21300016: Atk H exosuit_8
-    21300018: Atk H exosuit_9
+    21300000: Dth H artillery_0
+    21300002: Dth H artillery_1
+    21300004: Dth H artillery_2
+    21300006: Dth H artillery_3
+    21300008: Dth H artillery_4
+    21300010: Dth H artillery_5
+    21300012: Dth H artillery_6
+    21300014: Dth H artillery_7
+    21300016: Dth H artillery_8
+    21300018: Dth H artillery_9
+    21300020: Human_Artillery_Death_0
+    21300022: Human_Artillery_Death_1
+    21300024: Human_Artillery_Death_2
+    21300026: Human_Artillery_Death_3
+    21300028: Human_Artillery_Death_4
+    21300030: Human_Artillery_Death_5
+    21300032: Human_Artillery_Death_6
+    21300034: Human_Artillery_Death_7
+    21300036: Human_Artillery_Death_8
+    21300038: Human_Artillery_Death_9
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -60,103 +70,103 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: Atk H exosuit_0
+    - name: Human_Artillery_Death_0
       rect:
         serializedVersion: 2
-        x: 18
-        y: 10
-        width: 30
-        height: 41
+        x: 4
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Atk H exosuit_1
+    - name: Human_Artillery_Death_1
       rect:
         serializedVersion: 2
-        x: 80
-        y: 10
-        width: 32
-        height: 41
+        x: 66
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Atk H exosuit_2
+    - name: Human_Artillery_Death_2
       rect:
         serializedVersion: 2
-        x: 142
-        y: 10
-        width: 31
-        height: 41
+        x: 128
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Atk H exosuit_3
+    - name: Human_Artillery_Death_3
       rect:
         serializedVersion: 2
-        x: 204
-        y: 10
-        width: 30
-        height: 41
+        x: 190
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Atk H exosuit_4
+    - name: Human_Artillery_Death_4
       rect:
         serializedVersion: 2
-        x: 266
-        y: 10
-        width: 30
-        height: 41
+        x: 252
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Atk H exosuit_5
+    - name: Human_Artillery_Death_5
       rect:
         serializedVersion: 2
-        x: 328
-        y: 10
-        width: 30
-        height: 41
+        x: 314
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Atk H exosuit_6
+    - name: Human_Artillery_Death_6
       rect:
         serializedVersion: 2
-        x: 390
-        y: 10
-        width: 30
-        height: 41
+        x: 376
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Atk H exosuit_7
+    - name: Human_Artillery_Death_7
       rect:
         serializedVersion: 2
-        x: 452
-        y: 10
-        width: 35
-        height: 41
+        x: 438
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Atk H exosuit_8
+    - name: Human_Artillery_Death_8
       rect:
         serializedVersion: 2
-        x: 514
-        y: 10
-        width: 41
-        height: 41
+        x: 500
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Atk H exosuit_9
+    - name: Human_Artillery_Death_9
       rect:
         serializedVersion: 2
-        x: 576
-        y: 10
-        width: 44
-        height: 41
+        x: 563
+        y: 19
+        width: 54
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: c4c5533b62dc76641be2b9bbe01f0d58
-timeCreated: 1449580437
+timeCreated: 1449719809
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -14,6 +14,16 @@ TextureImporter:
     21300014: Dth_A_mobile_base_7
     21300016: Dth_A_mobile_base_8
     21300018: Dth_A_mobile_base_9
+    21300020: Alien_Mobile_Death_0
+    21300022: Alien_Mobile_Death_1
+    21300024: Alien_Mobile_Death_2
+    21300026: Alien_Mobile_Death_3
+    21300028: Alien_Mobile_Death_4
+    21300030: Alien_Mobile_Death_5
+    21300032: Alien_Mobile_Death_6
+    21300034: Alien_Mobile_Death_7
+    21300036: Alien_Mobile_Death_8
+    21300038: Alien_Mobile_Death_9
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -60,103 +70,103 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: Dth_A_mobile_base_0
+    - name: Alien_Mobile_Death_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 62
-        height: 62
+        x: 7
+        y: 8
+        width: 48
+        height: 47
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth_A_mobile_base_1
+    - name: Alien_Mobile_Death_1
       rect:
         serializedVersion: 2
-        x: 62
-        y: 0
-        width: 62
-        height: 62
+        x: 69
+        y: 8
+        width: 48
+        height: 47
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth_A_mobile_base_2
+    - name: Alien_Mobile_Death_2
       rect:
         serializedVersion: 2
-        x: 124
-        y: 0
-        width: 62
-        height: 62
+        x: 131
+        y: 8
+        width: 48
+        height: 47
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth_A_mobile_base_3
+    - name: Alien_Mobile_Death_3
       rect:
         serializedVersion: 2
-        x: 186
-        y: 0
-        width: 62
-        height: 62
+        x: 193
+        y: 8
+        width: 48
+        height: 47
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth_A_mobile_base_4
+    - name: Alien_Mobile_Death_4
       rect:
         serializedVersion: 2
-        x: 248
-        y: 0
-        width: 62
-        height: 62
+        x: 255
+        y: 8
+        width: 48
+        height: 47
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth_A_mobile_base_5
+    - name: Alien_Mobile_Death_5
       rect:
         serializedVersion: 2
-        x: 310
-        y: 0
-        width: 62
-        height: 62
+        x: 317
+        y: 8
+        width: 48
+        height: 47
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth_A_mobile_base_6
+    - name: Alien_Mobile_Death_6
       rect:
         serializedVersion: 2
-        x: 372
-        y: 0
-        width: 62
-        height: 62
+        x: 379
+        y: 8
+        width: 48
+        height: 47
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth_A_mobile_base_7
+    - name: Alien_Mobile_Death_7
       rect:
         serializedVersion: 2
-        x: 434
-        y: 0
-        width: 62
-        height: 62
+        x: 441
+        y: 8
+        width: 48
+        height: 47
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth_A_mobile_base_8
+    - name: Alien_Mobile_Death_8
       rect:
         serializedVersion: 2
-        x: 496
-        y: 0
-        width: 62
-        height: 62
+        x: 503
+        y: 8
+        width: 48
+        height: 47
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Dth_A_mobile_base_9
+    - name: Alien_Mobile_Death_9
       rect:
         serializedVersion: 2
-        x: 558
-        y: 0
-        width: 62
-        height: 62
+        x: 565
+        y: 8
+        width: 48
+        height: 47
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

@@ -15,7 +15,14 @@ public class GameManagerScript : MonoBehaviour
 	public GameObject EndTurn;
 	public GameObject AIPlayerPrefab;
 	public GameObject CardPrefab;
+
+	// Mobile base prefabs
 	public GameObject HumanMobileBasePrefab;
+	public GameObject AlienMobileBasePrefab;
+
+	// Human Exo
+	public GameObject HumanExoPrefab;
+
 	public PlayerScript Player1;
 	public PlayerScript Player2;
 	public TurnIndicatorScript TurnIndicator;
@@ -343,7 +350,7 @@ public class GameManagerScript : MonoBehaviour
 
 		p1Base = placeUnit (map [p1Startx] [p1Starty], UnitScript.Types.MobileBaseH);
 		p1Base.setPlayer (1);
-		p2Base = placeUnit (map [p2Startx] [p2Starty], UnitScript.Types.HeavyTankA);
+		p2Base = placeUnit (map [p2Startx] [p2Starty], UnitScript.Types.MobileBaseA);
 		p2Base.setPlayer (2);
 	}
 
@@ -354,17 +361,34 @@ public class GameManagerScript : MonoBehaviour
 		for (int i = 0; i < 7; i ++) {
 			deck.add (new CardScript ().init (CardScript.CardType.Currency1));
 		}
+		for (int i = 0; i < 3; i++) {
+			deck.add (new CardScript ().init (CardScript.CardType.Currency2));
+		}
 		for (int i = 0; i < 2; i ++) {
 			deck.add (new CardScript ().init (CardScript.CardType.HumanInfantry));
 		}
 		for (int i = 0; i < 1; i++) {
 			deck.add (new CardScript ().init (CardScript.CardType.HumanTank));
 		}
+
+		//TODO:
+		//Used to spawn exo and artillery (no cards implemented yet)
+		/*for (int i = 0; i < 1; i++) {
+			deck.add (new CardScript ().init (CardScript.CardType.HumanExo));
+		}
+		for (int i = 0; i < 1; i++) {
+			deck.add (new CardScript ().init (CardScript.CardType.HumanArtillery));
+		}*/
+
+
 		deck.shuffle ();
 		deck1.init (new CardCollection (), deck, new CardCollection ());
 		deck = new CardCollection ();
 		for (int i = 0; i < 7; i ++) {
 			deck.add (new CardScript ().init (CardScript.CardType.Currency1));
+		}
+		for (int i = 0; i < 3; i++) {
+			deck.add (new CardScript ().init (CardScript.CardType.Currency2));
 		}
 		for (int i = 0; i < 2; i ++) {
 			deck.add (new CardScript ().init (CardScript.CardType.AlienInfantry));
@@ -633,6 +657,13 @@ public class GameManagerScript : MonoBehaviour
 				unit.move (map [x] [y]);
 				units.Add (unit);
 				break;
+			case UnitScript.Types.HumanExo:
+				unit = ((GameObject)Instantiate (HumanExoPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+				unit.setType (UnitScript.Types.HumanExo);
+				unit.setPlayer (turn);
+				unit.move (map [x] [y]);
+				units.Add (unit);
+				break;
 			case UnitScript.Types.HeavyTankA:
 				unit = ((GameObject)Instantiate (AlienTankPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 				unit.setType (UnitScript.Types.HeavyTankA);
@@ -657,6 +688,13 @@ public class GameManagerScript : MonoBehaviour
 			case UnitScript.Types.MobileBaseH:
 				unit = ((GameObject)Instantiate (HumanMobileBasePrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 				unit.setType (UnitScript.Types.MobileBaseH);
+				unit.setPlayer (turn);
+				unit.move (map [x] [y]);
+				units.Add (unit);
+				break;
+			case UnitScript.Types.MobileBaseA:
+				unit = ((GameObject)Instantiate (AlienMobileBasePrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+				unit.setType (UnitScript.Types.MobileBaseA);
 				unit.setPlayer (turn);
 				unit.move (map [x] [y]);
 				units.Add (unit);
@@ -785,14 +823,19 @@ public class GameManagerScript : MonoBehaviour
 			focusedCard = card;
 			switch (focusedCard.getType ()) {
 			case CardScript.CardType.Currency1:
-				// TODO: Add money to the player
-				Player1.addCurrency (1);
+				if (turn == 1) 
+					Player1.addCurrency (1);
+				else 
+					Player2.addCurrency (1);
 				focusedCard.destroyCard ();
 				Destroy (focusedCard);
 				focusedCard = null;
 				break;
 			case CardScript.CardType.Currency2:
-				Player2.addCurrency (2);
+				if (turn == 1) 
+					Player1.addCurrency (3);
+				else 
+					Player2.addCurrency (3);
 				focusedCard.destroyCard ();
 				Destroy (focusedCard);
 				focusedCard = null;

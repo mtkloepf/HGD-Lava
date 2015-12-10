@@ -18,9 +18,23 @@ public class UnitScript : MonoBehaviour
 	readonly int HeavyTankHMovement = 2;
 	readonly int HeavyTankAMovement = 2;
 
+	//Human Artillery
+	readonly int HumanArtilleryMovement = 1;
+	readonly int HumanArtilleryAttack = 50;
+	readonly int HumanArtilleryDefense = 10;
+
+	//Human Exo
+	readonly int HumanExoMovement = 3;
+	readonly int HumanExoAttack = 30;
+	readonly int HumanExoDefense = 25;
+
 	//Human Mobile Base
 	readonly int MobileBaseHMovement = 2;
 	readonly float MobileBaseHDef = 30;
+
+	//Alien Mobile Base
+	readonly int MobileBaseAMovement = 2;
+	readonly float MobileBaseADef = 30;
 
 	public Sprite Sprite;
 	public SortedDictionary<HexScript.HexEnum, int> terrainMap = new SortedDictionary<HexScript.HexEnum, int> ();
@@ -68,9 +82,12 @@ public class UnitScript : MonoBehaviour
 	{
 		InfantryH,
 		InfantryA,
+		HumanExo,
+		HumanArtillery,
 		HeavyTankH,
 		HeavyTankA,
-		MobileBaseH
+		MobileBaseH,
+		MobileBaseA
 	}
 	;
 
@@ -97,6 +114,28 @@ public class UnitScript : MonoBehaviour
 			defense = InfantryADef;
 			terrainMap.Add (HexScript.HexEnum.water, 1);
 			terrainMap.Add (HexScript.HexEnum.mountain, 2);
+			terrainMap.Add (HexScript.HexEnum.plains, 1);
+			terrainMap.Add (HexScript.HexEnum.desert, 2);
+			break;
+			
+		case Types.HumanExo:
+			attack = HumanExoAttack;
+			maxMovement = HumanExoMovement;
+			movement = maxMovement;
+			defense = HumanExoDefense;
+			terrainMap.Add (HexScript.HexEnum.water, 1);
+			terrainMap.Add (HexScript.HexEnum.mountain, 2);
+			terrainMap.Add (HexScript.HexEnum.plains, 1);
+			terrainMap.Add (HexScript.HexEnum.desert, 2);
+			break;
+
+		case Types.HumanArtillery:
+			attack = HumanArtilleryAttack;
+			maxMovement = HumanArtilleryMovement;
+			movement = maxMovement;
+			defense = HumanArtilleryDefense;
+			terrainMap.Add (HexScript.HexEnum.water, 1);
+			terrainMap.Add (HexScript.HexEnum.mountain, 100);
 			terrainMap.Add (HexScript.HexEnum.plains, 1);
 			terrainMap.Add (HexScript.HexEnum.desert, 2);
 			break;
@@ -134,6 +173,20 @@ public class UnitScript : MonoBehaviour
 			terrainMap.Add (HexScript.HexEnum.desert, 1);
 			canAttack = false;
 			break;
+
+		case Types.MobileBaseA:
+			attack = 0;
+			maxMovement = MobileBaseAMovement;
+			movement = maxMovement;
+			defense = MobileBaseADef;
+			terrainMap.Add (HexScript.HexEnum.water, 1);
+			terrainMap.Add (HexScript.HexEnum.mountain, 1);
+			terrainMap.Add (HexScript.HexEnum.plains, 1);
+			terrainMap.Add (HexScript.HexEnum.desert, 1);
+			canAttack = false;
+			break;
+
+
 
 		default:
 			Debug.Log ("Default case");
