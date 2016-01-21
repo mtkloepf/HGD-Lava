@@ -724,7 +724,7 @@ public class GameManagerScript : MonoBehaviour
 					unit.move (map [x] [y]);
 					units.Add (unit);
 					created = true;
-					Player1.subtractCurrency (focusedCard.cost);
+					Player2.subtractCurrency (focusedCard.cost);
 				}
 				break;
 			case CardScript.CardType.AlienTank:
@@ -735,7 +735,7 @@ public class GameManagerScript : MonoBehaviour
 					unit.move (map [x] [y]);
 					units.Add (unit);
 					created = true;
-					Player1.subtractCurrency (focusedCard.cost);
+					Player2.subtractCurrency (focusedCard.cost);
 				}
 				break;
 			case CardScript.CardType.HumanInfantry:
@@ -830,9 +830,9 @@ public class GameManagerScript : MonoBehaviour
 				break;
 			case CardScript.CardType.Currency2:
 				if (turn == 1) 
-					Player1.addCurrency (3);
+					Player1.addCurrency (5);
 				else 
-					Player2.addCurrency (3);
+					Player2.addCurrency (5);
 				focusedCard.destroyCard ();
 				Destroy (focusedCard);
 				focusedCard = null;

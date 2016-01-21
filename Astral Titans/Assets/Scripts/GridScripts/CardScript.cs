@@ -59,11 +59,11 @@ public class CardScript : MonoBehaviour
 		switch (type) {
 		case CardType.AlienInfantry:
 			render.sprite = AlienInfantry;
-			cost = 3;
+			cost = 1;
 			break;
 		case CardType.AlienTank:
 			render.sprite = AlienTank;
-			cost = 5;
+			cost = 4;
 			break;
 		case CardType.Currency1:
 			render.sprite = Currency1;
@@ -73,15 +73,15 @@ public class CardScript : MonoBehaviour
 			break;
 		case CardType.HumanInfantry:
 			render.sprite = HumanInfantry;
-			cost = 3;
+			cost = 1;
 			break;
 		case CardType.HumanTank:
 			render.sprite = HumanTank;
-			cost = 5;
+			cost = 4;
 			break;
 		case CardType.HumanExo:
 			render.sprite = HumanExo;
-			cost = 4;
+			cost = 2;
 			break;
 		case CardType.HumanArtillery:
 			render.sprite = HumanArtillery;

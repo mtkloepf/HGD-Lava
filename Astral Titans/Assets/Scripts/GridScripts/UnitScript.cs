@@ -101,7 +101,7 @@ public class UnitScript : MonoBehaviour
 			maxMovement = InfantryHMovement;
 			movement = InfantryHMovement;
 			defense = InfantryHDef;
-			terrainMap.Add (HexScript.HexEnum.water, 1);
+			terrainMap.Add (HexScript.HexEnum.water, 100);
 			terrainMap.Add (HexScript.HexEnum.mountain, 2);
 			terrainMap.Add (HexScript.HexEnum.plains, 1);
 			terrainMap.Add (HexScript.HexEnum.desert, 2);
@@ -112,7 +112,7 @@ public class UnitScript : MonoBehaviour
 			maxMovement = InfantryAMovement;
 			movement = InfantryAMovement;
 			defense = InfantryADef;
-			terrainMap.Add (HexScript.HexEnum.water, 1);
+			terrainMap.Add (HexScript.HexEnum.water, 100);
 			terrainMap.Add (HexScript.HexEnum.mountain, 2);
 			terrainMap.Add (HexScript.HexEnum.plains, 1);
 			terrainMap.Add (HexScript.HexEnum.desert, 2);
@@ -123,7 +123,7 @@ public class UnitScript : MonoBehaviour
 			maxMovement = HumanExoMovement;
 			movement = maxMovement;
 			defense = HumanExoDefense;
-			terrainMap.Add (HexScript.HexEnum.water, 1);
+			terrainMap.Add (HexScript.HexEnum.water, 100);
 			terrainMap.Add (HexScript.HexEnum.mountain, 2);
 			terrainMap.Add (HexScript.HexEnum.plains, 1);
 			terrainMap.Add (HexScript.HexEnum.desert, 2);
@@ -134,7 +134,7 @@ public class UnitScript : MonoBehaviour
 			maxMovement = HumanArtilleryMovement;
 			movement = maxMovement;
 			defense = HumanArtilleryDefense;
-			terrainMap.Add (HexScript.HexEnum.water, 1);
+			terrainMap.Add (HexScript.HexEnum.water, 100);
 			terrainMap.Add (HexScript.HexEnum.mountain, 100);
 			terrainMap.Add (HexScript.HexEnum.plains, 1);
 			terrainMap.Add (HexScript.HexEnum.desert, 2);
@@ -145,8 +145,8 @@ public class UnitScript : MonoBehaviour
 			maxMovement = HeavyTankHMovement;
 			movement = maxMovement;
 			defense = HeavyTankHDef;
-			terrainMap.Add (HexScript.HexEnum.water, 2);
-			terrainMap.Add (HexScript.HexEnum.mountain, 2);
+			terrainMap.Add (HexScript.HexEnum.water, 100);
+			terrainMap.Add (HexScript.HexEnum.mountain, 100);
 			terrainMap.Add (HexScript.HexEnum.plains, 1);
 			terrainMap.Add (HexScript.HexEnum.desert, 1);
 			break;
@@ -156,8 +156,8 @@ public class UnitScript : MonoBehaviour
 			maxMovement = HeavyTankAMovement;
 			movement = maxMovement;
 			defense = HeavyTankADef;
-			terrainMap.Add (HexScript.HexEnum.water, 2);
-			terrainMap.Add (HexScript.HexEnum.mountain, 2);
+			terrainMap.Add (HexScript.HexEnum.water, 100);
+			terrainMap.Add (HexScript.HexEnum.mountain, 100);
 			terrainMap.Add (HexScript.HexEnum.plains, 1);
 			terrainMap.Add (HexScript.HexEnum.desert, 1);
 			break;
