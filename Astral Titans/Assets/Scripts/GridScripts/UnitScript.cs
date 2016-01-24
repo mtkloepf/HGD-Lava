@@ -51,6 +51,8 @@ public class UnitScript : MonoBehaviour
 	public bool canAttack = true;
 	public bool hasAttacked;
 
+	public bool mouseOver = false;
+
 	int attack;
 	int maxHealth = 100;
 	int health = 100;
@@ -312,5 +314,15 @@ public class UnitScript : MonoBehaviour
 		} else {
 			GameManagerScript.instance.attack (this);
 		}
+	}
+
+	// Check if the mouse is over the unit and display the stats if it is
+	void OnMouseEnter() {
+		mouseOver = true;
+	}
+
+	// Check if the mouse has left the unit and stop displaying the stats if it has
+	void OnMouseExit() {
+		mouseOver = false;
 	}
 }

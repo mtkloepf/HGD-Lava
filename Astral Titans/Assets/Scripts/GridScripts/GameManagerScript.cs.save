@@ -407,7 +407,7 @@ public class GameManagerScript : MonoBehaviour
 		float i = 0f;
 		if (turn == 1) {
 			foreach (CardScript playerCard in deck1.hand.getCards ()) {
-				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.7f + i / 1.66f + cardStartX, -1.45f + cardStartY, -2), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
+				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.7f + i / 1.66f + cardStartX, -1.45f + cardStartY, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
 				card.startRenderer ();
 				card.setType (playerCard.getType ());
 				hand.Add (card);
@@ -415,7 +415,7 @@ public class GameManagerScript : MonoBehaviour
 			}
 		} else {
 			foreach (CardScript playerCard in deck2.hand.getCards ()) {
-				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.7f + i / 1.66f + cardStartX, -1.45f + cardStartY, -2), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
+				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.7f + i / 1.66f + cardStartX, -1.45f + cardStartY, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
 				card.startRenderer ();
 				card.setType (playerCard.getType ());
 				hand.Add (card);
@@ -724,7 +724,7 @@ public class GameManagerScript : MonoBehaviour
 					unit.move (map [x] [y]);
 					units.Add (unit);
 					created = true;
-					Player2.subtractCurrency (focusedCard.cost);
+					Player1.subtractCurrency (focusedCard.cost);
 				}
 				break;
 			case CardScript.CardType.AlienTank:
@@ -735,7 +735,7 @@ public class GameManagerScript : MonoBehaviour
 					unit.move (map [x] [y]);
 					units.Add (unit);
 					created = true;
-					Player2.subtractCurrency (focusedCard.cost);
+					Player1.subtractCurrency (focusedCard.cost);
 				}
 				break;
 			case CardScript.CardType.HumanInfantry:
@@ -830,9 +830,9 @@ public class GameManagerScript : MonoBehaviour
 				break;
 			case CardScript.CardType.Currency2:
 				if (turn == 1) 
-					Player1.addCurrency (5);
+					Player1.addCurrency (3);
 				else 
-					Player2.addCurrency (5);
+					Player2.addCurrency (3);
 				focusedCard.destroyCard ();
 				Destroy (focusedCard);
 				focusedCard = null;
@@ -867,15 +867,6 @@ public class GameManagerScript : MonoBehaviour
 			}
 			//Debug.Log ("unit selected");
 		}
-	}
-
-	public UnitScript getHoveredUnit() {
-		foreach (UnitScript unit in units) {
-			if (unit.mouseOver) {
-				return unit;
-			}
-		}
-		return null;
 	}
 
 	public void endGame ()
