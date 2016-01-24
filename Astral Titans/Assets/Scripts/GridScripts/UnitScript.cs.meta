@@ -1,10 +1,14 @@
 fileFormatVersion: 2
 guid: 59fb5764d00b7461a99eaaf01fa71188
-timeCreated: 1445183384
+timeCreated: 1453550761
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - HpBarPrefab: {fileID: 21300000, guid: 6cdd760e699c5a94d90e81a6e61b5531, type: 3}
+  - HpBarBackPrefab: {fileID: 21300000, guid: 0fd6e75a2382ab24a9ddf3ec70347353, type: 3}
+  - Sprite: {instanceID: 0}
+  - HpBar: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

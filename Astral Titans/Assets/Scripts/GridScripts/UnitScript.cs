@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class UnitScript : MonoBehaviour
 {
-	
 	readonly int InfantryHAttack = 20;
 	readonly int InfantryAAttack = 20;
 	readonly int HeavyTankHAttack = 30;
@@ -35,6 +34,8 @@ public class UnitScript : MonoBehaviour
 	//Alien Mobile Base
 	readonly int MobileBaseAMovement = 2;
 	readonly float MobileBaseADef = 30;
+
+	public GameObject HPBar;
 
 	public Sprite Sprite;
 	public SortedDictionary<HexScript.HexEnum, int> terrainMap = new SortedDictionary<HexScript.HexEnum, int> ();
@@ -286,14 +287,25 @@ public class UnitScript : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update ()
-	{
-		
+	void Update () {
+		// Original position/scale
+		Transform HpGreenPosition = HPBar.transform;
+		// x scale and position of the green bar change based on health percentage 
+		var x_scale = 0.5f * health / maxHealth;
+		var x_value = 0.5f * x_scale - 0.25f;
+		// update x position and scale
+		HpGreenPosition.localPosition = new Vector3 (x_value, HpGreenPosition.localPosition.y,   HpGreenPosition.localPosition.z);
+		HpGreenPosition.localScale = new Vector3 ( x_scale, HpGreenPosition.transform.localScale.y, HpGreenPosition.transform.localScale.z);
+
 	}
 
 	// Selects the unit and sets it to be focused in the game manager
-	void OnMouseDown ()
-	{
+	void OnMouseDown () {
+		Debug.Log ( "Health: " + health +
+			"\nAttack: " + attack +
+			"\nDefense: " + defense +
+			"\nMove: " + movement );
+		
 		if (GameManagerScript.instance.getTurn () == player) {
 			GameManagerScript.instance.selectFocus (this);
 			Debug.Log ("Player selected");

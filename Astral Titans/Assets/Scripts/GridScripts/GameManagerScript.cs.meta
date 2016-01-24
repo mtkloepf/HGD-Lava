@@ -1,10 +1,28 @@
 fileFormatVersion: 2
 guid: f1e616a87544a4136bd0877428b4236c
-timeCreated: 1445183270
+timeCreated: 1453496012
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - TilePrefab: {instanceID: 0}
+  - HumanInfantryPrefab: {instanceID: 0}
+  - HumanTankPrefab: {instanceID: 0}
+  - AlienInfantryPrefab: {instanceID: 0}
+  - AlienTankPrefab: {instanceID: 0}
+  - EndTurn: {instanceID: 0}
+  - AIPlayerPrefab: {instanceID: 0}
+  - CardPrefab: {instanceID: 0}
+  - HpBar: {fileID: 194248, guid: 1cff75ee649046a4fa755e24be142312, type: 2}
+  - HpBarBack: {fileID: 116788, guid: 9a01a5be477204740b7f55eb8dc0995e, type: 2}
+  - HumanMobileBasePrefab: {instanceID: 0}
+  - AlienMobileBasePrefab: {instanceID: 0}
+  - HumanExoPrefab: {instanceID: 0}
+  - Player1: {instanceID: 0}
+  - Player2: {instanceID: 0}
+  - TurnIndicator: {instanceID: 0}
+  - UI: {instanceID: 0}
+  - SpriteManager: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
