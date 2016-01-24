@@ -407,7 +407,7 @@ public class GameManagerScript : MonoBehaviour
 		float i = 0f;
 		if (turn == 1) {
 			foreach (CardScript playerCard in deck1.hand.getCards ()) {
-				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.7f + i / 1.66f + cardStartX, -1.45f + cardStartY, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
+				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.7f + i / 1.66f + cardStartX, -1.45f + cardStartY, -2), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
 				card.startRenderer ();
 				card.setType (playerCard.getType ());
 				hand.Add (card);
@@ -415,7 +415,7 @@ public class GameManagerScript : MonoBehaviour
 			}
 		} else {
 			foreach (CardScript playerCard in deck2.hand.getCards ()) {
-				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.7f + i / 1.66f + cardStartX, -1.45f + cardStartY, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
+				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.7f + i / 1.66f + cardStartX, -1.45f + cardStartY, -2), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
 				card.startRenderer ();
 				card.setType (playerCard.getType ());
 				hand.Add (card);
