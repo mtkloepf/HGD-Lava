@@ -31,7 +31,9 @@ public class CardUIScript : MonoBehaviour
 			attack.text = "" + unit.getAttack ();
 			defense.text = "" + unit.getDefense ();
 			movement.text = "" + unit.getMovement ();
-			unitSprite.sprite = unit.Sprite;
+			if (unitSprite != null) {
+				unitSprite.sprite = unit.Sprite;
+			}
 		}
 		else if (game.getFocusedUnit () != null) {
 			unit = game.getFocusedUnit ();
@@ -39,7 +41,9 @@ public class CardUIScript : MonoBehaviour
 			attack.text = "" + unit.getAttack ();
 			defense.text = "" + unit.getDefense ();
 			movement.text = "" + unit.getMovement ();
-			unitSprite.sprite = unit.Sprite;
+			if (unitSprite != null) {
+				unitSprite.sprite = unit.Sprite;
+			}
 		}
 		if (game.turn % 2 == 1)
 			currency.text = "" + game.Player1.getCurrency ();
