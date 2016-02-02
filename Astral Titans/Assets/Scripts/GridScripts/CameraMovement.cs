@@ -6,6 +6,7 @@ public class CameraMovement : MonoBehaviour
 
 	public float xVel;
 	public float yVel;
+	public float zVel;
 	public bool locked = false;
 
 	// Use this for initialization
@@ -37,5 +38,18 @@ public class CameraMovement : MonoBehaviour
 			position.x += xVel;
 			this.transform.position = position;
 		}
+			
+		float scrollMovement = Input.GetAxis ("Mouse ScrollWheel");
+		if (scrollMovement < 0.0f) {
+			GetComponent<Camera> ().orthographicSize += zVel;
+		}
+		if (scrollMovement > 0.0f) {
+			if (GetComponent<Camera> ().orthographicSize - zVel < 0) {
+				GetComponent<Camera> ().orthographicSize = 0.1f;
+			} else {
+				GetComponent<Camera> ().orthographicSize -= zVel;
+			}
+		}
+
 	}
 }
