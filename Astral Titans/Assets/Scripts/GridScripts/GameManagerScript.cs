@@ -36,7 +36,7 @@ public class GameManagerScript : MonoBehaviour
 	public int mapHeight = 40;
 	public int turn;
 	private GameObject musicSlider;
-	private bool paused = false;
+	public bool paused = false;
 	private float timer;
 
 	private float cardStartX = 0;
@@ -60,8 +60,8 @@ public class GameManagerScript : MonoBehaviour
 	List<CardScript> hand = new List<CardScript> ();
 
 	// Deck managers for players 1 and 2
-	DeckManager deck1 = new DeckManager ();
-	DeckManager deck2 = new DeckManager ();
+	public static DeckManager deck1 = new DeckManager ();
+	public static DeckManager deck2 = new DeckManager ();
 
 	// Set containing all hexes that a unit can move to
 	HashSet<HexScript> hexSet = new HashSet<HexScript> ();
@@ -880,6 +880,32 @@ public class GameManagerScript : MonoBehaviour
 			}
 		}
 		return null;
+	}
+
+	public void buyCard(CardScript.CardType type) {
+		CardScript temp = new CardScript ();
+		int cost = temp.getCost (type);
+		if (turn == 1) {
+			if (cost <= Player1.getCurrency()) {
+				Player1.subtractCurrency(cost);
+				deck1.discardPile.add (new CardScript().init (type));
+			}
+		}
+
+		if (turn == 2) {
+			if (cost <= Player2.getCurrency()) {
+				Player2.subtractCurrency(cost);
+				deck2.discardPile.add(new CardScript().init (type));
+			}
+		}
+	}
+
+	public DeckManager getDeck1() {
+		return deck1;
+	}
+
+	public DeckManager getDeck2() {
+		return deck2;
 	}
 
 	public void endGame ()

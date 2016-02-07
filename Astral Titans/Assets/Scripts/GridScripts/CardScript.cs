@@ -103,4 +103,37 @@ public class CardScript : MonoBehaviour
 		Debug.Log ("Card clicked of type: " + type);
 		GameManagerScript.instance.selectCard (this);
 	}
+
+	public int getCost(CardScript.CardType type) {
+		switch (type) {
+		case CardType.AlienInfantry:
+			cost = 1;
+			break;
+		case CardType.AlienTank:
+			cost = 4;
+			break;
+		case CardType.Currency1:
+			cost = 1;
+			break;
+		case CardType.Currency2:
+			cost = 3;
+			break;
+		case CardType.HumanInfantry:
+			cost = 1;
+			break;
+		case CardType.HumanTank:
+			cost = 4;
+			break;
+		case CardType.HumanExo:
+			cost = 2;
+			break;
+		case CardType.HumanArtillery:
+			cost = 3;
+			break;
+		default:
+			break;
+		}
+
+		return cost;
+	}
 }

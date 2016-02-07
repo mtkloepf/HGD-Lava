@@ -92,5 +92,13 @@ public class DeckManager : MonoBehaviour
 		handSize = size;
 	}
 
+	public CardCollection getAllCards() {
+		CardCollection allCards = new CardCollection ();
+		allCards.addList (hand.getCards());
+		allCards.addList (deck.getCards ());
+		allCards.addList (discardPile.getCards ());
+		return allCards;
+	}
+
 
 }

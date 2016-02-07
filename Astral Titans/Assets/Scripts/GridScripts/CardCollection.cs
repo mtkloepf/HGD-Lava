@@ -96,4 +96,14 @@ public class CardCollection : MonoBehaviour
 	{
 		return cards;
 	}
+
+	public int getCount(CardScript.CardType type) {
+		int counter = 0;
+		foreach (CardScript card in cards) {
+			if (card.getType () == type) {
+				counter ++;
+			}
+		}
+		return counter;
+	}
 }
