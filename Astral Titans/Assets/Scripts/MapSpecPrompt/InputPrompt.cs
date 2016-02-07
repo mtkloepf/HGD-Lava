@@ -8,8 +8,6 @@ public class InputPrompt : MonoBehaviour {
 	private string msg_1, msg_2, msg_3;
 	/* [ width min, width max, height min, height max ] */
 	private int[] bounds;
-	/* List of valid map types */
-	private static readonly string[] MAP_TYPES = new string[] { "inland", "highland", "coastal", "ring", "maze" };
 
 	void Start() {
 		in_1 = "";
@@ -32,10 +30,10 @@ public class InputPrompt : MonoBehaviour {
 	 */
 	void EvaluateInput(int ID) {
 		/* Display general guidelines */
-		GUI.Label(new Rect(45, 45, 510, 88), "Please input the size and type of the map you wish to create: width and height must be within the bounds of 10 and 45 inclusive.\n\nGame types: " + allTypes() );
+		GUI.Label(new Rect(45, 45, 510, 88), "Please input the size and type of the map you wish to create: width and height must be within the bounds of 10 and 45 inclusive.\n\nGame types: " + MapGeneration.allTypes() );
 		/* Display width and height prompts */
-		GUI.Label(new Rect(45, 165, 124, 22), "Height of the map?");
-		GUI.Label(new Rect(45, 200, 120, 22), "Width of the map?");
+		GUI.Label(new Rect(45, 165, 120, 22), "Width of the map?");
+		GUI.Label(new Rect(45, 200, 124, 22), "Height of the map?");
 		GUI.Label(new Rect(45, 235, 110, 22), "Type of map?");
 		/* Draw input fields */
 		in_1 = GUI.TextField(new Rect(191, 165, 32, 22), in_1, 3);
@@ -67,7 +65,7 @@ public class InputPrompt : MonoBehaviour {
 
 			/* Parse user input for height value */
 			if ( Int32.TryParse (in_2, out h_in) ) {
-				if (h_in >= bounds[2] && w_in <= bounds[3]) {
+				if (h_in >= bounds[2] && h_in <= bounds[3]) {
 					MapGeneration.height = h_in;
 					msg_2 = "";
 				} else {
@@ -79,7 +77,7 @@ public class InputPrompt : MonoBehaviour {
 				h_in = -1;
 			}
 			/* Parse user input for map type */
-			if ( containsType(in_3) ) {
+			if ( MapGeneration.containsType(in_3) ) {
 				/* if all input fields are valid, then jump to creation of the map */
 				if (w_in > 0 && h_in > 0) {
 					SceneManager.LoadScene("grid_scene");
@@ -98,24 +96,6 @@ public class InputPrompt : MonoBehaviour {
 		GUI.Label(new Rect(288, 235, 146, 22), msg_3);
 	}
 
-	/* Determines if the given type is a valid map type */
-	private static bool containsType(string type) {
-		foreach (string t in MAP_TYPES) {
-			if (t == type) { return true; }
-		}
 
-		return false;
-	}
-
-	/* Provides a comma'd list of all map types */
-	private static string allTypes() {
-		string types = "";
-
-		foreach (string t in MAP_TYPES) {
-			types +=  t + ", ";
-		}
-
-		return types.TrimEnd( new char[] { ' ' , ',', ' ' } );
-	}
 }
 
