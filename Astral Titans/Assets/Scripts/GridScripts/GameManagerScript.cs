@@ -16,6 +16,9 @@ public class GameManagerScript : MonoBehaviour
 	public GameObject AIPlayerPrefab;
 	public GameObject CardPrefab;
 
+	// Shop Canvas UI Element
+	public Canvas shopCanvas;
+
 	// Mobile base prefabs
 	public GameObject HumanMobileBasePrefab;
 	public GameObject AlienMobileBasePrefab;
@@ -78,6 +81,7 @@ public class GameManagerScript : MonoBehaviour
 	{		
 		musicSlider = GameObject.Find ("Slider");
 		UI.GetComponentInChildren<Canvas> ().enabled = false;
+		shopCanvas.enabled = false;
 		//generateMap();
 		generateRandomMap ();
 		generateUnits ();
@@ -888,14 +892,32 @@ public class GameManagerScript : MonoBehaviour
 	{
 		if (UI.GetComponentInChildren<Canvas> ().enabled) {
 			UI.GetComponentInChildren<Canvas> ().enabled = false;
-			paused = false;
 			musicSlider.SetActive (false);
 			Time.timeScale = 1;
 		} else {
 			UI.GetComponentInChildren<Canvas> ().enabled = true;
 			musicSlider.SetActive (true);
-			paused = true;
 			Time.timeScale = 0;
+		}
+		if (shopCanvas.enabled || UI.GetComponentInChildren<Canvas> ().enabled) {
+			paused = true;
+		} else {
+			paused = false;
+		}
+	}
+
+	public void toggleShop() {
+		if (shopCanvas.enabled) {
+			shopCanvas.enabled = false;
+			Time.timeScale = 1;
+		} else {
+			shopCanvas.enabled = true;
+			Time.timeScale = 0;
+		}
+		if (shopCanvas.enabled || UI.GetComponentInChildren<Canvas> ().enabled) {
+			paused = true;
+		} else {
+			paused = false;
 		}
 	}
 }
