@@ -11,6 +11,7 @@ public class CardShopScript : MonoBehaviour {
 	public Text cardCount;
 	public CardScript.CardType p1Type;
 	public CardScript.CardType p2Type;
+	public Canvas parentCanvas;
 
 
 	// Use this for initialization
@@ -28,8 +29,13 @@ public class CardShopScript : MonoBehaviour {
 			int count = cards.getCount(p1Type);
 			cardCount.text = "" + count;
 			image.sprite = p1Sprite;
-			if (p1Sprite == null) {
+			if (p1Sprite == null || parentCanvas.enabled == false) {
 				image.enabled = false;
+				GetComponent<BoxCollider2D>().enabled = false;
+				cardCount.text = "";
+			}
+			else {
+				GetComponent<BoxCollider2D>().enabled = true;
 			}
 
 		} else {
@@ -37,8 +43,13 @@ public class CardShopScript : MonoBehaviour {
 			int count = cards.getCount(p2Type);
 			cardCount.text = "" + count;
 			image.sprite = p2Sprite;
-			if (p2Sprite == null) {
+			if (p2Sprite == null || parentCanvas.enabled == false) {
 				image.enabled = false;
+				GetComponent<BoxCollider2D>().enabled = false;
+				cardCount.text = "";
+			}
+			else {
+				GetComponent<BoxCollider2D>().enabled = true;
 			}
 		}
 	}
