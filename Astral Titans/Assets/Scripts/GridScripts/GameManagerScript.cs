@@ -88,9 +88,10 @@ public class GameManagerScript : MonoBehaviour
 		generateDecks ();
 		deck1.deal ();
 //		generateCards();
-		turn = 1;
+		turn = 2;
 		Player1 = new PlayerScript ();
 		Player2 = new PlayerScript ();
+        endTurn();
 	}
 	
 	// Update is called once per frame
