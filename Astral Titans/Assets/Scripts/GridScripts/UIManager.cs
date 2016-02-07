@@ -13,6 +13,9 @@ public class UIManager : MonoBehaviour
 		if (Input.GetKeyDown ("escape")) {
 			game.togglePauseMenu ();
 		}
+		if (Input.GetKeyDown ("tab")) {
+			game.toggleShop ();
+		}
 	}
 
 	public void musicSliderUpdate (float val)
