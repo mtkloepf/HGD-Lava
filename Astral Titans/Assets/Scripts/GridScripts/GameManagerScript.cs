@@ -23,8 +23,8 @@ public class GameManagerScript : MonoBehaviour
 	// Human Exo
 	public GameObject HumanExoPrefab;
 
-	public PlayerScript Player1;
-	public PlayerScript Player2;
+	public static PlayerScript Player1;
+	public static PlayerScript Player2;
 	public TurnIndicatorScript TurnIndicator;
 	public GameObject UI;
 	public SpriteManagerScript SpriteManager;
