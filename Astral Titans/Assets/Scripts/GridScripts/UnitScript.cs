@@ -66,6 +66,9 @@ public class UnitScript : MonoBehaviour
 		animator = GetComponent<Animator> ();
 		hasMoved = false;
 		hasAttacked = false;
+		// Set HP z value, so it does not overlay the cards
+		var original = HPBar.transform.localPosition;
+		HPBar.transform.localPosition = new Vector3(original.x, original.y, -1.5f);
 	}
 
 	public void updateTurn ()

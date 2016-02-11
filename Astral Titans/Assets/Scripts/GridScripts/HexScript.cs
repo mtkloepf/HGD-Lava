@@ -112,5 +112,6 @@ public class HexScript : MonoBehaviour {
 		Vector2 v = new Vector2 (position.x, position.y);
 		bool occ = GameManagerScript.instance.hexClicked(this);
         occupied = occ;
+		Debug.Log("(" + position.x + " , " + position.y + ")\n");
 	}
 }

@@ -78,14 +78,15 @@ public class GameManagerScript : MonoBehaviour
 		musicSlider = GameObject.Find ("Slider");
 		UI.GetComponentInChildren<Canvas> ().enabled = false;
 		shopCanvas.enabled = false;
-
+		// map setup
+		MapGeneration.sprites = SpriteManager;
 		mapWidth = MapGeneration.width;
 		mapHeight = MapGeneration.height;
 
 		generateMap();
 
 		if (MapGeneration.generate) {
-			MapGeneration.generatePseudoRandomMap (map);
+			MapGeneration.generatePseudoRandomMap(map);
 		} else {
 			randomizeHexes();
 		}
