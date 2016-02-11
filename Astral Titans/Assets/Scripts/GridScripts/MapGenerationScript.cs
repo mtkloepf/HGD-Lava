@@ -18,14 +18,12 @@ public static class MapGeneration {
 	private static string map_type;
 
 	static MapGeneration() {
-		width = -1;
-		height = 1;
+		width = 8;
+		height = 32;
 	}
 
-	public static List<List<HexScript>> generateMap() {
-		Debug.Log("width: " + width + "\nheight: " + height + "\n");
+	public static void generatePseudoRandomMap(List<List<HexScript>> map) {
 		// TODO: actually build the map . . .
-		return null;
 	}
 
 	public static void setGeneration() { generate = true; }

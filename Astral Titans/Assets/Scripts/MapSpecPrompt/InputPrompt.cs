@@ -48,7 +48,7 @@ public class InputPrompt : MonoBehaviour {
 			if ( Int32.TryParse (in_1, out w_in) ) {
 				if ( w_in >= bounds[0] && w_in <= bounds[1] ) {
 					if (w_in % 2 == 0) {
-						MapGeneration.width = w_in;
+						MapGeneration.width = w_in / 2;
 						msg_1 = "";
 					} else {
 						msg_1 = "Width must be even!";
@@ -66,7 +66,7 @@ public class InputPrompt : MonoBehaviour {
 			/* Parse user input for height value */
 			if ( Int32.TryParse (in_2, out h_in) ) {
 				if (h_in >= bounds[2] && h_in <= bounds[3]) {
-					MapGeneration.height = h_in;
+					MapGeneration.height = h_in * 2;
 					msg_2 = "";
 				} else {
 					msg_2 = "Not a valid height value!";

@@ -31,9 +31,9 @@ public class GameManagerScript : MonoBehaviour
 	public TurnIndicatorScript TurnIndicator;
 	public GameObject UI;
 	public SpriteManagerScript SpriteManager;
-	public int mapSize = 11;
-	public int mapWidth = 10;
-	public int mapHeight = 40;
+	private int mapSize = 4;
+	private int mapWidth;
+	private int mapHeight;
 	public int turn;
 	private GameObject musicSlider;
 	public bool paused = false;
@@ -47,10 +47,6 @@ public class GameManagerScript : MonoBehaviour
 
 	private UnitScript p1Base;
 	private UnitScript p2Base;
-	public int p1Startx;
-	public int p1Starty;
-	public int p2Startx;
-	public int p2Starty;
 
 	// List of all the hexes
 	List <List<HexScript>> map = new List<List<HexScript>> ();
@@ -82,12 +78,22 @@ public class GameManagerScript : MonoBehaviour
 		musicSlider = GameObject.Find ("Slider");
 		UI.GetComponentInChildren<Canvas> ().enabled = false;
 		shopCanvas.enabled = false;
-		//generateMap();
-		generateRandomMap ();
+
+		mapWidth = MapGeneration.width;
+		mapHeight = MapGeneration.height;
+
+		generateMap();
+
+		if (MapGeneration.generate) {
+			MapGeneration.generatePseudoRandomMap (map);
+		} else {
+			randomizeHexes();
+		}
+			
 		generateUnits ();
 		generateDecks ();
 		deck1.deal ();
-//		generateCards();
+		//generateCards();
 		turn = 2;
 		Player1 = new PlayerScript ();
 		Player2 = new PlayerScript ();
@@ -252,29 +258,27 @@ public class GameManagerScript : MonoBehaviour
 		}
 	}
 
-	// Create all of the hexes in the map
-	// TODO: Create an implementation of this method that takes in a 2D array and generates a custom
-	//       map with different terrain.
-	void generateMap ()
-	{
+	// Create all of the hexes in the map and defaults them to plains
+	void generateMap () {
 		map = new List<List<HexScript>> ();
+
 		for (int i = 0; i < mapWidth; i++) {
-			List <HexScript> row = new List<HexScript> ();
+			List <HexScript> row = new List<HexScript>();
 			for (int j = 0; j < mapHeight; j++) {
 				HexScript hex;
-				// If else statements to create an offset, because we are using hexes.
-				// This needs polishing.
+
 				if (j % 2 == 1) {
 					hex = ((GameObject)Instantiate (TilePrefab, 
-                                            new Vector3 (i * 0.9f + 0.45f - Mathf.Floor (mapSize / 2), 
-                                               -(j + 0f) / 4f + Mathf.Floor (mapSize / 2), 1), 
-                                            Quaternion.Euler (new Vector3 ()))).GetComponent<HexScript> ();
+						new Vector3 (i * 0.9f + 0.45f - Mathf.Floor (mapSize / 2), 
+							-(j + 0f) / 4f + Mathf.Floor (mapSize / 2), 1), 
+						Quaternion.Euler (new Vector3 ()))).GetComponent<HexScript> ();
 				} else {
 					hex = ((GameObject)Instantiate (TilePrefab, 
-                                            new Vector3 (i * 0.9f - Mathf.Floor (mapSize / 2), 
-                                               -j / 4f + Mathf.Floor (mapSize / 2), 1), 
-                                            Quaternion.Euler (new Vector3 ()))).GetComponent<HexScript> ();
+						new Vector3 (i * 0.9f - Mathf.Floor (mapSize / 2), 
+							-j / 4f + Mathf.Floor (mapSize / 2), 1), 
+						Quaternion.Euler (new Vector3 ()))).GetComponent<HexScript> ();
 				}
+
 				hex.setPosition (new Vector2 ((float)i, (float)j));
 				hex.startRenderer ();
 				hex.setType (HexScript.HexEnum.plains,
@@ -288,27 +292,11 @@ public class GameManagerScript : MonoBehaviour
 	}
 
 	// Randomly generate a map
-	void generateRandomMap ()
-	{
-		map = new List<List<HexScript>> ();
-		for (int i = 0; i < mapWidth; i++) {
-			List<HexScript> row = new List<HexScript> ();
-			for (int j = 0; j < mapHeight; j++) {
-				HexScript hex;
-				if (j % 2 == 1) {
-					hex = ((GameObject)Instantiate (TilePrefab, 
-                             new Vector3 (i * 0.9f + 0.45f - Mathf.Floor (mapSize / 2), 
-                                -(j + 0f) / 4f + Mathf.Floor (mapSize / 2), 1), 
-                             Quaternion.Euler (new Vector3 ()))).GetComponent<HexScript> ();
-				} else {
-					hex = ((GameObject)Instantiate (TilePrefab, 
-                             new Vector3 (i * 0.9f - Mathf.Floor (mapSize / 2), 
-                                -j / 4f + Mathf.Floor (mapSize / 2), 1), 
-                             Quaternion.Euler (new Vector3 ()))).GetComponent<HexScript> ();
-				}
-				hex.setPosition (new Vector2 ((float)i, (float)j));
-				hex.startRenderer ();
-
+	void randomizeHexes() {
+		
+		foreach (List<HexScript> column in map) {
+			foreach (HexScript hex in column) {
+				
 				//Randomization of hexes to add
 				int tileNumber = Random.Range (0, 4);
 
@@ -340,23 +328,19 @@ public class GameManagerScript : MonoBehaviour
                           SpriteManager.redMountainSprite,
                           SpriteManager.blueMountainSprite);
 				}
-				row.Add (hex);
 			}
-			map.Add (row);
 		}
 	}
 
 	// Creates a unit for testing purposes. Additional units can be added if desired.
 	// TODO: Create a method to purchase a unit and place it at a desired location. This
 	//       will be a seperate method from this one. Eventually, we will not need this method anymore
-	void generateUnits ()
-	{
-		UnitScript unit;
-
-		p1Base = placeUnit (map [p1Startx] [p1Starty], UnitScript.Types.MobileBaseH);
+	void generateUnits () {
+		p1Base = placeUnit ( map[(mapWidth - 1) / 2 - 1][mapHeight / 2 - 1], UnitScript.Types.MobileBaseH );
 		p1Base.setPlayer (1);
-		p2Base = placeUnit (map [p2Startx] [p2Starty], UnitScript.Types.MobileBaseA);
+		p2Base = placeUnit ( map[(mapWidth - 1) / 2 + 2][mapHeight / 2], UnitScript.Types.MobileBaseA );
 		p2Base.setPlayer (2);
+
 		Debug.Log ("Spawned mobile base");
 	}
 
