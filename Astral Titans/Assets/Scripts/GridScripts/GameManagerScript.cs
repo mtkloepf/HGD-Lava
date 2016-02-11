@@ -80,13 +80,14 @@ public class GameManagerScript : MonoBehaviour
 		shopCanvas.enabled = false;
 		// map setup
 		MapGeneration.sprites = SpriteManager;
+
 		mapWidth = MapGeneration.width;
 		mapHeight = MapGeneration.height;
 
 		generateMap();
 
 		if (MapGeneration.generate) {
-			MapGeneration.generatePseudoRandomMap(map);
+			MapGeneration.generatePseudoRandomMap();
 		} else {
 			randomizeHexes();
 		}
@@ -259,7 +260,10 @@ public class GameManagerScript : MonoBehaviour
 		}
 	}
 
-	// Create all of the hexes in the map and defaults them to plains
+	/**
+	 * Create all of the hexes in the map and defaults them to plains
+	 * This method MUST be called before modifying the map in any way!
+	 */
 	void generateMap () {
 		map = new List<List<HexScript>> ();
 
@@ -290,6 +294,8 @@ public class GameManagerScript : MonoBehaviour
 			}
 			map.Add (row);
 		}
+		// pass copy of the map to the MapGeneration
+		MapGeneration.setMap(map);
 	}
 
 	// Randomly generate a map
