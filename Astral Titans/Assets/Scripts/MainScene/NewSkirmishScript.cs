@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class NewSkirmishScript : MonoBehaviour
@@ -19,6 +20,6 @@ public class NewSkirmishScript : MonoBehaviour
 
 	void OnMouseDown ()
 	{
-		Application.LoadLevel ("grid_scene");
+		SceneManager.LoadScene ("grid_scene");
 	}
 }

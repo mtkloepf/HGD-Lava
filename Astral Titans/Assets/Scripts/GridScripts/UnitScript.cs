@@ -4,37 +4,6 @@ using System.Collections.Generic;
 
 public class UnitScript : MonoBehaviour
 {
-	readonly int InfantryHAttack = 20;
-	readonly int InfantryAAttack = 20;
-	readonly int HeavyTankHAttack = 30;
-	readonly int HeavyTankAAttack = 30;
-	readonly float InfantryHDef = 10;
-	readonly float InfantryADef = 10;
-	readonly float HeavyTankHDef = 40;
-	readonly float HeavyTankADef = 40;
-	readonly int InfantryHMovement = 4;
-	readonly int InfantryAMovement = 4;
-	readonly int HeavyTankHMovement = 2;
-	readonly int HeavyTankAMovement = 2;
-
-	//Human Artillery
-	readonly int HumanArtilleryMovement = 1;
-	readonly int HumanArtilleryAttack = 50;
-	readonly int HumanArtilleryDefense = 10;
-
-	//Human Exo
-	readonly int HumanExoMovement = 3;
-	readonly int HumanExoAttack = 30;
-	readonly int HumanExoDefense = 25;
-
-	//Human Mobile Base
-	readonly int MobileBaseHMovement = 2;
-	readonly float MobileBaseHDef = 30;
-
-	//Alien Mobile Base
-	readonly int MobileBaseAMovement = 2;
-	readonly float MobileBaseADef = 30;
-
 	public GameObject HPBar;
 
 	public Sprite Sprite;
@@ -53,16 +22,31 @@ public class UnitScript : MonoBehaviour
 
 	public bool mouseOver = false;
 
-	int attack;
-	int maxHealth = 100;
-	int health = 100;
-	int maxMovement;
-	int movement;
-	float defense;
+	public enum Types {
+		H_Infantry,
+		H_Exo,
+		H_Tank,
+		H_Artillery,
+		H_Base,
+
+		A_Infantry,
+		A_Elite,
+		A_Tank,
+		A_Artillery,
+		A_Base
+	};
+
+	private int attack;
+	private int defense;
+
+	public readonly int maxHealth = 100;
+	private int health;
+	private int maxMovement;
+	private int movement;
 
 	// Use this for initialization
-	void Start ()
-	{
+	void Start () {
+		health = 100;
 		animator = GetComponent<Animator> ();
 		hasMoved = false;
 		hasAttacked = false;
@@ -84,116 +68,122 @@ public class UnitScript : MonoBehaviour
 		Destroy (this.gameObject, 1);
 	}
 
-	public enum Types
-	{
-		InfantryH,
-		InfantryA,
-		HumanExo,
-		HumanArtillery,
-		HeavyTankH,
-		HeavyTankA,
-		MobileBaseH,
-		MobileBaseA
-	}
-	;
+
 
 	// Set the unit type
-	public void setType (Types type)
-	{
+	public void setType(Types type) {
 		switch (type) {
 		
-		case Types.InfantryH:
-			attack = InfantryHAttack;
-			maxMovement = InfantryHMovement;
-			movement = InfantryHMovement;
-			defense = InfantryHDef;
-			terrainMap.Add (HexScript.HexEnum.water, 100);
-			terrainMap.Add (HexScript.HexEnum.mountain, 2);
-			terrainMap.Add (HexScript.HexEnum.plains, 1);
-			terrainMap.Add (HexScript.HexEnum.desert, 2);
+		case Types.H_Infantry:
+			attack = 1;
+			defense = 1;
+			maxMovement = 4;
+			movement = 4;
+			terrainMap.Add(HexScript.HexEnum.water, 100);
+			terrainMap.Add(HexScript.HexEnum.mountain, 2);
+			terrainMap.Add(HexScript.HexEnum.plains, 1);
+			terrainMap.Add(HexScript.HexEnum.desert, 2);
 			break;
 		
-		case Types.InfantryA:
-			attack = InfantryAAttack;
-			maxMovement = InfantryAMovement;
-			movement = InfantryAMovement;
-			defense = InfantryADef;
+		case Types.H_Exo:
+			attack = 2;
+			defense = 2;
+			maxMovement = 3;
+			movement = 3;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
-			terrainMap.Add (HexScript.HexEnum.mountain, 2);
+			terrainMap.Add (HexScript.HexEnum.mountain, 1);
+			terrainMap.Add (HexScript.HexEnum.plains, 1);
+			terrainMap.Add (HexScript.HexEnum.desert, 1);
+			break;
+		
+		case Types.H_Tank:
+			attack = 5;
+			defense = 6;
+			maxMovement = 5;
+			movement = 5;
+			terrainMap.Add (HexScript.HexEnum.water, 100);
+			terrainMap.Add (HexScript.HexEnum.mountain, 100);
 			terrainMap.Add (HexScript.HexEnum.plains, 1);
 			terrainMap.Add (HexScript.HexEnum.desert, 2);
 			break;
 			
-		case Types.HumanExo:
-			attack = HumanExoAttack;
-			maxMovement = HumanExoMovement;
-			movement = maxMovement;
-			defense = HumanExoDefense;
-			terrainMap.Add (HexScript.HexEnum.water, 100);
-			terrainMap.Add (HexScript.HexEnum.mountain, 2);
-			terrainMap.Add (HexScript.HexEnum.plains, 1);
-			terrainMap.Add (HexScript.HexEnum.desert, 2);
-			break;
-
-		case Types.HumanArtillery:
-			attack = HumanArtilleryAttack;
-			maxMovement = HumanArtilleryMovement;
-			movement = maxMovement;
-			defense = HumanArtilleryDefense;
+		case Types.H_Artillery:
+			attack = 6;
+			defense = 4;
+			maxMovement = 3;
+			movement = 3;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
 			terrainMap.Add (HexScript.HexEnum.mountain, 100);
 			terrainMap.Add (HexScript.HexEnum.plains, 1);
-			terrainMap.Add (HexScript.HexEnum.desert, 2);
+			terrainMap.Add (HexScript.HexEnum.desert, 3);
 			break;
-
-		case Types.HeavyTankH:
-			attack = HeavyTankHAttack;
-			maxMovement = HeavyTankHMovement;
-			movement = maxMovement;
-			defense = HeavyTankHDef;
-			terrainMap.Add (HexScript.HexEnum.water, 100);
-			terrainMap.Add (HexScript.HexEnum.mountain, 100);
-			terrainMap.Add (HexScript.HexEnum.plains, 1);
-			terrainMap.Add (HexScript.HexEnum.desert, 1);
-			break;
-
-		case Types.HeavyTankA:
-			attack = HeavyTankAAttack;
-			maxMovement = HeavyTankAMovement;
-			movement = maxMovement;
-			defense = HeavyTankADef;
-			terrainMap.Add (HexScript.HexEnum.water, 100);
-			terrainMap.Add (HexScript.HexEnum.mountain, 100);
-			terrainMap.Add (HexScript.HexEnum.plains, 1);
-			terrainMap.Add (HexScript.HexEnum.desert, 1);
-			break;
-
-		case Types.MobileBaseH:
+		
+		case Types.H_Base:
 			attack = 0;
-			maxMovement = MobileBaseHMovement;
-			movement = maxMovement;
-			defense = MobileBaseHDef;
+			defense = 8;
+			maxMovement = 4;
+			movement = 4;
 			terrainMap.Add (HexScript.HexEnum.water, 1);
 			terrainMap.Add (HexScript.HexEnum.mountain, 1);
 			terrainMap.Add (HexScript.HexEnum.plains, 1);
 			terrainMap.Add (HexScript.HexEnum.desert, 1);
-			canAttack = false;
+			break;
+		
+		case Types.A_Infantry:
+			attack = 1;
+			defense = 1;
+			maxMovement = 4;
+			movement = 4;
+			terrainMap.Add(HexScript.HexEnum.water, 100);
+			terrainMap.Add(HexScript.HexEnum.mountain, 2);
+			terrainMap.Add(HexScript.HexEnum.plains, 1);
+			terrainMap.Add(HexScript.HexEnum.desert, 2);
 			break;
 
-		case Types.MobileBaseA:
+		case Types.A_Elite:
+			attack = 2;
+			defense = 2;
+			maxMovement = 3;
+			movement = 3;
+			terrainMap.Add (HexScript.HexEnum.water, 100);
+			terrainMap.Add (HexScript.HexEnum.mountain, 1);
+			terrainMap.Add (HexScript.HexEnum.plains, 1);
+			terrainMap.Add (HexScript.HexEnum.desert, 1);
+			break;
+
+		case Types.A_Tank:
+			attack = 5;
+			defense = 6;
+			maxMovement = 5;
+			movement = 5;
+			terrainMap.Add (HexScript.HexEnum.water, 100);
+			terrainMap.Add (HexScript.HexEnum.mountain, 100);
+			terrainMap.Add (HexScript.HexEnum.plains, 1);
+			terrainMap.Add (HexScript.HexEnum.desert, 2);
+			break;
+
+		case Types.A_Artillery:
+			attack = 6;
+			defense = 4;
+			maxMovement = 3;
+			movement = 3;
+			terrainMap.Add (HexScript.HexEnum.water, 100);
+			terrainMap.Add (HexScript.HexEnum.mountain, 100);
+			terrainMap.Add (HexScript.HexEnum.plains, 1);
+			terrainMap.Add (HexScript.HexEnum.desert, 3);
+			break;
+
+		case Types.A_Base:
 			attack = 0;
-			maxMovement = MobileBaseAMovement;
-			movement = maxMovement;
-			defense = MobileBaseADef;
+			defense = 8;
+			maxMovement = 4;
+			movement = 4;
 			terrainMap.Add (HexScript.HexEnum.water, 1);
 			terrainMap.Add (HexScript.HexEnum.mountain, 1);
 			terrainMap.Add (HexScript.HexEnum.plains, 1);
 			terrainMap.Add (HexScript.HexEnum.desert, 1);
-			canAttack = false;
 			break;
-
-
-
+		
 		default:
 			Debug.Log ("Default case");
 			break;
@@ -306,11 +296,6 @@ public class UnitScript : MonoBehaviour
 
 	// Selects the unit and sets it to be focused in the game manager
 	void OnMouseDown () {
-		Debug.Log ( "Health: " + health +
-			"\nAttack: " + attack +
-			"\nDefense: " + defense +
-			"\nMove: " + movement );
-		
 		if (GameManagerScript.instance.getTurn () == player) {
 			GameManagerScript.instance.selectFocus (this);
 			Debug.Log ("Player selected");

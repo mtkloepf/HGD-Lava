@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class OptionsScript : MonoBehaviour
@@ -28,8 +29,7 @@ public class OptionsScript : MonoBehaviour
 		this.transform.GetComponent<UnityEngine.UI.Image> ().sprite = mouseExited;
 	}
 
-	void OnMouseDown ()
-	{
-		Application.LoadLevel ("options_menu");
+	void OnMouseDown () {
+		SceneManager.LoadScene ("options_menu");
 	}
 }

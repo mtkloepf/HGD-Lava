@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class ExitButton : MonoBehaviour
 {
-	public void onClick ()
-	{
-		Application.LoadLevel ("start_menu");
+	public void onClick () {
+		SceneManager.LoadScene("start_menu");
 	}
 }

@@ -8,22 +8,9 @@ using System.Collections.Generic;
  * 
  * This class will be used for the player's hand, deck, and discard pile.
  */
-public class CardCollection : MonoBehaviour
-{
+public class CardCollection {
 	
 	private List<CardScript> cards = new List<CardScript> ();
-
-	// Use this for initialization
-	void Start ()
-	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
-	}
 
 	// Removes a card from the collection
 	public CardScript remove (CardScript card)

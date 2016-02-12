@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -8,10 +9,17 @@ public class GameManagerScript : MonoBehaviour
 	public static GameManagerScript instance;
 
 	public GameObject TilePrefab;
+
 	public GameObject HumanInfantryPrefab;
+	public GameObject HumanExoPrefab;
 	public GameObject HumanTankPrefab;
+	public GameObject HumanArtilleryPrefab;
+
 	public GameObject AlienInfantryPrefab;
+	public GameObject AlienElitePrefab;
 	public GameObject AlienTankPrefab;
+	public GameObject AlienArtilleryPrefab;
+
 	public GameObject EndTurn;
 	public GameObject AIPlayerPrefab;
 	public GameObject CardPrefab;
@@ -19,12 +27,8 @@ public class GameManagerScript : MonoBehaviour
 	// Shop Canvas UI Element
 	public Canvas shopCanvas;
 
-	// Mobile base prefabs
 	public GameObject HumanMobileBasePrefab;
 	public GameObject AlienMobileBasePrefab;
-
-	// Human Exo
-	public GameObject HumanExoPrefab;
 
 	public static PlayerScript Player1;
 	public static PlayerScript Player2;
@@ -343,9 +347,9 @@ public class GameManagerScript : MonoBehaviour
 	// TODO: Create a method to purchase a unit and place it at a desired location. This
 	//       will be a seperate method from this one. Eventually, we will not need this method anymore
 	void generateUnits () {
-		p1Base = placeUnit ( map[(mapWidth - 1) / 2 - 1][mapHeight / 2 - 1], UnitScript.Types.MobileBaseH );
+		p1Base = placeUnit ( map[(mapWidth - 1) / 2 - 1][mapHeight / 2 - 1], UnitScript.Types.H_Base );
 		p1Base.setPlayer (1);
-		p2Base = placeUnit ( map[(mapWidth - 1) / 2 + 2][mapHeight / 2], UnitScript.Types.MobileBaseA );
+		p2Base = placeUnit ( map[(mapWidth - 1) / 2 + 2][mapHeight / 2], UnitScript.Types.A_Base );
 		p2Base.setPlayer (2);
 
 		Debug.Log ("Spawned mobile base");
@@ -371,7 +375,7 @@ public class GameManagerScript : MonoBehaviour
 		//TODO:
 		//Used to spawn exo and artillery (no cards implemented yet)
 		/*for (int i = 0; i < 1; i++) {
-			deck.add (new CardScript ().init (CardScript.CardType.HumanExo));
+			deck.add (new CardScript ().init (CardScript.CardType.H_Exo));
 		}
 		for (int i = 0; i < 1; i++) {
 			deck.add (new CardScript ().init (CardScript.CardType.HumanArtillery));
@@ -587,8 +591,11 @@ public class GameManagerScript : MonoBehaviour
 					int h = unit.getHealth ();
 					focusedUnit.attackEnemy ();
 					// Reduces the attacked units health by the attacking units attack
-					unit.setHealth ((int)(unit.getHealth () - 
-						(focusedUnit.getAttack () * (1 - unit.getDefense () / 100))));
+					// dmg = 2 (P / A ) - 2 ( A / P ) + 3P - 2A + 38
+					var dmg = 2 * ( (float)focusedUnit.getAttack() / unit.getDefense() ) - 2 * ( (float)unit.getDefense() / focusedUnit.getAttack() ) +
+							  3 * focusedUnit.getAttack() - 2 * unit.getDefense() + 38;
+					unit.setHealth(h - (int)dmg);
+					//unit.setHealth ((int)(unit.getHealth () - (focusedUnit.getAttack () * (1 - unit.getDefense () / 100))));
 					focusedUnit.hasAttacked = true;
 					focusedUnit.hasMoved = true;
 
@@ -644,51 +651,51 @@ public class GameManagerScript : MonoBehaviour
 			UnitScript unit = null;
 			
 			switch (type) {
-			case UnitScript.Types.InfantryA:
+			case UnitScript.Types.A_Infantry:
 				unit = ((GameObject)Instantiate (AlienInfantryPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
-				unit.setType (UnitScript.Types.InfantryA);
+				unit.setType (UnitScript.Types.A_Infantry);
 				unit.setPlayer (turn);
 				unit.move (map [x] [y]);
 				units.Add (unit);
 				break;
-			case UnitScript.Types.HumanExo:
+			case UnitScript.Types.H_Exo:
 				unit = ((GameObject)Instantiate (HumanExoPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
-				unit.setType (UnitScript.Types.HumanExo);
+				unit.setType (UnitScript.Types.H_Exo);
 				unit.setPlayer (turn);
 				unit.move (map [x] [y]);
 				units.Add (unit);
 				break;
-			case UnitScript.Types.HeavyTankA:
+			case UnitScript.Types.A_Tank:
 				unit = ((GameObject)Instantiate (AlienTankPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
-				unit.setType (UnitScript.Types.HeavyTankA);
+				unit.setType (UnitScript.Types.A_Tank);
 				unit.setPlayer (turn);
 				unit.move (map [x] [y]);
 				units.Add (unit);
 				break;
-			case UnitScript.Types.InfantryH:
+			case UnitScript.Types.H_Infantry:
 				unit = ((GameObject)Instantiate (HumanInfantryPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
-				unit.setType (UnitScript.Types.InfantryH);
+				unit.setType (UnitScript.Types.H_Infantry);
 				unit.setPlayer (turn);
 				unit.move (map [x] [y]);
 				units.Add (unit);
 				break;
-			case UnitScript.Types.HeavyTankH:
+			case UnitScript.Types.H_Tank:
 				unit = ((GameObject)Instantiate (HumanTankPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
-				unit.setType (UnitScript.Types.HeavyTankH);
+				unit.setType (UnitScript.Types.H_Tank);
 				unit.setPlayer (turn);
 				unit.move (map [x] [y]);
 				units.Add (unit);
 				break;
-			case UnitScript.Types.MobileBaseH:
+			case UnitScript.Types.H_Base:
 				unit = ((GameObject)Instantiate (HumanMobileBasePrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
-				unit.setType (UnitScript.Types.MobileBaseH);
+				unit.setType (UnitScript.Types.H_Base);
 				unit.setPlayer (turn);
 				unit.move (map [x] [y]);
 				units.Add (unit);
 				break;
-			case UnitScript.Types.MobileBaseA:
+			case UnitScript.Types.A_Base:
 				unit = ((GameObject)Instantiate (AlienMobileBasePrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
-				unit.setType (UnitScript.Types.MobileBaseA);
+				unit.setType (UnitScript.Types.A_Base);
 				unit.setPlayer (turn);
 				unit.move (map [x] [y]);
 				units.Add (unit);
@@ -716,7 +723,7 @@ public class GameManagerScript : MonoBehaviour
 				if (focusedCard.cost <= Player2.getCurrency ()) {
 					unit = ((GameObject)Instantiate (AlienInfantryPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 					unit.setPlayer (turn);
-					unit.setType (UnitScript.Types.InfantryA);
+					unit.setType (UnitScript.Types.A_Infantry);
 					unit.move (map [x] [y]);
 					units.Add (unit);
 					created = true;
@@ -727,7 +734,7 @@ public class GameManagerScript : MonoBehaviour
 				if (focusedCard.cost <= Player2.getCurrency ()) {
 					unit = ((GameObject)Instantiate (AlienTankPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 					unit.setPlayer (turn);
-					unit.setType (UnitScript.Types.HeavyTankA);
+					unit.setType (UnitScript.Types.A_Tank);
 					unit.move (map [x] [y]);
 					units.Add (unit);
 					created = true;
@@ -737,7 +744,7 @@ public class GameManagerScript : MonoBehaviour
 			case CardScript.CardType.HumanInfantry:
 				if (focusedCard.cost <= Player1.getCurrency ()) {
 					unit = ((GameObject)Instantiate (HumanInfantryPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
-					unit.setType (UnitScript.Types.InfantryH);
+					unit.setType (UnitScript.Types.H_Infantry);
 					unit.setPlayer (turn);
 					unit.move (map [x] [y]);
 					units.Add (unit);
@@ -748,7 +755,7 @@ public class GameManagerScript : MonoBehaviour
 			case CardScript.CardType.HumanTank:
 				if (focusedCard.cost <= Player1.getCurrency ()) {
 					unit = ((GameObject)Instantiate (HumanTankPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
-					unit.setType (UnitScript.Types.HeavyTankH);
+					unit.setType (UnitScript.Types.H_Tank);
 					unit.setPlayer (turn);
 					unit.move (map [x] [y]);
 					units.Add (unit);
@@ -900,10 +907,9 @@ public class GameManagerScript : MonoBehaviour
 		return deck2;
 	}
 
-	public void endGame ()
-	{			
+	public void endGame () {			
 		Debug.Log ("Game Over!");
-		Application.LoadLevel ("grid_scene");
+		SceneManager.LoadScene ("grid_scene");
 	}
 
 	public void togglePauseMenu ()

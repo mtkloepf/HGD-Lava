@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class BackToMainMenu : MonoBehaviour {
@@ -13,8 +14,7 @@ public class BackToMainMenu : MonoBehaviour {
 
 	}
 
-    void OnMouseDown()
-    {
-        Application.LoadLevel("start_menu");
+    void OnMouseDown() {
+		SceneManager.LoadScene("start_menu");
     }
 }
