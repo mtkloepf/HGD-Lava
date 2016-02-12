@@ -20,6 +20,6 @@ public class NewSkirmishScript : MonoBehaviour
 
 	void OnMouseDown ()
 	{
-		SceneManager.LoadScene ("grid_scene");
+		SceneManager.LoadScene("map_prompt");
 	}
 }

@@ -16,7 +16,7 @@ public class InputPrompt : MonoBehaviour {
 		msg_1 = "";
 		msg_2 = "";
 		msg_3 = "";
-		bounds = new int[] { 10, 45, 10, 45 };
+		bounds = new int[] { 12, 46, 12, 46 };
 	}
 
 	/* Draws the window for the prompt */
@@ -30,7 +30,7 @@ public class InputPrompt : MonoBehaviour {
 	 */
 	void EvaluateInput(int ID) {
 		/* Display general guidelines */
-		GUI.Label(new Rect(45, 45, 510, 88), "Please input the size and type of the map you wish to create: width and height must be within the bounds of 10 and 45 inclusive.\n\nGame types: " + MapGeneration.allTypes() );
+		GUI.Label(new Rect(45, 45, 510, 88), "Please input the size and type of the map you wish to create: width and height must be within the bounds of 12 and 46 inclusive and the width must be even.\n\nGame types: " + MapGeneration.allTypes() );
 		/* Display width and height prompts */
 		GUI.Label(new Rect(45, 165, 120, 22), "Width of the map?");
 		GUI.Label(new Rect(45, 200, 124, 22), "Height of the map?");
@@ -80,8 +80,8 @@ public class InputPrompt : MonoBehaviour {
 			if ( MapGeneration.containsType(in_3) ) {
 				/* if all input fields are valid, then jump to creation of the map */
 				if (w_in > 0 && h_in > 0) {
+					MapGeneration.map_type = in_3;
 					SceneManager.LoadScene("grid_scene");
-					// MapGeneration.setGeneration();
 				}
 
 				msg_3 = "";

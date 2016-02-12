@@ -299,7 +299,7 @@ public class GameManagerScript : MonoBehaviour
 			map.Add (row);
 		}
 		// pass copy of the map to the MapGeneration
-		MapGeneration.setMap(map);
+		MapGeneration.map = map;
 	}
 
 	// Randomly generate a map
