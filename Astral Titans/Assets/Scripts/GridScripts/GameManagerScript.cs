@@ -347,9 +347,9 @@ public class GameManagerScript : MonoBehaviour
 	// TODO: Create a method to purchase a unit and place it at a desired location. This
 	//       will be a seperate method from this one. Eventually, we will not need this method anymore
 	void generateUnits () {
-		p1Base = placeUnit ( map[(mapWidth - 1) / 2 - 1][mapHeight / 2 - 1], UnitScript.Types.H_Base );
+		p1Base = placeUnit ( map[1][2], UnitScript.Types.H_Base );
 		p1Base.setPlayer (1);
-		p2Base = placeUnit ( map[(mapWidth - 1) / 2 + 2][mapHeight / 2], UnitScript.Types.A_Base );
+		p2Base = placeUnit ( map[mapWidth - 2][mapHeight -3], UnitScript.Types.A_Base );
 		p2Base.setPlayer (2);
 
 		Debug.Log ("Spawned mobile base");
