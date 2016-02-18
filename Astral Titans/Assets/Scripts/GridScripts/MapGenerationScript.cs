@@ -17,7 +17,7 @@ public static class MapGeneration {
 	public static int height;
 
 	/* List of valid map types */
-	private static readonly string[] MAP_TYPES = new string[] { "inland", "highland", "coastal", "mountain", "maze", "" };
+	private static readonly string[] MAP_TYPES = new string[] { "inland", "highland", "coastal", "mountain", "desert", "" };
 	// the type of map to generate (i.e. )
 	public static string map_type;
 
@@ -31,11 +31,11 @@ public static class MapGeneration {
 	// TODO: base map generation off of size and map type
 
 	public static void generatePseudoRandomMap() {
-		/*if (map_type == "mountain") {
-			centralMountainMap();
-		} else {*/
+		if (map_type == "desert") {
+			desertification();
+		} else {
 			defaultMap();
-		//}
+		}
 	}
 
 	private static void defaultMap() {
@@ -49,20 +49,20 @@ public static class MapGeneration {
 			pos_x = UnityEngine.Random.Range(0, width - 1);
 			pos_y = UnityEngine.Random.Range(0, height - 1);
 
-			area = findArea(map[pos_x][pos_y], System.Math.Max(2 * width, height / 2) / 3, new Probability(0.75f, 0.08f));
+			area = findArea(map[pos_x][pos_y], System.Math.Max(2 * width, height / 2) / 3, new Probability(0.45f, 0.02f));
 
 			foreach (HexScript h in area) {
 				setHexType(h, 1);
 			}
 		}
 
-		/* build small lakes */
+		/* build lakes */
 		counter = average / 10 + 1;
 		while (--counter >= 0) {
 			pos_x = UnityEngine.Random.Range(0, width - 1);
 			pos_y = UnityEngine.Random.Range (0, height - 1);
 
-			area = findArea(map[pos_x][pos_y], average / 15 + 3, new Probability(0.6f, 0.2f));
+			area = findArea(map[pos_x][pos_y], average / 15 + 3, new Probability(0.5f, 0.04f));
 
 			foreach (HexScript h in area) {
 				setHexType(h, 2);
@@ -75,10 +75,29 @@ public static class MapGeneration {
 			pos_x = UnityEngine.Random.Range(0, width - 1);
 			pos_y = UnityEngine.Random.Range (0, height - 1);
 
-			area = findArea(map[pos_x][pos_y], average / 20 + 3, new Probability(0.65f, 0.08f));
+			area = findArea(map[pos_x][pos_y], average / 20 + 3, new Probability(0.55f, 0.06f));
 
 			foreach (HexScript h in area) {
 				setHexType(h, 3);
+			}
+		}
+	}
+
+	private static void desertification() {
+		int pos_x, pos_y, counter;
+		List<HexScript> area;
+		int average = (2 * width + height / 2) / 2;
+
+		/* build  a pontentially large desert */
+		counter = 1;
+		while (--counter >= 0) {
+			pos_x = width / 2;
+			pos_y = height / 2;
+
+			area = findArea(map[pos_x][pos_y], 2 * System.Math.Max(2 * width, height / 2) / 3, new Probability(0.35f, -0.02f));
+
+			foreach (HexScript h in area) {
+				setHexType(h, 1);
 			}
 		}
 	}
@@ -173,6 +192,9 @@ public static class MapGeneration {
 				}
 			}
 		}
+		// avoid cutting off the generation of the area, because of an empty layer
+		if (cur_layer.Count == 0) { cur_layer = prev_layer; }
+
 		if (variation != null) { variation.reduce(); }
 		// find the next layer
 		addNextLayer(cur_layer, total, radius - 1, variation);
