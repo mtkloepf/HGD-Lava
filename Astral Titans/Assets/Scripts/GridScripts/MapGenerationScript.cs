@@ -102,43 +102,44 @@ public static class MapGeneration {
 		}
 	}
 
-	/*private static void centralMountainMap() {
+	/* DON'T try this map: it is not polished!! */
+	private static void centralMountainMap() {
 		int pos_x, pos_y, counter;
 		List<HexScript> area;
 
-		/* build 1 ~ 3 pontentially large deserts *
+		/* build 1 ~ 3 pontentially large deserts */
 		counter = (int)( (2.0f * width + height / 2.0f) / 30.0f + 0.5f );
 		while (--counter >= 0) {
 			pos_x = UnityEngine.Random.Range(0, width - 1);
 			pos_y = UnityEngine.Random.Range (0, height - 1);
 
-			area = findArea(map[pos_x][pos_y], System.Math.Max(2 * width, height / 2) / 3, 0.45f);
+			area = findArea(map[pos_x][pos_y], System.Math.Max(2 * width, height / 2) / 3, null);
 
 			foreach (HexScript h in area) {
 				setHexType(h, 1);
 			}
 		}
 
-		/* build a few medium lakes *
+		/* build a few medium lakes */
 		counter = 3;
 		while (--counter >= 0) {
 			pos_x = UnityEngine.Random.Range(0, width - 1);
 			pos_y = UnityEngine.Random.Range (0, height - 1);
 
-			area = findArea(map[pos_x][pos_y], 2, 0.75f);
+			area = findArea(map[pos_x][pos_y], 2, null);
 
 			foreach (HexScript h in area) {
 				setHexType(h, 2);
 			}
 		}
 
-		/* build the central mountain *
+		/* build the central mountain */
 		counter = 1;
 		while (--counter >= 0) {
 			pos_x = width / 2;
 			pos_y = height / 2;
 			Debug.Log("(" + pos_x + " , " + pos_y + ") " + (2 * height / 10) + "\n");
-			area = findArea(map[pos_x][pos_y], (2 * height / 10), 0.73f);
+			area = findArea(map[pos_x][pos_y], (2 * height / 10), null);
 
 			foreach (HexScript h in area) {
 				// leave outside margins passable by non-infantry units
@@ -147,7 +148,7 @@ public static class MapGeneration {
 				}
 			}
 		}
-	}*/
+	}
 
 	/**
 	 * Returns all hexes that surround the given hex, in the map, at a given radius
