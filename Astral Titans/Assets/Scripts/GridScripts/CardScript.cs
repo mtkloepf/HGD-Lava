@@ -4,7 +4,7 @@ using System.Collections;
 public class CardScript : MonoBehaviour
 {
 
-	public Sprite HumanInfantry, AlienInfantry, HumanTank, AlienTank, HumanExo, HumanArtillery, Currency1, Currency2;
+	public Sprite HumanInfantry, AlienInfantry, HumanTank, AlienTank, HumanExo, AlienElite, HumanArtillery, Currency1, Currency2, Currency3;
 	SpriteRenderer render;
 	public int cost = 0;
 
@@ -14,11 +14,13 @@ public class CardScript : MonoBehaviour
 		AlienInfantry,
 		HumanTank,
 		AlienTank,
+		AlienElite,
 		HumanExo,
 		HumanArtillery,
 		Currency1,
-		Currency2}
-	;
+		Currency2,
+		Currency3
+	};
 
 	private CardType type;
 
@@ -71,6 +73,9 @@ public class CardScript : MonoBehaviour
 		case CardType.Currency2:
 			render.sprite = Currency2;
 			break;
+		case CardType.Currency3:
+			render.sprite = Currency3;
+			break;
 		case CardType.HumanInfantry:
 			render.sprite = HumanInfantry;
 			cost = 1;
@@ -81,6 +86,10 @@ public class CardScript : MonoBehaviour
 			break;
 		case CardType.HumanExo:
 			render.sprite = HumanExo;
+			cost = 2;
+			break;
+		case CardType.AlienElite:
+			render.sprite = AlienElite;
 			cost = 2;
 			break;
 		case CardType.HumanArtillery:
@@ -118,6 +127,9 @@ public class CardScript : MonoBehaviour
 		case CardType.Currency2:
 			cost = 3;
 			break;
+		case CardType.Currency3:
+			cost = 10;
+			break;
 		case CardType.HumanInfantry:
 			cost = 1;
 			break;
@@ -125,6 +137,9 @@ public class CardScript : MonoBehaviour
 			cost = 4;
 			break;
 		case CardType.HumanExo:
+			cost = 2;
+			break;
+		case CardType.AlienElite:
 			cost = 2;
 			break;
 		case CardType.HumanArtillery:

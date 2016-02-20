@@ -12,7 +12,7 @@ public static class MapGeneration {
 	public static SpriteManagerScript sprites;
 	/* Copy of the map */
 	public static List<List<HexScript>> map;
-	/* the dimensions of the map to create (within the bounds of [5, 45] */
+	/* the dimensions of the map to create (within the bounds of [12, 46] */
 	public static int width;
 	public static int height;
 
@@ -31,7 +31,9 @@ public static class MapGeneration {
 	// TODO: base map generation off of size and map type
 
 	public static void generatePseudoRandomMap() {
-		if (map_type == "desert") {
+		if (map_type == "mountain") {
+			centralMountainMap();
+		} else if (map_type == "desert") {
 			desertification();
 		} else {
 			defaultMap();

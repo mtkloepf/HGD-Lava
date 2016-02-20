@@ -763,6 +763,28 @@ public class GameManagerScript : MonoBehaviour
 					Player1.subtractCurrency (focusedCard.cost);
 				}
 				break;
+			case CardScript.CardType.HumanExo:
+				if (focusedCard.cost <= Player1.getCurrency()) {
+					unit = ((GameObject)Instantiate (HumanExoPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+					unit.setType(UnitScript.Types.H_Exo);
+					unit.setPlayer(turn);
+					unit.move(map[x][y]);
+					units.Add(unit);
+					created = true;
+					Player1.subtractCurrency(focusedCard.cost);
+				}
+				break;
+			case CardScript.CardType.AlienElite:
+				if (focusedCard.cost <= Player2.getCurrency()) {
+					unit = ((GameObject)Instantiate (AlienElitePrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+					unit.setType(UnitScript.Types.A_Elite);
+					unit.setPlayer(turn);
+					unit.move(map[x][y]);
+					units.Add(unit);
+					created = true;
+					Player2.subtractCurrency(focusedCard.cost);
+				}
+				break;
 			default :
 				Debug.Log ("Unknown card type");
 				break;
@@ -836,6 +858,15 @@ public class GameManagerScript : MonoBehaviour
 					Player1.addCurrency (5);
 				else 
 					Player2.addCurrency (5);
+				focusedCard.destroyCard ();
+				Destroy (focusedCard);
+				focusedCard = null;
+				break;
+			case CardScript.CardType.Currency3:
+				if (turn == 1) 
+					Player1.addCurrency (10);
+				else 
+					Player2.addCurrency (10);
 				focusedCard.destroyCard ();
 				Destroy (focusedCard);
 				focusedCard = null;
