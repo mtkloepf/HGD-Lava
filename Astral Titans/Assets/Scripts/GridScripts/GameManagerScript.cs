@@ -149,26 +149,33 @@ public class GameManagerScript : MonoBehaviour
 		if (Input.GetKey ("d")) {
 			cardStartX += cardVelX;
 		}
-		// DON'T try running this code - it is broken . . .
-		/*if (Input.GetKey("c")) {
+		/* Allows the player to convert bronze to silver and silver to gold
+		 * hold 'c' and press '2' to
+		 * 		remove 3 currency and replace 5 bronze (in discard pile) with 1 silver (placed in discard pile).
+		 * hold 'c' and press '3' to
+		 * 		remove 7 currency and replace 2 silver (in discard pile) with 1 gold (placed in discard pile).
+		 */
+		if (Input.GetKey("c")) {
 			if (Input.GetKeyDown("2")) {
 				Debug.Log( "Bronze: " + getDeck().discardPile.getCount(CardScript.CardType.Currency1) + "\n" );
 
 				if (getPlayer().getCurrency() >= 3 && getDeck().discardPile.getCount(CardScript.CardType.Currency1) >= 5) {
 					int removed = getDeck().removeCardsFromDiscard(CardScript.CardType.Currency1, 5);
-					Debug.Log("Remove: " + removed + "\n");
+					Debug.Log("Removed: " + removed + "\n");
 					getDeck().discardPile.add( new CardScript().init(CardScript.CardType.Currency2) );
+					getPlayer().subtractCurrency(3);
 				} 
 			} else if (Input.GetKeyDown("3")) {
 				Debug.Log( "Silver: " + getDeck().discardPile.getCount(CardScript.CardType.Currency2) + "\n" );
 
 				if (getPlayer().getCurrency() >= 7 && getDeck().discardPile.getCount(CardScript.CardType.Currency2) >= 2) {
 					int removed = getDeck().removeCardsFromDiscard(CardScript.CardType.Currency2, 2);
-					Debug.Log("Remove: " + removed + "\n");
+					Debug.Log("Removed: " + removed + "\n");
 					getDeck().discardPile.add( new CardScript().init(CardScript.CardType.Currency3) );
+					getPlayer ().subtractCurrency(7);
 				}
 			}
-		}*/
+		}
 	}
 
 	public UnitScript getFocusedUnit ()

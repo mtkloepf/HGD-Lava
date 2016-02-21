@@ -93,4 +93,15 @@ public class CardCollection {
 		}
 		return counter;
 	}
+
+	public string list() {
+		string l = "";
+
+		for (int idx = 0; idx < cards.Count; ++idx) {
+			l += cards[idx].getType() + "(" + idx + ")";
+			if (idx < cards.Count - 1) { l += " , "; }
+		}
+
+		return l;
+	}
 }
