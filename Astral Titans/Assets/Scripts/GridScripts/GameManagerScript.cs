@@ -100,10 +100,10 @@ public class GameManagerScript : MonoBehaviour
 		generateDecks ();
 		deck1.deal ();
 		//generateCards();
-		turn = 2;
+		turn = 1;
 		Player1 = new PlayerScript ();
 		Player2 = new PlayerScript ();
-        endTurn();
+		drawCards ();
 	}
 	
 	// Update is called once per frame
@@ -149,7 +149,26 @@ public class GameManagerScript : MonoBehaviour
 		if (Input.GetKey ("d")) {
 			cardStartX += cardVelX;
 		}
+		// DON'T try running this code - it is broken . . .
+		/*if (Input.GetKey("c")) {
+			if (Input.GetKeyDown("2")) {
+				Debug.Log( "Bronze: " + getDeck().discardPile.getCount(CardScript.CardType.Currency1) + "\n" );
 
+				if (getPlayer().getCurrency() >= 3 && getDeck().discardPile.getCount(CardScript.CardType.Currency1) >= 5) {
+					int removed = getDeck().removeCardsFromDiscard(CardScript.CardType.Currency1, 5);
+					Debug.Log("Remove: " + removed + "\n");
+					getDeck().discardPile.add( new CardScript().init(CardScript.CardType.Currency2) );
+				} 
+			} else if (Input.GetKeyDown("3")) {
+				Debug.Log( "Silver: " + getDeck().discardPile.getCount(CardScript.CardType.Currency2) + "\n" );
+
+				if (getPlayer().getCurrency() >= 7 && getDeck().discardPile.getCount(CardScript.CardType.Currency2) >= 2) {
+					int removed = getDeck().removeCardsFromDiscard(CardScript.CardType.Currency2, 2);
+					Debug.Log("Remove: " + removed + "\n");
+					getDeck().discardPile.add( new CardScript().init(CardScript.CardType.Currency3) );
+				}
+			}
+		}*/
 	}
 
 	public UnitScript getFocusedUnit ()
@@ -594,6 +613,8 @@ public class GameManagerScript : MonoBehaviour
 					// dmg = 2 (P / A ) - 2 ( A / P ) + 3P - 2A + 38
 					var dmg = 2 * ( (float)focusedUnit.getAttack() / unit.getDefense() ) - 2 * ( (float)unit.getDefense() / focusedUnit.getAttack() ) +
 							  3 * focusedUnit.getAttack() - 2 * unit.getDefense() + 38;
+					// damage randomness
+					dmg *= ( 100 + UnityEngine.Random.Range(-5, 5) ) / 100.0f;
 					unit.setHealth(h - (int)dmg);
 					//unit.setHealth ((int)(unit.getHealth () - (focusedUnit.getAttack () * (1 - unit.getDefense () / 100))));
 					focusedUnit.hasAttacked = true;
@@ -974,5 +995,15 @@ public class GameManagerScript : MonoBehaviour
 		} else {
 			paused = false;
 		}
+	}
+
+	/* Returns the deck manager for the current player. */
+	private DeckManager getDeck() {
+		return (turn == 1) ? deck1 : deck2;
+	}
+
+	/* Returns the current player. */
+	private PlayerScript getPlayer() {
+		return (turn == 1) ? Player1 : Player2;
 	}
 }

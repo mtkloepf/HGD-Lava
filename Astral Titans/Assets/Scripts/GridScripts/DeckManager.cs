@@ -100,5 +100,28 @@ public class DeckManager : MonoBehaviour
 		return allCards;
 	}
 
+	// DOES NOT WORK CORRECTLY YET!!!!
+	/* Removes a number of cards of the given type equal to or less than quantity from the discard pile.
+	 * Keep in mind that if there exists less cards in the discard pile than quantity the cards will
+	 * still be removed!! */
+	public int removeCardsFromDiscard(CardScript.CardType toRemove, int quantity) {
+		List<CardScript> discard = discardPile.getCards();
+		List<CardScript> remove = new List<CardScript>();
+		int left = quantity;
+		// Find cards to remove
+		for (int idx = 0; idx < discardPile.getSize(); ++idx) {
+			if (left <= 0) {
+				break;
+			} else if (discard[idx].getType() == toRemove) {
+				remove.Add(discard[idx]);
+				--left;
+			}
+		}
+		// Remove the cards
+		foreach (CardScript card in remove) {
+			discard.Remove(card);
+		}
 
+		return quantity - left;
+	}
 }

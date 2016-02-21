@@ -125,7 +125,7 @@ public class CardScript : MonoBehaviour
 			cost = 1;
 			break;
 		case CardType.Currency2:
-			cost = 3;
+			cost = 5;
 			break;
 		case CardType.Currency3:
 			cost = 10;

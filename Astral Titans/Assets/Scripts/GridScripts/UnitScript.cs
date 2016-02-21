@@ -75,7 +75,7 @@ public class UnitScript : MonoBehaviour
 		switch (type) {
 		
 		case Types.H_Infantry:
-			attack = 1;
+			attack = 2;
 			defense = 1;
 			maxMovement = 4;
 			movement = 4;
@@ -86,7 +86,7 @@ public class UnitScript : MonoBehaviour
 			break;
 		
 		case Types.H_Exo:
-			attack = 2;
+			attack = 3;
 			defense = 2;
 			maxMovement = 3;
 			movement = 3;
@@ -97,8 +97,8 @@ public class UnitScript : MonoBehaviour
 			break;
 		
 		case Types.H_Tank:
-			attack = 5;
-			defense = 6;
+			attack = 7;
+			defense = 8;
 			maxMovement = 5;
 			movement = 5;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
@@ -108,8 +108,8 @@ public class UnitScript : MonoBehaviour
 			break;
 			
 		case Types.H_Artillery:
-			attack = 6;
-			defense = 4;
+			attack = 8;
+			defense = 5;
 			maxMovement = 3;
 			movement = 3;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
@@ -120,7 +120,7 @@ public class UnitScript : MonoBehaviour
 		
 		case Types.H_Base:
 			attack = 0;
-			defense = 8;
+			defense = 9;
 			maxMovement = 4;
 			movement = 4;
 			terrainMap.Add (HexScript.HexEnum.water, 1);
@@ -130,7 +130,7 @@ public class UnitScript : MonoBehaviour
 			break;
 		
 		case Types.A_Infantry:
-			attack = 1;
+			attack = 2;
 			defense = 1;
 			maxMovement = 4;
 			movement = 4;
@@ -141,7 +141,7 @@ public class UnitScript : MonoBehaviour
 			break;
 
 		case Types.A_Elite:
-			attack = 2;
+			attack = 3;
 			defense = 2;
 			maxMovement = 3;
 			movement = 3;
@@ -152,8 +152,8 @@ public class UnitScript : MonoBehaviour
 			break;
 
 		case Types.A_Tank:
-			attack = 5;
-			defense = 6;
+			attack = 7;
+			defense = 8;
 			maxMovement = 5;
 			movement = 5;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
@@ -163,8 +163,8 @@ public class UnitScript : MonoBehaviour
 			break;
 
 		case Types.A_Artillery:
-			attack = 6;
-			defense = 4;
+			attack = 8;
+			defense = 5;
 			maxMovement = 3;
 			movement = 3;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
@@ -175,7 +175,7 @@ public class UnitScript : MonoBehaviour
 
 		case Types.A_Base:
 			attack = 0;
-			defense = 8;
+			defense = 9;
 			maxMovement = 4;
 			movement = 4;
 			terrainMap.Add (HexScript.HexEnum.water, 1);
