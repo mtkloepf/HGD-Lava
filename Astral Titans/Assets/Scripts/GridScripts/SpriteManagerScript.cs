@@ -18,10 +18,10 @@ public class SpriteManagerScript : MonoBehaviour {
 	public Sprite blueMountainSprite;
         
         // Human Unit Sprites
-	public Sprite infantryHSprite;
+	/*public Sprite infantryHSprite;
 	public Sprite heavyTankHSprite;
 
         // Alien Unit Sprites
 	public Sprite infantryASprite;
-	public Sprite heavyTankASprite;
+	public Sprite heavyTankASprite;*/
 }
