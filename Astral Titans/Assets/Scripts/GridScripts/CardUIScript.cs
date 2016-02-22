@@ -45,10 +45,8 @@ public class CardUIScript : MonoBehaviour
 				unitSprite.sprite = unit.Sprite;
 			}
 		}
-		if (game.turn % 2 == 1)
-			currency.text = "" + GameManagerScript.Player1.getCurrency ();
-		else
-			currency.text = "" + GameManagerScript.Player2.getCurrency ();
+
+		currency.text = "" + game.getPlayer().getCurrency();
 		deckCount.text = "" + game.getDeckCount ();
 		discardCount.text = "" + game.getDiscardCount ();
 	}

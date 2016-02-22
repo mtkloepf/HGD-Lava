@@ -60,8 +60,8 @@ public class GameManagerScript : MonoBehaviour
 	List<CardScript> hand = new List<CardScript> ();
 
 	// Deck managers for players 1 and 2
-	public static DeckManager deck1 = new DeckManager ();
-	public static DeckManager deck2 = new DeckManager ();
+	//public static DeckManager deck1 = new DeckManager ();
+	//public static DeckManager deck2 = new DeckManager ();
 
 	// Set containing all hexes that a unit can move to
 	HashSet<HexScript> hexSet = new HashSet<HexScript> ();
@@ -77,11 +77,11 @@ public class GameManagerScript : MonoBehaviour
 	}
 	
 	// Use this for initialization
-	void Start ()
-	{		
+	void Start () {		
 		musicSlider = GameObject.Find ("Slider");
 		UI.GetComponentInChildren<Canvas> ().enabled = false;
 		shopCanvas.enabled = false;
+		
 		// map setup
 		MapGeneration.sprites = SpriteManager;
 
@@ -95,15 +95,25 @@ public class GameManagerScript : MonoBehaviour
 		} else {
 			randomizeHexes();
 		}
-			
-		generateUnits ();
-		generateDecks ();
-		deck1.deal ();
-		//generateCards();
+		// give starting deck specifications
+		DeckManager d1 = new DeckManager( new CardScript.CardType[] {CardScript.CardType.Currency1, CardScript.CardType.Currency2, CardScript.CardType.HumanInfantry, CardScript.CardType.HumanTank}, new int[] {7, 2, 2, 1} );
+		DeckManager d2 = new DeckManager( new CardScript.CardType[] {CardScript.CardType.Currency1, CardScript.CardType.Currency2, CardScript.CardType.AlienInfantry, CardScript.CardType.AlienTank}, new int[] {7, 2, 2, 1} );
+		// player setup
+		Player1 = new PlayerScript(d1);
+		Player2 = new PlayerScript(d2);
+		Player1.getDeck().deck.shuffle();
+		Player2.getDeck().deck.shuffle();
 		turn = 1;
-		Player1 = new PlayerScript ();
-		Player2 = new PlayerScript ();
-		drawCards ();
+
+		getPlayer().getDeck().deal();
+		drawCards();
+		// place mobile bases
+		p1Base = placeUnit ( map[1][2], UnitScript.Types.H_Base );
+		p1Base.setPlayer (1);
+		p2Base = placeUnit ( map[mapWidth - 2][mapHeight -3], UnitScript.Types.A_Base );
+		p2Base.setPlayer (2);
+
+		Debug.Log ("Spawned mobile base");
 	}
 	
 	// Update is called once per frame
@@ -157,22 +167,22 @@ public class GameManagerScript : MonoBehaviour
 		 */
 		if (Input.GetKey("c")) {
 			if (Input.GetKeyDown("2")) {
-				Debug.Log( "Bronze: " + getDeck().discardPile.getCount(CardScript.CardType.Currency1) + "\n" );
+				Debug.Log( "Bronze: " + getPlayer().getDeck().discardPile.getCount(CardScript.CardType.Currency1) + "\n" );
 
-				if (getPlayer().getCurrency() >= 3 && getDeck().discardPile.getCount(CardScript.CardType.Currency1) >= 5) {
-					int removed = getDeck().removeCardsFromDiscard(CardScript.CardType.Currency1, 5);
+				if (getPlayer().getCurrency() >= 3 && getPlayer().getDeck().discardPile.getCount(CardScript.CardType.Currency1) >= 5) {
+					int removed = getPlayer().getDeck().removeCardsFromDiscard(CardScript.CardType.Currency1, 5);
 					Debug.Log("Removed: " + removed + "\n");
-					getDeck().discardPile.add( new CardScript().init(CardScript.CardType.Currency2) );
-					getPlayer().subtractCurrency(3);
+					getPlayer().getDeck().discardPile.add( new CardScript().init(CardScript.CardType.Currency2) );
+					getPlayer().changeCurrency(-3);
 				} 
 			} else if (Input.GetKeyDown("3")) {
-				Debug.Log( "Silver: " + getDeck().discardPile.getCount(CardScript.CardType.Currency2) + "\n" );
+				Debug.Log( "Silver: " + getPlayer().getDeck().discardPile.getCount(CardScript.CardType.Currency2) + "\n" );
 
-				if (getPlayer().getCurrency() >= 7 && getDeck().discardPile.getCount(CardScript.CardType.Currency2) >= 2) {
-					int removed = getDeck().removeCardsFromDiscard(CardScript.CardType.Currency2, 2);
+				if (getPlayer().getCurrency() >= 7 && getPlayer().getDeck().discardPile.getCount(CardScript.CardType.Currency2) >= 2) {
+					int removed = getPlayer().getDeck().removeCardsFromDiscard(CardScript.CardType.Currency2, 2);
 					Debug.Log("Removed: " + removed + "\n");
-					getDeck().discardPile.add( new CardScript().init(CardScript.CardType.Currency3) );
-					getPlayer ().subtractCurrency(7);
+					getPlayer().getDeck().discardPile.add( new CardScript().init(CardScript.CardType.Currency3) );
+					getPlayer ().changeCurrency(-7);
 				}
 			}
 		}
@@ -183,26 +193,19 @@ public class GameManagerScript : MonoBehaviour
 		return focusedUnit;
 	}
 
-	public int getDeckCount ()
-	{
-		if (turn == 1) {
-			return deck1.deck.getSize ();
-		}
-		if (turn == 2) {
-			return deck2.deck.getSize ();
-		}
-		return 0;
+	/* Returns the current player's deck size */
+	public int getDeckCount () {
+		return getPlayer().getDeck().deck.getSize();
 	}
 
-	public int getDiscardCount ()
-	{
-		if (turn == 1) {
-			return deck1.discardPile.getSize ();
-		}
-		if (turn == 2) {
-			return deck2.discardPile.getSize ();
-		}
-		return 0;
+	/* Returns the current player's discard pile size */
+	public int getDiscardCount () {
+		return getPlayer().getDeck().discardPile.getSize();
+	}
+
+	/* Returns the current player. */
+	public PlayerScript getPlayer() {
+		return (turn == 1) ? Player1 : Player2;
 	}
 
 	// Updates the colors of the hexes
@@ -251,20 +254,18 @@ public class GameManagerScript : MonoBehaviour
 //				Destroy (card);
 			}
 
-			if (turn == 1) {
-				turn = 2;
-				deck2.deal ();
-			} else {
-				turn = 1;
-				deck1.deal ();
-			}
-			Player1.setCurrency (0);
-			Player2.setCurrency (0);
-			updateHexes ();
-			drawCards ();
-			TurnIndicator.updateTurn (turn);
+			// switch turns
+			turn = (turn) % 2 + 1;
 
+			getPlayer().getDeck().deal();
 
+			Player1.setCurrency(0);
+			Player2.setCurrency(0);
+
+			updateHexes();
+			drawCards();
+
+			TurnIndicator.updateTurn(turn);
 		}
 	}
 
@@ -369,70 +370,12 @@ public class GameManagerScript : MonoBehaviour
 		}
 	}
 
-	// Creates a unit for testing purposes. Additional units can be added if desired.
-	// TODO: Create a method to purchase a unit and place it at a desired location. This
-	//       will be a seperate method from this one. Eventually, we will not need this method anymore
-	void generateUnits () {
-		p1Base = placeUnit ( map[1][2], UnitScript.Types.H_Base );
-		p1Base.setPlayer (1);
-		p2Base = placeUnit ( map[mapWidth - 2][mapHeight -3], UnitScript.Types.A_Base );
-		p2Base.setPlayer (2);
-
-		Debug.Log ("Spawned mobile base");
-	}
-
-	// Creates the starting decks.
-	void generateDecks ()
-	{
-		CardCollection deck = new CardCollection ();
-		for (int i = 0; i < 7; i ++) {
-			deck.add (new CardScript ().init (CardScript.CardType.Currency1));
-		}
-		for (int i = 0; i < 3; i++) {
-			deck.add (new CardScript ().init (CardScript.CardType.Currency2));
-		}
-		for (int i = 0; i < 2; i ++) {
-			deck.add (new CardScript ().init (CardScript.CardType.HumanInfantry));
-		}
-		for (int i = 0; i < 1; i++) {
-			deck.add (new CardScript ().init (CardScript.CardType.HumanTank));
-		}
-
-		//TODO:
-		//Used to spawn exo and artillery (no cards implemented yet)
-		/*for (int i = 0; i < 1; i++) {
-			deck.add (new CardScript ().init (CardScript.CardType.H_Exo));
-		}
-		for (int i = 0; i < 1; i++) {
-			deck.add (new CardScript ().init (CardScript.CardType.HumanArtillery));
-		}*/
-
-
-		deck.shuffle ();
-		deck1.init (new CardCollection (), deck, new CardCollection ());
-		deck = new CardCollection ();
-		for (int i = 0; i < 7; i ++) {
-			deck.add (new CardScript ().init (CardScript.CardType.Currency1));
-		}
-		for (int i = 0; i < 3; i++) {
-			deck.add (new CardScript ().init (CardScript.CardType.Currency2));
-		}
-		for (int i = 0; i < 2; i ++) {
-			deck.add (new CardScript ().init (CardScript.CardType.AlienInfantry));
-		}
-		for (int i = 0; i < 1; i++) {
-			deck.add (new CardScript ().init (CardScript.CardType.AlienTank));
-		}
-		deck.shuffle ();
-		deck2.init (new CardCollection (), deck, new CardCollection ());
-	}
-
 	void drawCards ()
 	{
 		CardScript card;
 		float i = 0f;
 		if (turn == 1) {
-			foreach (CardScript playerCard in deck1.hand.getCards ()) {
+			foreach (CardScript playerCard in getPlayer().getDeck().hand.getCards()) {
 				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.7f + i / 1.66f + cardStartX, -1.45f + cardStartY, -2), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
 				card.startRenderer ();
 				card.setType (playerCard.getType ());
@@ -440,7 +383,7 @@ public class GameManagerScript : MonoBehaviour
 				i ++;
 			}
 		} else {
-			foreach (CardScript playerCard in deck2.hand.getCards ()) {
+			foreach (CardScript playerCard in getPlayer().getDeck().hand.getCards ()) {
 				card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1.7f + i / 1.66f + cardStartX, -1.45f + cardStartY, -2), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
 				card.startRenderer ();
 				card.setType (playerCard.getType ());
@@ -755,7 +698,7 @@ public class GameManagerScript : MonoBehaviour
 					unit.move (map [x] [y]);
 					units.Add (unit);
 					created = true;
-					Player2.subtractCurrency (focusedCard.cost);
+					Player2.changeCurrency(-focusedCard.cost);
 				}
 				break;
 			case CardScript.CardType.AlienTank:
@@ -766,7 +709,7 @@ public class GameManagerScript : MonoBehaviour
 					unit.move (map [x] [y]);
 					units.Add (unit);
 					created = true;
-					Player2.subtractCurrency (focusedCard.cost);
+					Player2.changeCurrency(-focusedCard.cost);
 				}
 				break;
 			case CardScript.CardType.HumanInfantry:
@@ -777,7 +720,7 @@ public class GameManagerScript : MonoBehaviour
 					unit.move (map [x] [y]);
 					units.Add (unit);
 					created = true;
-					Player1.subtractCurrency (focusedCard.cost);
+					Player1.changeCurrency(-focusedCard.cost);
 				}
 				break;
 			case CardScript.CardType.HumanTank:
@@ -788,7 +731,7 @@ public class GameManagerScript : MonoBehaviour
 					unit.move (map [x] [y]);
 					units.Add (unit);
 					created = true;
-					Player1.subtractCurrency (focusedCard.cost);
+					Player1.changeCurrency(-focusedCard.cost);
 				}
 				break;
 			case CardScript.CardType.HumanExo:
@@ -799,7 +742,7 @@ public class GameManagerScript : MonoBehaviour
 					unit.move(map[x][y]);
 					units.Add(unit);
 					created = true;
-					Player1.subtractCurrency(focusedCard.cost);
+					Player1.changeCurrency(-focusedCard.cost);
 				}
 				break;
 			case CardScript.CardType.AlienElite:
@@ -810,7 +753,7 @@ public class GameManagerScript : MonoBehaviour
 					unit.move(map[x][y]);
 					units.Add(unit);
 					created = true;
-					Player2.subtractCurrency(focusedCard.cost);
+					Player2.changeCurrency(-focusedCard.cost);
 				}
 				break;
 			default :
@@ -874,27 +817,27 @@ public class GameManagerScript : MonoBehaviour
 			switch (focusedCard.getType ()) {
 			case CardScript.CardType.Currency1:
 				if (turn == 1) 
-					Player1.addCurrency (1);
+					Player1.changeCurrency(1);
 				else 
-					Player2.addCurrency (1);
+					Player2.changeCurrency(1);
 				focusedCard.destroyCard ();
 				Destroy (focusedCard);
 				focusedCard = null;
 				break;
 			case CardScript.CardType.Currency2:
 				if (turn == 1) 
-					Player1.addCurrency (5);
+					Player1.changeCurrency (5);
 				else 
-					Player2.addCurrency (5);
+					Player2.changeCurrency (5);
 				focusedCard.destroyCard ();
 				Destroy (focusedCard);
 				focusedCard = null;
 				break;
 			case CardScript.CardType.Currency3:
 				if (turn == 1) 
-					Player1.addCurrency (10);
+					Player1.changeCurrency (10);
 				else 
-					Player2.addCurrency (10);
+					Player2.changeCurrency (10);
 				focusedCard.destroyCard ();
 				Destroy (focusedCard);
 				focusedCard = null;
@@ -945,25 +888,17 @@ public class GameManagerScript : MonoBehaviour
 		int cost = temp.getCost (type);
 		if (turn == 1) {
 			if (cost <= Player1.getCurrency()) {
-				Player1.subtractCurrency(cost);
-				deck1.discardPile.add (new CardScript().init (type));
+				Player1.changeCurrency(-cost);
+				getPlayer().getDeck().discardPile.add (new CardScript().init (type));
 			}
 		}
 
 		if (turn == 2) {
 			if (cost <= Player2.getCurrency()) {
-				Player2.subtractCurrency(cost);
-				deck2.discardPile.add(new CardScript().init (type));
+				Player2.changeCurrency(-cost);
+				getPlayer().getDeck().discardPile.add(new CardScript().init (type));
 			}
 		}
-	}
-
-	public DeckManager getDeck1() {
-		return deck1;
-	}
-
-	public DeckManager getDeck2() {
-		return deck2;
 	}
 
 	public void endGame () {			
@@ -1002,15 +937,5 @@ public class GameManagerScript : MonoBehaviour
 		} else {
 			paused = false;
 		}
-	}
-
-	/* Returns the deck manager for the current player. */
-	private DeckManager getDeck() {
-		return (turn == 1) ? deck1 : deck2;
-	}
-
-	/* Returns the current player. */
-	private PlayerScript getPlayer() {
-		return (turn == 1) ? Player1 : Player2;
 	}
 }

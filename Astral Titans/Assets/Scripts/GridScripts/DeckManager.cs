@@ -5,39 +5,28 @@ using System.Collections.Generic;
 /// <summary>
 /// A class used to manage a player's deck, discard pile, and hand.
 /// </summary>
-public class DeckManager : MonoBehaviour
-{
+public class DeckManager {
 
-	public CardCollection hand = new CardCollection ();
-	public CardCollection deck = new CardCollection ();
-	public CardCollection discardPile = new CardCollection ();
+	public CardCollection hand;
+	public CardCollection deck;
+	public CardCollection discardPile;
+	private int handSize;
 
-	private int handSize = 5;
+	/* Builds a deck given the types and their respective quantities in the array arguments.
+	 * NOTE: types and weights MUST be of the same length!
+	 * Also, there should be no null values in types and weights should contain no nonpositive values either! */
+	public DeckManager(CardScript.CardType[] types, int[] weights) {
+		deck = new CardCollection ();
 
-	// Use this for initialization
-	void Start ()
-	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
-	}
-	
-	/// <summary>
-	/// Initialize your deck with a given hand, deck, and discardPile.
-	/// The hand and discardPile should usually be an empty CardCollection
-	/// </summary>
-	/// <param name="hand">The hand.</param>
-	/// <param name="deck">The deck.</param>
-	/// <param name="discardPile">The discard pile.</param>
-	public void init (CardCollection hand, CardCollection deck, CardCollection discardPile)
-	{
-		this.hand = hand;
-		this.deck = deck;
-		this.discardPile = discardPile;
+		for (int idx = 0; idx < types.Length; ++idx) {
+			for (int qty = 0; qty < weights[idx]; ++qty) {
+				deck.add( new CardScript().init(types[idx]) );
+			}
+		}
+
+		hand = new CardCollection();
+		discardPile = new CardCollection();
+		handSize = 5;
 	}
 	
 	/// <summary>

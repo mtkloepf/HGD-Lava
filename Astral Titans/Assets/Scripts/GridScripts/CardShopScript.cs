@@ -25,7 +25,7 @@ public class CardShopScript : MonoBehaviour {
 			image.enabled = true;
 		}
 		if (game.turn == 1) {
-			CardCollection cards = game.getDeck1 ().getAllCards();
+			CardCollection cards = game.getPlayer().getDeck().getAllCards();
 			int count = cards.getCount(p1Type);
 			cardCount.text = "" + count;
 			image.sprite = p1Sprite;
@@ -39,7 +39,7 @@ public class CardShopScript : MonoBehaviour {
 			}
 
 		} else {
-			CardCollection cards = game.getDeck2 ().getAllCards();
+			CardCollection cards = game.getPlayer().getDeck().getAllCards();
 			int count = cards.getCount(p2Type);
 			cardCount.text = "" + count;
 			image.sprite = p2Sprite;

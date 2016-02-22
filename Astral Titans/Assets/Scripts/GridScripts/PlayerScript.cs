@@ -1,40 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerScript : MonoBehaviour
-{
+public class PlayerScript {
 
-	private int currency = 0;
+	private readonly DeckManager deck;
+	private int currency;
 
-	// Use this for initialization
-	void Start ()
-	{
-
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
+	/* Creates a player with the given ID value */
+	public PlayerScript(DeckManager DM) {
+		deck = DM;
+		currency = 0;
 	}
 
-	public void setCurrency (int val)
-	{
-		currency = val;
-	}
+	/* Adds the given value to the player's currency */
+	public void changeCurrency(int change) { currency += change; }
 
-	public int getCurrency ()
-	{
-		return currency;
-	}
+	/* Set the player's currency to the given value */
+	public void setCurrency (int val) { currency = val; }
 
-	public void addCurrency (int val)
-	{
-		currency += val;
-	}
+	/* Returns the player's current currency */
+	public int getCurrency() { return currency; }
 
-	public void subtractCurrency (int val)
-	{
-		currency -= val;
-	}
+	/* Returns this player's deck */
+	public DeckManager getDeck() { return deck; }
 }
