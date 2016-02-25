@@ -86,8 +86,8 @@ public class UnitScript : MonoBehaviour
 			break;
 		
 		case Types.H_Exo:
-			attack = 3;
-			defense = 2;
+			attack = 4;
+			defense = 3;
 			maxMovement = 3;
 			movement = 3;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
@@ -141,8 +141,8 @@ public class UnitScript : MonoBehaviour
 			break;
 
 		case Types.A_Elite:
-			attack = 3;
-			defense = 2;
+			attack = 4;
+			defense = 3;
 			maxMovement = 3;
 			movement = 3;
 			terrainMap.Add (HexScript.HexEnum.water, 100);

@@ -174,7 +174,7 @@ public static class MapGeneration {
 	/**
 	 * Finds all hexes that are adjacent to any hex in prev_layer at a given radius from the hexes in prev_layer, that
 	 * do not exist in total, with no duplicates. Ideally, prev_layer is a subset of total. Passing a non-positive
-	 * radius will yield no change. Variation is a a float between 0.0 and 1.0 inclusive coupled with a static decay
+	 * radius will yield no change. Variation should be a float between 0.0 and 1.0 inclusive coupled with a static decay
 	 * value that will reduce the probability on susequent layer calls. Contrary to logic, the greater the variability
 	 * the greater the chance of a uniform shape being formed from the hexes in total.
 	 */
@@ -183,7 +183,7 @@ public static class MapGeneration {
 		if (radius <= 0) { return; }
 
 		List<HexScript> cur_layer = new List<HexScript>();
-		// Find all hexes, which have not already been found, adjacent to any hex in the previous layer
+		// Find hexes, which have not already been found, adjacent to any hex in the previous layer
 		foreach (HexScript hex in prev_layer) {
 			// find all adjacent hexes
 			for (int pos = 0; pos < 6; ++pos) {
