@@ -4,24 +4,66 @@ using System;
 using System.Collections;
 
 public class InputPrompt : MonoBehaviour {
+
+	private Rect window_dimensions;
+	private Rect[] components;
 	private string in_1, in_2, in_3;
 	private string msg_1, msg_2, msg_3;
 	/* [ width min, width max, height min, height max ] */
 	private int[] bounds;
 
 	void Start() {
+		window_dimensions = new Rect(100, 100, 100, 100);
+		components = new Rect[11];
+
 		in_1 = "";
 		in_2 = "";
 		in_3 = "";
 		msg_1 = "";
 		msg_2 = "";
 		msg_3 = "";
+
 		bounds = new int[] { 12, 46, 12, 46 };
 	}
 
 	/* Draws the window for the prompt */
 	void OnGUI() {
-		GUI.Window(0, new Rect(400, 200, 600, 400), EvaluateInput, "Map Specs");
+		var limbo = new Rect(window_dimensions.x, window_dimensions.y, window_dimensions.width, window_dimensions.height);
+		window_dimensions = resizeWindow();
+		// resizes the components of the window if the window's dimensions changed
+		if (!Rect.Equals (limbo, window_dimensions)) {
+			Debug.Log(window_dimensions);
+			updateComponents();
+		}
+
+		GUI.Window(0, window_dimensions, EvaluateInput, "Map Specs");
+	}
+		
+	/* Resize the window based on the size of the screen */
+	private Rect resizeWindow() {
+		// minimum value for window width is 400
+		float width = Mathf.Max(2.0f * Screen.width / 5.0f, 400.0f);
+		return new Rect((Screen.width - width) / 2.0f, Screen.height / 5, width, 3 * Screen.height / 5);
+	}
+
+	/* Reconfigures the positions of all elements in the window. */
+	private void updateComponents() {
+		// dimensions for the general description
+		components[0] = new Rect(45, 45, window_dimensions.width - 90, 128);
+		// dimensions for the labels
+		components[1] = new Rect(components[0].x, components[0].y + components[0].height + 22, 110, 22);
+		components[2] = new Rect(components[1].x, components[1].y + components[1].height + 10, 110, 22);
+		components[3] = new Rect(components[2].x, components[2].y + components[2].height + 10, 110, 22);
+		// dimensions for the input fields
+		components[4] = new Rect(components[1].x + components[1].width + 18, components[1].y, 32, 22);
+		components[5] = new Rect(components[4].x, components[2].y, 32, 22);
+		components[6] = new Rect(components[5].x, components[3].y, 85, 22);
+		// dimensions for error output
+		components[7] = new Rect(components[4].x + components[4].width + 6, components[4].y, 146, 22);
+		components[8] = new Rect(components[5].x + components[5].width + 6, components[5].y, 146, 22);
+		components[9] = new Rect(components[6].x + components[6].width + 6, components[6].y, 146, 22);
+		// dimensions for button
+		components[10] = new Rect(components[0].x, components[6].y + components[6].height + 30, 56, 26);
 	}
 
 	/**
@@ -30,17 +72,17 @@ public class InputPrompt : MonoBehaviour {
 	 */
 	void EvaluateInput(int ID) {
 		/* Display general guidelines */
-		GUI.Label(new Rect(45, 45, 510, 88), "Please input the size and type of the map you wish to create: width and height must be within the bounds of 12 and 46 inclusive and the width must be even.\n\nGame types: " + MapGeneration.allTypes() );
+		GUI.Label(components[0], "Please input the size and type of the map you wish to create: width and height must be within the bounds of 12 and 46 inclusive and the width must be even.\n\nGame types: " + MapGeneration.allTypes() );
 		/* Display width and height prompts */
-		GUI.Label(new Rect(45, 165, 120, 22), "Width of the map?");
-		GUI.Label(new Rect(45, 200, 124, 22), "Height of the map?");
-		GUI.Label(new Rect(45, 235, 110, 22), "Type of map?");
+		GUI.Label(components[1], "Width of the map?");
+		GUI.Label(components[2], "Height of the map?");
+		GUI.Label(components[3], "Type of map?");
 		/* Draw input fields */
-		in_1 = GUI.TextField(new Rect(191, 165, 32, 22), in_1, 3);
-		in_2 = GUI.TextField(new Rect(191, 200, 32, 22), in_2, 3);
-		in_3 = GUI.TextField(new Rect(191, 235, 85, 22), in_3);
+		in_1 = GUI.TextField(components[4], in_1, 3);
+		in_2 = GUI.TextField(components[5], in_2, 3);
+		in_3 = GUI.TextField(components[6], in_3);
 
-		if ( GUI.Button (new Rect (45, 275, 56, 26), "Confirm") ) {
+		if ( GUI.Button (components[10], "Confirm") ) {
 			int w_in = -1;
 			int h_in = -1;
 
@@ -90,12 +132,10 @@ public class InputPrompt : MonoBehaviour {
 			}
 		}
 
-		/* Print Error messages */
-		GUI.Label(new Rect(235, 165, 146, 22), msg_1);
-		GUI.Label(new Rect(235, 200, 146, 22), msg_2);
-		GUI.Label(new Rect(288, 235, 146, 22), msg_3);
+		/* Print error messages */
+		GUI.Label(components[7], msg_1);
+		GUI.Label(components[8], msg_2);
+		GUI.Label(components[9], msg_3);
 	}
-
-
 }
 
