@@ -24,8 +24,8 @@ public class CardShopScript : MonoBehaviour {
 		if (!image.enabled) {
 			image.enabled = true;
 		}
-		if (game.turn == 1) {
-			CardCollection cards = game.getPlayer().getDeck().getAllCards();
+		if (GameManagerScript.getTurn() == 1) {
+			CardCollection cards = GameManagerScript.getPlayer().getDeck().getAllCards();
 			int count = cards.getCount(p1Type);
 			cardCount.text = "" + count;
 			image.sprite = p1Sprite;
@@ -39,7 +39,7 @@ public class CardShopScript : MonoBehaviour {
 			}
 
 		} else {
-			CardCollection cards = game.getPlayer().getDeck().getAllCards();
+			CardCollection cards = GameManagerScript.getPlayer().getDeck().getAllCards();
 			int count = cards.getCount(p2Type);
 			cardCount.text = "" + count;
 			image.sprite = p2Sprite;
@@ -55,10 +55,10 @@ public class CardShopScript : MonoBehaviour {
 	}
 
 	void OnMouseDown() {
-		if (game.turn == 1) {
+		if (GameManagerScript.getTurn() == 1) {
 			game.buyCard(p1Type);
 		}
-		else if (game.turn == 2) {
+		else if (GameManagerScript.getTurn() == 2) {
 			game.buyCard (p2Type);
 		}
 	}

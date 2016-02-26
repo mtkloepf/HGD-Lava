@@ -296,7 +296,7 @@ public class UnitScript : MonoBehaviour
 
 	// Selects the unit and sets it to be focused in the game manager
 	void OnMouseDown () {
-		if (GameManagerScript.instance.getTurn () == player) {
+		if (GameManagerScript.getTurn() == player) {
 			GameManagerScript.instance.selectFocus (this);
 			Debug.Log ("Player selected");
 		} else {

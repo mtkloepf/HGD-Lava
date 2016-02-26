@@ -6,15 +6,12 @@ using System.Collections.Generic;
  * Proceedurally generates maps based on a given size and type
  */
 public static class MapGeneration {
-	/* Determines if the game map will be created pseudo-randomly */
-	public static bool generate;
-	/* Used to set the Hex sprites: NEEDS to be set in GameManager!!! */
-	public static SpriteManagerScript sprites;
 	/* Copy of the map */
 	public static List<List<HexScript>> map;
 	/* the dimensions of the map to create (within the bounds of [12, 46] */
 	public static int width;
 	public static int height;
+	public static int size;
 
 	/* List of valid map types */
 	private static readonly string[] MAP_TYPES = new string[] { "inland", "highland", "coastal", "mountain", "desert", "" };
@@ -23,14 +20,28 @@ public static class MapGeneration {
 
 	/* Initialize the width and height of the map */
 	static MapGeneration() {
-		generate = true;
 		width = 8;
 		height = 32;
+		size = 4;
 	}
 
 	// TODO: base map generation off of size and map type
 
 	public static void generatePseudoRandomMap() {
+		map = new List<List<HexScript>>();
+
+		// generate all hexes initially
+		for (int i = 0; i < width; i++) {
+			List <HexScript> row = new List<HexScript>();
+
+			for (int j = 0; j < height; j++) {
+				// default to plains
+				row.Add(HexScript.createHex(i, j, size, 0));
+			}
+
+			map.Add(row);
+		}
+
 		if (map_type == "mountain") {
 			centralMountainMap();
 		} else if (map_type == "desert") {
@@ -54,7 +65,7 @@ public static class MapGeneration {
 			area = findArea(map[pos_x][pos_y], System.Math.Max(2 * width, height / 2) / 3, new Probability(0.45f, 0.02f));
 
 			foreach (HexScript h in area) {
-				setHexType(h, 1);
+				h.setType(1);
 			}
 		}
 
@@ -67,7 +78,7 @@ public static class MapGeneration {
 			area = findArea(map[pos_x][pos_y], average / 15 + 3, new Probability(0.5f, 0.04f));
 
 			foreach (HexScript h in area) {
-				setHexType(h, 2);
+				h.setType(2);
 			}
 		}
 
@@ -80,7 +91,7 @@ public static class MapGeneration {
 			area = findArea(map[pos_x][pos_y], average / 20 + 3, new Probability(0.55f, 0.06f));
 
 			foreach (HexScript h in area) {
-				setHexType(h, 3);
+				h.setType(3);
 			}
 		}
 	}
@@ -99,7 +110,7 @@ public static class MapGeneration {
 			area = findArea(map[pos_x][pos_y], 2 * System.Math.Max(2 * width, height / 2) / 3, new Probability(0.35f, -0.02f));
 
 			foreach (HexScript h in area) {
-				setHexType(h, 1);
+				h.setType(1);
 			}
 		}
 	}
@@ -118,7 +129,7 @@ public static class MapGeneration {
 			area = findArea(map[pos_x][pos_y], System.Math.Max(2 * width, height / 2) / 3, null);
 
 			foreach (HexScript h in area) {
-				setHexType(h, 1);
+				h.setType(1);
 			}
 		}
 
@@ -131,7 +142,7 @@ public static class MapGeneration {
 			area = findArea(map[pos_x][pos_y], 2, null);
 
 			foreach (HexScript h in area) {
-				setHexType(h, 2);
+				h.setType(2);
 			}
 		}
 
@@ -146,7 +157,7 @@ public static class MapGeneration {
 			foreach (HexScript h in area) {
 				// leave outside margins passable by non-infantry units
 				if (h.position.x > 0 && h.position.x < width - 1 && h.position.y > 2 && h.position.y < (height - 2)) {
-					setHexType (h, 3);
+					h.setType(3);
 				}
 			}
 		}
@@ -241,37 +252,6 @@ public static class MapGeneration {
 		}
 	}
 
-	private static void setHexType(HexScript hex, int type) {
-		// Generate a plains
-		if (type == 0) {
-			hex.setType (HexScript.HexEnum.plains,
-				sprites.plainsSprite, 
-				sprites.redPlainsSprite,
-				sprites.bluePlainsSprite);
-		}
-		// Generate a desert
-		else if (type == 1) {
-			hex.setType (HexScript.HexEnum.desert,
-				sprites.desertSprite, 
-				sprites.redDesertSprite,
-				sprites.blueDesertSprite);
-		}
-		// Generate water
-		else if (type == 2) {
-			hex.setType (HexScript.HexEnum.water,
-				sprites.waterSprite, 
-				sprites.redWaterSprite,
-				sprites.blueWaterSprite);
-		}
-		// Generate a mountain
-		else if (type == 3) {
-			hex.setType (HexScript.HexEnum.mountain,
-				sprites.mountainSprite, 
-				sprites.redMountainSprite,
-				sprites.blueMountainSprite);
-		}
-	}
-
 	/* Return the x and y coordiantes of the center of the map */
 	private static Point center() {
 		return new Point(width / 2, height / 2);
@@ -282,8 +262,6 @@ public static class MapGeneration {
 
 	/* Return the bottom-right most hex in the map */
 	private static Point bottomRight() { return new Point(width - 1, height - 1); }
-
-	public static void setGeneration() { generate = true; }
 
 	/* Determines if the given type is a valid map type */
 	public static bool containsType(string type) {

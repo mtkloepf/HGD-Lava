@@ -36,19 +36,6 @@ public class HexScript : MonoBehaviour {
 		return type;
 	}
 
-	// Sets the type of terrain
-	public void setType(HexEnum type, Sprite standard, 
-        Sprite red, Sprite blue) {
-		this.type = type;
-        if(type == HexEnum.mountain || 
-		   type == HexEnum.water) occupied = true;
-        standardSprite = standard;
-        redSprite = red;
-        blueSprite = blue;
-
-        render.sprite = standardSprite;
-	}
-
         // Returns if a hex cannot be traveled to
         public bool getOccupied() {
            return occupied;
@@ -113,5 +100,73 @@ public class HexScript : MonoBehaviour {
 		bool occ = GameManagerScript.instance.hexClicked(this);
         occupied = occ;
 		// Debug.Log("(" + position.x + " , " + position.y + ")\n");
+	}
+
+	/* Creates a hex at the given row and column value on the map with the given type.
+	 * 0 -> plains; 1 -> desert; 2 -> water; and 3 -> mountain */
+	public static HexScript createHex(int row, int column, int map_size, int type) {
+		HexScript hex;
+
+		if (column % 2 == 1) {
+			hex = ((GameObject)Instantiate (PrefabManager.TilePrefab, 
+				new Vector3 (row * 0.9f + 0.45f - Mathf.Floor (map_size / 2), 
+					-(column + 0f) / 4f + Mathf.Floor (map_size / 2), 1), 
+				Quaternion.Euler (new Vector3 ()))).GetComponent<HexScript>();
+		} else {
+			hex = ((GameObject)Instantiate (PrefabManager.TilePrefab, 
+				new Vector3 (row * 0.9f - Mathf.Floor (map_size / 2), 
+					-column / 4f + Mathf.Floor (map_size / 2), 1), 
+				Quaternion.Euler (new Vector3 ()))).GetComponent<HexScript>();
+		}
+
+		hex.setPosition(new Vector2 ((float)row, (float)column));
+		hex.startRenderer();
+		hex.setType(type);
+
+		return hex;
+	}
+
+	public void setType(int type) {
+		// Generate a plains
+		if (type == 0) {
+			setType (HexScript.HexEnum.plains,
+				SpriteManagerScript.plainsSprite, 
+				SpriteManagerScript.redPlainsSprite,
+				SpriteManagerScript.bluePlainsSprite);
+		}
+		// Generate a desert
+		else if (type == 1) {
+			setType (HexScript.HexEnum.desert,
+				SpriteManagerScript.desertSprite, 
+				SpriteManagerScript.redDesertSprite,
+				SpriteManagerScript.blueDesertSprite);
+		}
+		// Generate water
+		else if (type == 2) {
+			setType (HexScript.HexEnum.water,
+				SpriteManagerScript.waterSprite, 
+				SpriteManagerScript.redWaterSprite,
+				SpriteManagerScript.blueWaterSprite);
+		}
+		// Generate a mountain
+		else if (type == 3) {
+			setType (HexScript.HexEnum.mountain,
+				SpriteManagerScript.mountainSprite, 
+				SpriteManagerScript.redMountainSprite,
+				SpriteManagerScript.blueMountainSprite);
+		}
+	}
+
+	// Sets the type of terrain
+	private void setType(HexEnum type, Sprite standard, 
+		Sprite red, Sprite blue) {
+		this.type = type;
+		if(type == HexEnum.mountain || 
+			type == HexEnum.water) occupied = true;
+		standardSprite = standard;
+		redSprite = red;
+		blueSprite = blue;
+
+		render.sprite = standardSprite;
 	}
 }

@@ -18,11 +18,7 @@ public class GameManagerScript : MonoBehaviour
 	public static PlayerScript Player2;
 	public TurnIndicatorScript TurnIndicator;
 	public GameObject UI;
-	public SpriteManagerScript SpriteManager;
-	private int mapSize = 4;
-	private int mapWidth;
-	private int mapHeight;
-	public int turn;
+	private static int turn;
 	private GameObject musicSlider;
 	public bool paused = false;
 	private float timer;
@@ -36,8 +32,6 @@ public class GameManagerScript : MonoBehaviour
 	private UnitScript p1Base;
 	private UnitScript p2Base;
 
-	// List of all the hexes
-	List <List<HexScript>> map = new List<List<HexScript>> ();
 	// List of all the units in the game
 	List <UnitScript> units = new List<UnitScript> ();
 	// List of the cards in a hand
@@ -55,8 +49,7 @@ public class GameManagerScript : MonoBehaviour
 	HexScript focusedHex;
 	CardScript focusedCard;
 	
-	void Awake ()
-	{
+	void Awake () {
 		instance = this;
 	}
 	
@@ -65,20 +58,10 @@ public class GameManagerScript : MonoBehaviour
 		musicSlider = GameObject.Find ("Slider");
 		UI.GetComponentInChildren<Canvas> ().enabled = false;
 		shopCanvas.enabled = false;
-		
+
 		// map setup
-		MapGeneration.sprites = SpriteManager;
+		MapGeneration.generatePseudoRandomMap();
 
-		mapWidth = MapGeneration.width;
-		mapHeight = MapGeneration.height;
-
-		generateMap();
-
-		if (MapGeneration.generate) {
-			MapGeneration.generatePseudoRandomMap();
-		} else {
-			randomizeHexes();
-		}
 		// give starting deck specifications
 		DeckManager d1 = new DeckManager( new CardScript.CardType[] {CardScript.CardType.Currency1, CardScript.CardType.Currency2, CardScript.CardType.HumanInfantry, CardScript.CardType.HumanTank}, new int[] {7, 2, 2, 1} );
 		DeckManager d2 = new DeckManager( new CardScript.CardType[] {CardScript.CardType.Currency1, CardScript.CardType.Currency2, CardScript.CardType.AlienInfantry, CardScript.CardType.AlienTank}, new int[] {7, 2, 2, 1} );
@@ -92,9 +75,9 @@ public class GameManagerScript : MonoBehaviour
 		getPlayer().getDeck().deal();
 		drawCards();
 		// place mobile bases
-		p1Base = placeUnit ( map[1][2], UnitScript.Types.H_Base );
+		p1Base = placeUnit ( MapGeneration.map[1][2], UnitScript.Types.H_Base );
 		p1Base.setPlayer (1);
-		p2Base = placeUnit ( map[mapWidth - 2][mapHeight -3], UnitScript.Types.A_Base );
+		p2Base = placeUnit ( MapGeneration.map[MapGeneration.width - 2][MapGeneration.height - 3], UnitScript.Types.A_Base );
 		p2Base.setPlayer (2);
 
 		Debug.Log ("Spawned mobile base");
@@ -170,6 +153,10 @@ public class GameManagerScript : MonoBehaviour
 				}
 			}
 		}
+
+		if (Input.GetKey ("t")) {
+			
+		}
 	}
 
 	public UnitScript getFocusedUnit ()
@@ -177,25 +164,30 @@ public class GameManagerScript : MonoBehaviour
 		return focusedUnit;
 	}
 
+	// Gets the turn
+	public static int getTurn () {
+		return turn;
+	}
+
 	/* Returns the current player's deck size */
-	public int getDeckCount () {
+	public static int getDeckCount () {
 		return getPlayer().getDeck().deck.getSize();
 	}
 
 	/* Returns the current player's discard pile size */
-	public int getDiscardCount () {
+	public static int getDiscardCount () {
 		return getPlayer().getDeck().discardPile.getSize();
 	}
 
 	/* Returns the current player. */
-	public PlayerScript getPlayer() {
+	public static PlayerScript getPlayer() {
 		return (turn == 1) ? Player1 : Player2;
 	}
 
 	// Updates the colors of the hexes
 	void updateHexes ()
 	{
-		foreach (List<HexScript> hexlist in map) {
+		foreach (List<HexScript> hexlist in MapGeneration.map) {
 			foreach (HexScript hex in hexlist) {
 				hex.setFocus (false);
 			}
@@ -203,22 +195,16 @@ public class GameManagerScript : MonoBehaviour
 		foreach (UnitScript unit in units) {
 			if (unit.hasMoved && unit.getPlayer () == turn) {
 				// make hex red
-				List<HexScript> mapRow = map [(int)unit.getPosition ().x];
+				List<HexScript> mapRow = MapGeneration.map [(int)unit.getPosition ().x];
 				HexScript hex = mapRow [(int)unit.getPosition ().y];
 				hex.makeRed ();
 			}
                         // DOES NOTHING AT THE MOMENT
 			else if (!unit.hasMoved && unit.getPlayer () == turn) {
-				List<HexScript> mapRow = map [(int)unit.getPosition ().x];
+				List<HexScript> mapRow = MapGeneration.map [(int)unit.getPosition ().x];
 				HexScript hex = mapRow [(int)unit.getPosition ().y];
 			}
 		}
-	}
-
-	// Gets the turn
-	public int getTurn ()
-	{
-		return turn;
 	}
 
 	// Call at the end of a turn to update the game.
@@ -227,7 +213,7 @@ public class GameManagerScript : MonoBehaviour
 		if (!paused) {
 			foreach (UnitScript unit in units) {
 				unit.updateTurn ();
-				List<HexScript> mapRow = map [(int)unit.getPosition ().x];
+				List<HexScript> mapRow = MapGeneration.map [(int)unit.getPosition ().x];
 				HexScript hex = mapRow [(int)unit.getPosition ().y];
 				hex.makeDefault ();
 			}
@@ -272,85 +258,6 @@ public class GameManagerScript : MonoBehaviour
 				focusedHex.setFocus (false);
 			}
 			updateHexes ();
-		}
-	}
-
-	/**
-	 * Create all of the hexes in the map and defaults them to plains
-	 * This method MUST be called before modifying the map in any way!
-	 */
-	void generateMap () {
-		map = new List<List<HexScript>> ();
-
-		for (int i = 0; i < mapWidth; i++) {
-			List <HexScript> row = new List<HexScript>();
-			for (int j = 0; j < mapHeight; j++) {
-				HexScript hex;
-
-				if (j % 2 == 1) {
-					hex = ((GameObject)Instantiate (PrefabManager.TilePrefab, 
-						new Vector3 (i * 0.9f + 0.45f - Mathf.Floor (mapSize / 2), 
-							-(j + 0f) / 4f + Mathf.Floor (mapSize / 2), 1), 
-						Quaternion.Euler (new Vector3 ()))).GetComponent<HexScript> ();
-				} else {
-					hex = ((GameObject)Instantiate (PrefabManager.TilePrefab, 
-						new Vector3 (i * 0.9f - Mathf.Floor (mapSize / 2), 
-							-j / 4f + Mathf.Floor (mapSize / 2), 1), 
-						Quaternion.Euler (new Vector3 ()))).GetComponent<HexScript> ();
-				}
-
-				hex.setPosition (new Vector2 ((float)i, (float)j));
-				hex.startRenderer ();
-				hex.setType (HexScript.HexEnum.plains,
-                                SpriteManager.plainsSprite, 
-                                SpriteManager.redPlainsSprite,
-                                SpriteManager.bluePlainsSprite);
-				row.Add (hex);
-			}
-			map.Add (row);
-		}
-		// pass copy of the map to the MapGeneration
-		MapGeneration.map = map;
-	}
-
-	// Randomly generate a map
-	void randomizeHexes() {
-		
-		foreach (List<HexScript> column in map) {
-			foreach (HexScript hex in column) {
-				
-				//Randomization of hexes to add
-				int tileNumber = Random.Range (0, 4);
-
-				// Generate a plains
-				if (tileNumber == 0) {
-					hex.setType (HexScript.HexEnum.plains,
-                          SpriteManager.plainsSprite, 
-                          SpriteManager.redPlainsSprite,
-                          SpriteManager.bluePlainsSprite);
-				}
-                 // Generate a desert
-                 else if (tileNumber == 1) {
-					hex.setType (HexScript.HexEnum.desert,
-                          SpriteManager.desertSprite, 
-                          SpriteManager.redDesertSprite,
-                          SpriteManager.blueDesertSprite);
-				}
-                 // Generate water
-                 else if (tileNumber == 2) {
-					hex.setType (HexScript.HexEnum.water,
-                          SpriteManager.waterSprite, 
-                          SpriteManager.redWaterSprite,
-                          SpriteManager.blueWaterSprite);
-				}
-                 // Generate a mountain
-                 else if (tileNumber == 3) {
-					hex.setType (HexScript.HexEnum.mountain,
-                          SpriteManager.mountainSprite, 
-                          SpriteManager.redMountainSprite,
-                          SpriteManager.blueMountainSprite);
-				}
-			}
 		}
 	}
 
@@ -407,45 +314,45 @@ public class GameManagerScript : MonoBehaviour
 			//       it won't need any changes.
 			if (y % 2 == 0) {
 				if (y - 2 >= 0) {
-					set.Add (map [x] [y - 2]);
+					set.Add (MapGeneration.map [x] [y - 2]);
 				}
 				if (y - 1 >= 0) {
-					set.Add (map [x] [y - 1]);
+					set.Add (MapGeneration.map [x] [y - 1]);
 				}
-				if (y + 1 < map [x].Count) {
-					set.Add (map [x] [y + 1]);
+				if (y + 1 < MapGeneration.map [x].Count) {
+					set.Add (MapGeneration.map [x] [y + 1]);
 				}
-				if (y + 2 < map [x].Count) {
-					set.Add (map [x] [y + 2]);
+				if (y + 2 < MapGeneration.map [x].Count) {
+					set.Add (MapGeneration.map [x] [y + 2]);
 				}
 				if (x - 1 >= 0) {
-					if (y + 1 < map [x].Count) {
-						set.Add (map [x - 1] [y + 1]);
+					if (y + 1 < MapGeneration.map [x].Count) {
+						set.Add (MapGeneration.map [x - 1] [y + 1]);
 					}
 					if (y - 1 >= 0) {
-						set.Add (map [x - 1] [y - 1]);
+						set.Add (MapGeneration.map [x - 1] [y - 1]);
 					}
 				}
 			}
 			if (y % 2 == 1) {
 				if (y - 2 >= 0) {
-					set.Add (map [x] [y - 2]);
+					set.Add (MapGeneration.map [x] [y - 2]);
 				}
 				if (y - 1 >= 0) {
-					set.Add (map [x] [y - 1]);
+					set.Add (MapGeneration.map [x] [y - 1]);
 				}
-				if (y + 1 < map [x].Count) {
-					set.Add (map [x] [y + 1]);
+				if (y + 1 < MapGeneration.map [x].Count) {
+					set.Add (MapGeneration.map [x] [y + 1]);
 				}
-				if (y + 2 < map [x].Count) {
-					set.Add (map [x] [y + 2]);
+				if (y + 2 < MapGeneration.map [x].Count) {
+					set.Add (MapGeneration.map [x] [y + 2]);
 				}
-				if (x + 1 < map.Count) {
-					if (y + 1 < map [x].Count) {
-						set.Add (map [x + 1] [y + 1]);
+				if (x + 1 < MapGeneration.map.Count) {
+					if (y + 1 < MapGeneration.map [x].Count) {
+						set.Add (MapGeneration.map [x + 1] [y + 1]);
 					}
 					if (y - 1 >= 0) {
-						set.Add (map [x + 1] [y - 1]);
+						set.Add (MapGeneration.map [x + 1] [y - 1]);
 					}
 				}
 			}
@@ -525,10 +432,10 @@ public class GameManagerScript : MonoBehaviour
 		if (!paused) {
 			if (focusedUnit != null && focusedUnit.canAttack && !focusedUnit.hasAttacked) {
 				bool adj = false;
-				List<HexScript> focMapRow = map [(int)focusedUnit.getPosition ().x];
+				List<HexScript> focMapRow = MapGeneration.map [(int)focusedUnit.getPosition ().x];
 				HexScript focHex = focMapRow [(int)focusedUnit.getPosition ().y];
 
-				List<HexScript> curMapRow = map [(int)(unit.getPosition ().x)];
+				List<HexScript> curMapRow = MapGeneration.map [(int)(unit.getPosition ().x)];
 				HexScript curHex = curMapRow [(int)unit.getPosition ().y];
 
 
@@ -607,52 +514,52 @@ public class GameManagerScript : MonoBehaviour
 			
 			switch (type) {
 			case UnitScript.Types.A_Infantry:
-				unit = ((GameObject)Instantiate (PrefabManager.AlienInfantryPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+				unit = ((GameObject)Instantiate (PrefabManager.AlienInfantryPrefab, new Vector3 (4 - Mathf.Floor (MapGeneration.size / 2), -5 + Mathf.Floor (MapGeneration.size / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 				unit.setType (UnitScript.Types.A_Infantry);
 				unit.setPlayer (turn);
-				unit.move (map [x] [y]);
+				unit.move (MapGeneration.map [x] [y]);
 				units.Add (unit);
 				break;
 			case UnitScript.Types.H_Exo:
-				unit = ((GameObject)Instantiate (PrefabManager.HumanExoPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+				unit = ((GameObject)Instantiate (PrefabManager.HumanExoPrefab, new Vector3 (4 - Mathf.Floor (MapGeneration.size / 2), -5 + Mathf.Floor (MapGeneration.size / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 				unit.setType (UnitScript.Types.H_Exo);
 				unit.setPlayer (turn);
-				unit.move (map [x] [y]);
+				unit.move (MapGeneration.map [x] [y]);
 				units.Add (unit);
 				break;
 			case UnitScript.Types.A_Tank:
-				unit = ((GameObject)Instantiate (PrefabManager.AlienTankPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+				unit = ((GameObject)Instantiate (PrefabManager.AlienTankPrefab, new Vector3 (4 - Mathf.Floor (MapGeneration.size / 2), -5 + Mathf.Floor (MapGeneration.size / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 				unit.setType (UnitScript.Types.A_Tank);
 				unit.setPlayer (turn);
-				unit.move (map [x] [y]);
+				unit.move (MapGeneration.map [x] [y]);
 				units.Add (unit);
 				break;
 			case UnitScript.Types.H_Infantry:
-				unit = ((GameObject)Instantiate (PrefabManager.HumanInfantryPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+				unit = ((GameObject)Instantiate (PrefabManager.HumanInfantryPrefab, new Vector3 (4 - Mathf.Floor (MapGeneration.size / 2), -5 + Mathf.Floor (MapGeneration.size / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 				unit.setType (UnitScript.Types.H_Infantry);
 				unit.setPlayer (turn);
-				unit.move (map [x] [y]);
+				unit.move (MapGeneration.map [x] [y]);
 				units.Add (unit);
 				break;
 			case UnitScript.Types.H_Tank:
-				unit = ((GameObject)Instantiate (PrefabManager.HumanTankPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+				unit = ((GameObject)Instantiate (PrefabManager.HumanTankPrefab, new Vector3 (4 - Mathf.Floor (MapGeneration.size / 2), -5 + Mathf.Floor (MapGeneration.size / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 				unit.setType (UnitScript.Types.H_Tank);
 				unit.setPlayer (turn);
-				unit.move (map [x] [y]);
+				unit.move (MapGeneration.map [x] [y]);
 				units.Add (unit);
 				break;
 			case UnitScript.Types.H_Base:
-				unit = ((GameObject)Instantiate (PrefabManager.HumanMobileBasePrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+				unit = ((GameObject)Instantiate (PrefabManager.HumanMobileBasePrefab, new Vector3 (4 - Mathf.Floor (MapGeneration.size / 2), -5 + Mathf.Floor (MapGeneration.size / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 				unit.setType (UnitScript.Types.H_Base);
 				unit.setPlayer (turn);
-				unit.move (map [x] [y]);
+				unit.move (MapGeneration.map [x] [y]);
 				units.Add (unit);
 				break;
 			case UnitScript.Types.A_Base:
-				unit = ((GameObject)Instantiate (PrefabManager.AlienMobileBasePrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+				unit = ((GameObject)Instantiate (PrefabManager.AlienMobileBasePrefab, new Vector3 (4 - Mathf.Floor (MapGeneration.size / 2), -5 + Mathf.Floor (MapGeneration.size / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 				unit.setType (UnitScript.Types.A_Base);
 				unit.setPlayer (turn);
-				unit.move (map [x] [y]);
+				unit.move (MapGeneration.map [x] [y]);
 				units.Add (unit);
 				break;
 
@@ -676,10 +583,10 @@ public class GameManagerScript : MonoBehaviour
 			switch (focusedCard.getType ()) {
 			case CardScript.CardType.AlienInfantry:
 				if (focusedCard.cost <= Player2.getCurrency ()) {
-					unit = ((GameObject)Instantiate (PrefabManager.AlienInfantryPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+					unit = ((GameObject)Instantiate (PrefabManager.AlienInfantryPrefab, new Vector3 (4 - Mathf.Floor (MapGeneration.size / 2), -5 + Mathf.Floor (MapGeneration.size / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 					unit.setPlayer (turn);
 					unit.setType (UnitScript.Types.A_Infantry);
-					unit.move (map [x] [y]);
+					unit.move (MapGeneration.map [x] [y]);
 					units.Add (unit);
 					created = true;
 					Player2.changeCurrency(-focusedCard.cost);
@@ -687,10 +594,10 @@ public class GameManagerScript : MonoBehaviour
 				break;
 			case CardScript.CardType.AlienTank:
 				if (focusedCard.cost <= Player2.getCurrency ()) {
-					unit = ((GameObject)Instantiate (PrefabManager.AlienTankPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+					unit = ((GameObject)Instantiate (PrefabManager.AlienTankPrefab, new Vector3 (4 - Mathf.Floor (MapGeneration.size / 2), -5 + Mathf.Floor (MapGeneration.size / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 					unit.setPlayer (turn);
 					unit.setType (UnitScript.Types.A_Tank);
-					unit.move (map [x] [y]);
+					unit.move (MapGeneration.map [x] [y]);
 					units.Add (unit);
 					created = true;
 					Player2.changeCurrency(-focusedCard.cost);
@@ -698,10 +605,10 @@ public class GameManagerScript : MonoBehaviour
 				break;
 			case CardScript.CardType.HumanInfantry:
 				if (focusedCard.cost <= Player1.getCurrency ()) {
-					unit = ((GameObject)Instantiate (PrefabManager.HumanInfantryPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+					unit = ((GameObject)Instantiate (PrefabManager.HumanInfantryPrefab, new Vector3 (4 - Mathf.Floor (MapGeneration.size / 2), -5 + Mathf.Floor (MapGeneration.size / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 					unit.setType (UnitScript.Types.H_Infantry);
 					unit.setPlayer (turn);
-					unit.move (map [x] [y]);
+					unit.move (MapGeneration.map [x] [y]);
 					units.Add (unit);
 					created = true;
 					Player1.changeCurrency(-focusedCard.cost);
@@ -709,10 +616,10 @@ public class GameManagerScript : MonoBehaviour
 				break;
 			case CardScript.CardType.HumanTank:
 				if (focusedCard.cost <= Player1.getCurrency ()) {
-					unit = ((GameObject)Instantiate (PrefabManager.HumanTankPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+					unit = ((GameObject)Instantiate (PrefabManager.HumanTankPrefab, new Vector3 (4 - Mathf.Floor (MapGeneration.size / 2), -5 + Mathf.Floor (MapGeneration.size / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 					unit.setType (UnitScript.Types.H_Tank);
 					unit.setPlayer (turn);
-					unit.move (map [x] [y]);
+					unit.move (MapGeneration.map [x] [y]);
 					units.Add (unit);
 					created = true;
 					Player1.changeCurrency(-focusedCard.cost);
@@ -720,10 +627,10 @@ public class GameManagerScript : MonoBehaviour
 				break;
 			case CardScript.CardType.HumanExo:
 				if (focusedCard.cost <= Player1.getCurrency()) {
-					unit = ((GameObject)Instantiate (PrefabManager.HumanExoPrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+					unit = ((GameObject)Instantiate (PrefabManager.HumanExoPrefab, new Vector3 (4 - Mathf.Floor (MapGeneration.size / 2), -5 + Mathf.Floor (MapGeneration.size / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 					unit.setType(UnitScript.Types.H_Exo);
 					unit.setPlayer(turn);
-					unit.move(map[x][y]);
+					unit.move(MapGeneration.map[x][y]);
 					units.Add(unit);
 					created = true;
 					Player1.changeCurrency(-focusedCard.cost);
@@ -731,10 +638,10 @@ public class GameManagerScript : MonoBehaviour
 				break;
 			case CardScript.CardType.AlienElite:
 				if (focusedCard.cost <= Player2.getCurrency()) {
-					unit = ((GameObject)Instantiate (PrefabManager.AlienElitePrefab, new Vector3 (4 - Mathf.Floor (mapSize / 2), -5 + Mathf.Floor (mapSize / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+					unit = ((GameObject)Instantiate (PrefabManager.AlienElitePrefab, new Vector3 (4 - Mathf.Floor (MapGeneration.size / 2), -5 + Mathf.Floor (MapGeneration.size / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
 					unit.setType(UnitScript.Types.A_Elite);
 					unit.setPlayer(turn);
-					unit.move(map[x][y]);
+					unit.move(MapGeneration.map[x][y]);
 					units.Add(unit);
 					created = true;
 					Player2.changeCurrency(-focusedCard.cost);
@@ -745,7 +652,7 @@ public class GameManagerScript : MonoBehaviour
 				break;
 			}
 //			unit.setPlayer (turn);
-//			unit.move (map [x] [y]);
+//			unit.move (MapGeneration.map [x] [y]);
 //			units.Add (unit);
 //			hand.Remove (focusedCard);
 			if (created) {
@@ -761,10 +668,10 @@ public class GameManagerScript : MonoBehaviour
 		if (!paused) {
 
 			bool adj = false;
-//			List<HexScript> focMapRow = map [(int)focusedUnit.getPosition ().x];
+//			List<HexScript> focMapRow = MapGeneration.map [(int)focusedUnit.getPosition ().x];
 //			HexScript focHex = focMapRow [(int)focusedUnit.getPosition ().y];
 			if (getTurn () == 1) {
-				List<HexScript> curMapRow = map [(int)(p1Base.getPosition ().x)];
+				List<HexScript> curMapRow = MapGeneration.map [(int)(p1Base.getPosition ().x)];
 				HexScript curHex = curMapRow [(int)p1Base.getPosition ().y];
 				
 				
@@ -775,7 +682,7 @@ public class GameManagerScript : MonoBehaviour
 					}
 				}
 			} else {
-				List<HexScript> curMapRow = map [(int)(p2Base.getPosition ().x)];
+				List<HexScript> curMapRow = MapGeneration.map [(int)(p2Base.getPosition ().x)];
 				HexScript curHex = curMapRow [(int)p2Base.getPosition ().y];
 
 				HashSet<HexScript> adjHexes = findAdj (curHex);
@@ -839,13 +746,13 @@ public class GameManagerScript : MonoBehaviour
 			focusedUnit = unit;
 			if (!unit.hasMoved) {
 				updateHexes ();
-				List<HexScript> mapRow = map [(int)unit.getPosition ().x];
+				List<HexScript> mapRow = MapGeneration.map [(int)unit.getPosition ().x];
 				HexScript curHex = mapRow [(int)unit.getPosition ().y];
 
 				// Reinitialize the hexSet to an empty set
 				hexSet = new HashSet<HexScript> ();
 				// Populate the hexSet with moveable hexes
-				findMovement (focusedUnit.getMovement (), (map [(int)focusedUnit.getPosition ().x]) [(int)focusedUnit.getPosition ().y], false);
+				findMovement (focusedUnit.getMovement (), (MapGeneration.map [(int)focusedUnit.getPosition ().x]) [(int)focusedUnit.getPosition ().y], false);
 				// For each moveable hex, indicate that it is moveable
 				foreach (HexScript moveable in hexSet) {
 					moveable.setFocus (true);

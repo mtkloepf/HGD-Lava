@@ -46,8 +46,8 @@ public class CardUIScript : MonoBehaviour
 			}
 		}
 
-		currency.text = "" + game.getPlayer().getCurrency();
-		deckCount.text = "" + game.getDeckCount ();
-		discardCount.text = "" + game.getDiscardCount ();
+		currency.text = "" + GameManagerScript.getPlayer().getCurrency();
+		deckCount.text = "" + GameManagerScript.getDeckCount ();
+		discardCount.text = "" + GameManagerScript.getDiscardCount ();
 	}
 }
