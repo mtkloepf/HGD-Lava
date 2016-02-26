@@ -10,7 +10,7 @@ public class EndTurnScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		
 	}
 
 	// Ends the turn
