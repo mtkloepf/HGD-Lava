@@ -1,15 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CardScript : MonoBehaviour
-{
+public class CardScript {
 
-	public Sprite HumanInfantry, AlienInfantry, HumanTank, AlienTank, HumanExo, AlienElite, HumanArtillery, Currency1, Currency2, Currency3;
-	SpriteRenderer render;
-	public int cost = 0;
+	public readonly CardType type;
+	public readonly int cost;
 
-	public enum CardType
-	{
+	public enum CardType {
 		HumanInfantry,
 		AlienInfantry,
 		HumanTank,
@@ -19,136 +16,35 @@ public class CardScript : MonoBehaviour
 		HumanArtillery,
 		Currency1,
 		Currency2,
-		Currency3
+		Currency3,
+		Empty
 	};
 
-	private CardType type;
-
-	// Use this for initialization
-	void Start ()
-	{
-		transform.SetParent (GameObject.Find ("CardManager").transform);
-		startRenderer ();
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
+	/* Creates a card based on the given type. */
+	public CardScript(CardScript.CardType t) {
+		type = t;
+		cost = setCost(t);
 	}
 
-	public void destroyCard ()
-	{
-		if (render != null)
-			render.sprite = null;
-		Destroy (this.gameObject, 1);
-	}
-
-	public void startRenderer ()
-	{
-		render = GetComponent<SpriteRenderer> ();
-	}
-
-	public CardScript init (CardType type)
-	{
-		this.type = type;
-		return this;
-	}
-
-	public void setType (CardType type)
-	{
-		this.type = type;
-		switch (type) {
-		case CardType.AlienInfantry:
-			render.sprite = AlienInfantry;
-			cost = 1;
-			break;
-		case CardType.AlienTank:
-			render.sprite = AlienTank;
-			cost = 4;
-			break;
-		case CardType.Currency1:
-			render.sprite = Currency1;
-			break;
-		case CardType.Currency2:
-			render.sprite = Currency2;
-			break;
-		case CardType.Currency3:
-			render.sprite = Currency3;
-			break;
-		case CardType.HumanInfantry:
-			render.sprite = HumanInfantry;
-			cost = 1;
-			break;
-		case CardType.HumanTank:
-			render.sprite = HumanTank;
-			cost = 4;
-			break;
-		case CardType.HumanExo:
-			render.sprite = HumanExo;
-			cost = 2;
-			break;
-		case CardType.AlienElite:
-			render.sprite = AlienElite;
-			cost = 2;
-			break;
-		case CardType.HumanArtillery:
-			render.sprite = HumanArtillery;
-			cost = 3;
-			break;
-
-		default:
-			break;
+	/* Sets the cost of the card base on the card's type. */
+	private static int setCost(CardType t) {
+		switch (t) {
+			case CardType.HumanInfantry:		return 1;
+			case CardType.HumanTank:			return 4;
+			case CardType.HumanExo:				return 2;
+			case CardType.HumanArtillery:		return 5;
+			case CardType.AlienInfantry:		return 1;
+			case CardType.AlienTank:			return 4;
+			case CardType.AlienElite:			return 2;
+			case CardType.Currency1:			return 1;
+			case CardType.Currency2:			return 5;
+			case CardType.Currency3:			return 10;
+			default:							return int.MaxValue;
 		}
 	}
 
-	public CardType getType ()
-	{
-		return type;
-	}
-
-	void OnMouseDown ()
-	{
-		Debug.Log ("Card clicked of type: " + type);
-		GameManagerScript.instance.selectCard (this);
-	}
-
-	public int getCost(CardScript.CardType type) {
-		switch (type) {
-		case CardType.AlienInfantry:
-			cost = 1;
-			break;
-		case CardType.AlienTank:
-			cost = 4;
-			break;
-		case CardType.Currency1:
-			cost = 1;
-			break;
-		case CardType.Currency2:
-			cost = 5;
-			break;
-		case CardType.Currency3:
-			cost = 10;
-			break;
-		case CardType.HumanInfantry:
-			cost = 1;
-			break;
-		case CardType.HumanTank:
-			cost = 4;
-			break;
-		case CardType.HumanExo:
-			cost = 2;
-			break;
-		case CardType.AlienElite:
-			cost = 2;
-			break;
-		case CardType.HumanArtillery:
-			cost = 3;
-			break;
-		default:
-			break;
-		}
-
-		return cost;
+	/* Returns the image associated with this card. */
+	public Sprite card_image() {
+		return SpriteManagerScript.card_by_type(type);
 	}
 }

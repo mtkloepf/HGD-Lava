@@ -16,7 +16,7 @@ public class CloseShopScript : MonoBehaviour {
 	}
 
 	void OnMouseDown() {
-		if (game.paused) {
+		if (GameManagerScript.paused) {
 			game.toggleShop ();
 		}
 	}

@@ -47,12 +47,12 @@ public class UnitScript : MonoBehaviour
 	// Use this for initialization
 	void Start () {
 		health = 100;
-		animator = GetComponent<Animator> ();
+		animator = GetComponent<Animator>();
 		hasMoved = false;
 		hasAttacked = false;
-		// Set HP z value, so it does not overlay the cards
-		var original = HPBar.transform.localPosition;
-		HPBar.transform.localPosition = new Vector3(original.x, original.y, -1.5f);
+		// Fix local positioning of the unit
+		Vector3 pos = gameObject.transform.localPosition;
+		gameObject.transform.localPosition = new Vector3(pos.x, pos.y, -1);
 	}
 
 	public void updateTurn ()
@@ -226,7 +226,7 @@ public class UnitScript : MonoBehaviour
 		transform.position = new Vector3 (
 			hex.transform.position.x,
 			hex.transform.position.y,
-			hex.transform.position.z - 1f);
+			0);
 	}
 
 	// Returns the position of the unit

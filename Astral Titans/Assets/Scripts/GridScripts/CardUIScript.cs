@@ -35,8 +35,8 @@ public class CardUIScript : MonoBehaviour
 				unitSprite.sprite = unit.Sprite;
 			}
 		}
-		else if (game.getFocusedUnit () != null) {
-			unit = game.getFocusedUnit ();
+		else if (GameManagerScript.getFocusedUnit () != null) {
+			unit = GameManagerScript.getFocusedUnit ();
 			health.text = "" + unit.getHealth ();
 			attack.text = "" + unit.getAttack ();
 			defense.text = "" + unit.getDefense ();

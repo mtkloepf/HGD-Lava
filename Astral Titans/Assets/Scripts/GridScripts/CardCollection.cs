@@ -87,7 +87,7 @@ public class CardCollection {
 	public int getCount(CardScript.CardType type) {
 		int counter = 0;
 		foreach (CardScript card in cards) {
-			if (card.getType () == type) {
+			if (card.type == type) {
 				counter ++;
 			}
 		}
@@ -98,7 +98,7 @@ public class CardCollection {
 		string l = "";
 
 		for (int idx = 0; idx < cards.Count; ++idx) {
-			l += cards[idx].getType() + "(" + idx + ")";
+			l += cards[idx].type + "(" + idx + ")";
 			if (idx < cards.Count - 1) { l += " , "; }
 		}
 

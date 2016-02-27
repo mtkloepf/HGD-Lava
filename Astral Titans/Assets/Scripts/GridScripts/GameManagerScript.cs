@@ -16,11 +16,13 @@ public class GameManagerScript : MonoBehaviour
 
 	public static PlayerScript Player1;
 	public static PlayerScript Player2;
+	private static HandScript[] hand_display;
+
 	public TurnIndicatorScript TurnIndicator;
 	public GameObject UI;
 	private static int turn;
 	private GameObject musicSlider;
-	public bool paused = false;
+	public static bool paused = false;
 	private float timer;
 
 	private float cardStartX = 0;
@@ -33,21 +35,15 @@ public class GameManagerScript : MonoBehaviour
 	private UnitScript p2Base;
 
 	// List of all the units in the game
-	List <UnitScript> units = new List<UnitScript> ();
-	// List of the cards in a hand
-	List<CardScript> hand = new List<CardScript> ();
-
-	// Deck managers for players 1 and 2
-	//public static DeckManager deck1 = new DeckManager ();
-	//public static DeckManager deck2 = new DeckManager ();
+	static List <UnitScript> units = new List<UnitScript> ();
 
 	// Set containing all hexes that a unit can move to
 	HashSet<HexScript> hexSet = new HashSet<HexScript> ();
 
 	// Clicking on a unit will make it focused
-	UnitScript focusedUnit;
-	HexScript focusedHex;
-	CardScript focusedCard;
+	private static UnitScript focusedUnit;
+	private static HexScript focusedHex;
+	private static CardScript focusedCard;
 	
 	void Awake () {
 		instance = this;
@@ -55,6 +51,14 @@ public class GameManagerScript : MonoBehaviour
 	
 	// Use this for initialization
 	void Start () {
+		// Initialize hand display
+		GameObject[] card_frames = GameObject.FindGameObjectsWithTag("Hand");
+		hand_display = new HandScript[DeckManager.MAX_HAND_SIZE];
+
+		for (int idx = 0; idx < card_frames.Length; ++idx) {
+			hand_display[idx] = card_frames[idx].GetComponent<HandScript>();
+		}
+
 		musicSlider = GameObject.Find ("Slider");
 		UI.GetComponentInChildren<Canvas> ().enabled = false;
 		shopCanvas.enabled = false;
@@ -65,6 +69,7 @@ public class GameManagerScript : MonoBehaviour
 		// give starting deck specifications
 		DeckManager d1 = new DeckManager( new CardScript.CardType[] {CardScript.CardType.Currency1, CardScript.CardType.Currency2, CardScript.CardType.HumanInfantry, CardScript.CardType.HumanTank}, new int[] {7, 2, 2, 1} );
 		DeckManager d2 = new DeckManager( new CardScript.CardType[] {CardScript.CardType.Currency1, CardScript.CardType.Currency2, CardScript.CardType.AlienInfantry, CardScript.CardType.AlienTank}, new int[] {7, 2, 2, 1} );
+		
 		// player setup
 		Player1 = new PlayerScript(d1);
 		Player2 = new PlayerScript(d2);
@@ -74,6 +79,7 @@ public class GameManagerScript : MonoBehaviour
 
 		getPlayer().getDeck().deal();
 		drawCards();
+		updateHexes();
 		// place mobile bases
 		p1Base = placeUnit ( MapGeneration.map[1][2], UnitScript.Types.H_Base );
 		p1Base.setPlayer (1);
@@ -84,35 +90,8 @@ public class GameManagerScript : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update ()
-	{
+	void Update () {
 		timer = Time.deltaTime;
-
-		foreach (CardScript card in hand) {
-			if (card == null) {
-				continue;
-			}
-			if (Input.GetKey ("w")) {
-				Vector3 position = card.transform.position;
-				position.y += cardVelY;
-				card.transform.position = position;
-			}
-			if (Input.GetKey ("a")) {
-				Vector3 position = card.transform.position;
-				position.x -= cardVelX;
-				card.transform.position = position;
-			}
-			if (Input.GetKey ("s")) {
-				Vector3 position = card.transform.position;
-				position.y -= cardVelY;
-				card.transform.position = position;
-			}
-			if (Input.GetKey ("d")) {
-				Vector3 position = card.transform.position;
-				position.x += cardVelX;
-				card.transform.position = position;
-			}
-		}
 		
 		if (Input.GetKey ("w")) {
 			cardStartY += cardVelY;
@@ -139,7 +118,7 @@ public class GameManagerScript : MonoBehaviour
 				if (getPlayer().getCurrency() >= 3 && getPlayer().getDeck().discardPile.getCount(CardScript.CardType.Currency1) >= 5) {
 					int removed = getPlayer().getDeck().removeCardsFromDiscard(CardScript.CardType.Currency1, 5);
 					Debug.Log("Removed: " + removed + "\n");
-					getPlayer().getDeck().discardPile.add( new CardScript().init(CardScript.CardType.Currency2) );
+					getPlayer().getDeck().discardPile.add( new CardScript(CardScript.CardType.Currency2) );
 					getPlayer().changeCurrency(-3);
 				} 
 			} else if (Input.GetKeyDown("3")) {
@@ -148,20 +127,21 @@ public class GameManagerScript : MonoBehaviour
 				if (getPlayer().getCurrency() >= 7 && getPlayer().getDeck().discardPile.getCount(CardScript.CardType.Currency2) >= 2) {
 					int removed = getPlayer().getDeck().removeCardsFromDiscard(CardScript.CardType.Currency2, 2);
 					Debug.Log("Removed: " + removed + "\n");
-					getPlayer().getDeck().discardPile.add( new CardScript().init(CardScript.CardType.Currency3) );
+					getPlayer().getDeck().discardPile.add( new CardScript(CardScript.CardType.Currency3) );
 					getPlayer ().changeCurrency(-7);
 				}
 			}
 		}
-
-		if (Input.GetKey ("t")) {
-			
-		}
 	}
 
-	public UnitScript getFocusedUnit ()
-	{
+	// Returns currently seletec unit
+	public static UnitScript getFocusedUnit () {
 		return focusedUnit;
+	}
+
+	// Returns currently selected card
+	public static CardScript getFocusedCard() {
+		return focusedCard;
 	}
 
 	// Gets the turn
@@ -184,8 +164,13 @@ public class GameManagerScript : MonoBehaviour
 		return (turn == 1) ? Player1 : Player2;
 	}
 
+	/* Returns the hand of the current player. */
+	public static CardCollection currentHand() {
+		return getPlayer().getDeck().hand;
+	}
+
 	// Updates the colors of the hexes
-	void updateHexes ()
+	private static void updateHexes ()
 	{
 		foreach (List<HexScript> hexlist in MapGeneration.map) {
 			foreach (HexScript hex in hexlist) {
@@ -217,12 +202,6 @@ public class GameManagerScript : MonoBehaviour
 				HexScript hex = mapRow [(int)unit.getPosition ().y];
 				hex.makeDefault ();
 			}
-			foreach (CardScript card in hand) {
-				if (card != null) {
-					card.destroyCard ();
-				}
-//				Destroy (card);
-			}
 
 			// switch turns
 			turn = (turn) % 2 + 1;
@@ -245,7 +224,7 @@ public class GameManagerScript : MonoBehaviour
 		// DONE: Limit range of a unit's movement
 		// DONE: Zone of control
 		// DONE: Only allow unit's to be moved on their turn
-		// TODO: Attacking
+		// TODO: wacking
 
 		if (!paused) {
 			// Makes sure there is currently a focused unit
@@ -261,44 +240,11 @@ public class GameManagerScript : MonoBehaviour
 		}
 	}
 
-	void drawCards ()
-	{
-		CardScript card;
-		float i = 0f;
-		if (turn == 1) {
-			foreach (CardScript playerCard in getPlayer().getDeck().hand.getCards()) {
-				card = ((GameObject)Instantiate (PrefabManager.CardPrefab, new Vector3 (-1.7f + i / 1.66f + cardStartX, -1.45f + cardStartY, -2), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
-				card.startRenderer ();
-				card.setType (playerCard.getType ());
-				hand.Add (card);
-				i ++;
-			}
-		} else {
-			foreach (CardScript playerCard in getPlayer().getDeck().hand.getCards ()) {
-				card = ((GameObject)Instantiate (PrefabManager.CardPrefab, new Vector3 (-1.7f + i / 1.66f + cardStartX, -1.45f + cardStartY, -2), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
-				card.startRenderer ();
-				card.setType (playerCard.getType ());
-				hand.Add (card);
-				i ++;
-			}
+	/* Display Current player's hand. */
+	void drawCards () {
+		for (int idx = 0; idx < currentHand().getSize(); ++idx) {
+			hand_display[idx].reset(idx, currentHand().getCards()[idx].type);
 		}
-	}
-
-	void generateCards ()
-	{
-//		CardScript card;
-//
-//		card = ((GameObject)Instantiate (CardPrefab, new Vector3 (0, -1.5f, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
-//
-//		hand.Add (card);
-//
-//		card = ((GameObject)Instantiate (CardPrefab, new Vector3 (1f, -1.5f, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
-//		
-//		hand.Add (card);
-//
-//		card = ((GameObject)Instantiate (CardPrefab, new Vector3 (-1f, -1.5f, 0), Quaternion.Euler (new Vector3 ()))).GetComponent<CardScript> ();
-//		
-//		hand.Add (card);
 	}
 
 
@@ -430,7 +376,7 @@ public class GameManagerScript : MonoBehaviour
 	public void attack (UnitScript unit)
 	{
 		if (!paused) {
-			if (focusedUnit != null && focusedUnit.canAttack && !focusedUnit.hasAttacked) {
+			if (focusedUnit != null && focusedUnit.getAttack() > 0 && focusedUnit.canAttack && !focusedUnit.hasAttacked) {
 				bool adj = false;
 				List<HexScript> focMapRow = MapGeneration.map [(int)focusedUnit.getPosition ().x];
 				HexScript focHex = focMapRow [(int)focusedUnit.getPosition ().y];
@@ -487,14 +433,14 @@ public class GameManagerScript : MonoBehaviour
 	}
 
 	// Returns if the hex that was clicked is occupied by a unit
-	public bool hexClicked (HexScript hex)
-	{
+	public bool hexClicked (HexScript hex) {
+		
 		if (!paused) {
+			
 			if (focusedUnit != null) {
 				moveCurrentUnit (hex);
 				return true;
 			} else if (focusedCard != null) {
-
 				placeUnitAdjacentToBase (hex);
 				return true;
 			}
@@ -566,6 +512,7 @@ public class GameManagerScript : MonoBehaviour
 			default :
 				break;
 			}
+
 			return unit;
 		}
 		return null;
@@ -580,7 +527,7 @@ public class GameManagerScript : MonoBehaviour
 
 			UnitScript unit;
 
-			switch (focusedCard.getType ()) {
+			switch (focusedCard.type) {
 			case CardScript.CardType.AlienInfantry:
 				if (focusedCard.cost <= Player2.getCurrency ()) {
 					unit = ((GameObject)Instantiate (PrefabManager.AlienInfantryPrefab, new Vector3 (4 - Mathf.Floor (MapGeneration.size / 2), -5 + Mathf.Floor (MapGeneration.size / 2), -1), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
@@ -656,9 +603,18 @@ public class GameManagerScript : MonoBehaviour
 //			units.Add (unit);
 //			hand.Remove (focusedCard);
 			if (created) {
-				focusedCard.destroyCard ();
-				Destroy (focusedCard);
+				//focusedCard.destroyCard();
+				//Destroy (focusedCard);
+
+				int idx = currentHand().getCards().IndexOf( focusedCard );
+
+				if (idx == -1) {
+					Debug.Log("Invalid index!\n");
+				} else { // use the card
+					hand_display[idx].reset(-1, CardScript.CardType.Empty);
+				}
 			}
+
 			focusedCard = null;
 		}
 	}
@@ -699,44 +655,33 @@ public class GameManagerScript : MonoBehaviour
 		}
 	}
 
-	public void selectCard (CardScript card)
-	{
-		if (!paused) {
-			focusedUnit = null;
-			updateHexes ();
-			focusedCard = card;
-			switch (focusedCard.getType ()) {
-			case CardScript.CardType.Currency1:
-				if (turn == 1) 
-					Player1.changeCurrency(1);
-				else 
-					Player2.changeCurrency(1);
-				focusedCard.destroyCard ();
-				Destroy (focusedCard);
-				focusedCard = null;
-				break;
-			case CardScript.CardType.Currency2:
-				if (turn == 1) 
-					Player1.changeCurrency (5);
-				else 
-					Player2.changeCurrency (5);
-				focusedCard.destroyCard ();
-				Destroy (focusedCard);
-				focusedCard = null;
-				break;
-			case CardScript.CardType.Currency3:
-				if (turn == 1) 
-					Player1.changeCurrency (10);
-				else 
-					Player2.changeCurrency (10);
-				focusedCard.destroyCard ();
-				Destroy (focusedCard);
-				focusedCard = null;
-				break;
-			default:
-				break;
-			}
+	/* Evaluates the card at the given index in the hand being clicked.
+	 * Sets focusedCard if the cards is not a currenct card.
+	 * Returns true if the card was currency, false otherwise. */
+	public static bool cardClicked(int idx) {
+		if (paused) { // cards are unresponsive when the game is paused
+			return false;
 		}
+
+		CardScript c = currentHand().getCards()[idx];
+
+		focusedUnit = null;
+		updateHexes();
+		// Determine if the card is currency and if so add to the player's currency and return true
+		if (c.type == CardScript.CardType.Currency1) {
+			getPlayer().changeCurrency(1);
+			return true;
+		} else if (c.type == CardScript.CardType.Currency2) {
+			getPlayer().changeCurrency(5);
+			return true;
+		} else if (c.type == CardScript.CardType.Currency3) {
+			getPlayer().changeCurrency(10);
+			return true;
+		} else if (getPlayer().getCurrency() >= c.cost) { // card is not currency
+			focusedCard = c;
+		}
+
+		return false;
 	}
 
 	// Set's a unit to be the current unit in focus
@@ -748,7 +693,6 @@ public class GameManagerScript : MonoBehaviour
 				updateHexes ();
 				List<HexScript> mapRow = MapGeneration.map [(int)unit.getPosition ().x];
 				HexScript curHex = mapRow [(int)unit.getPosition ().y];
-
 				// Reinitialize the hexSet to an empty set
 				hexSet = new HashSet<HexScript> ();
 				// Populate the hexSet with moveable hexes
@@ -775,19 +719,19 @@ public class GameManagerScript : MonoBehaviour
 	}
 
 	public void buyCard(CardScript.CardType type) {
-		CardScript temp = new CardScript ();
-		int cost = temp.getCost (type);
+		CardScript temp = new CardScript(type);
+		int cost = temp.cost;
 		if (turn == 1) {
 			if (cost <= Player1.getCurrency()) {
 				Player1.changeCurrency(-cost);
-				getPlayer().getDeck().discardPile.add (new CardScript().init (type));
+				getPlayer().getDeck().discardPile.add (new CardScript(type));
 			}
 		}
 
 		if (turn == 2) {
 			if (cost <= Player2.getCurrency()) {
 				Player2.changeCurrency(-cost);
-				getPlayer().getDeck().discardPile.add(new CardScript().init (type));
+				getPlayer().getDeck().discardPile.add(new CardScript(type));
 			}
 		}
 	}

@@ -67,4 +67,20 @@ public static class SpriteManagerScript {
 		alien_elite_card = Resources.Load<Sprite>("Sprites/Cards/Alien_Elite");
 		alien_artillery_card = null; // does not exist yet!
 	}
+
+	/* Returns a card sprite based on the type given. */
+	public static Sprite card_by_type(CardScript.CardType type) {
+		switch (type) {
+			case CardScript.CardType.HumanInfantry:		return human_infantry_card;
+			case CardScript.CardType.HumanTank:			return human_tank_card;
+			case CardScript.CardType.HumanExo:			return human_exo_card;
+			case CardScript.CardType.AlienInfantry:		return alien_infantry_card;
+			case CardScript.CardType.AlienTank:			return alien_tank_card;
+			case CardScript.CardType.AlienElite:		return alien_elite_card;
+			case CardScript.CardType.Currency1:			return bronze_card;
+			case CardScript.CardType.Currency2:			return silver_card;
+			case CardScript.CardType.Currency3:			return gold_card;
+			default:									return empty_card;
+		}
+	}
 }

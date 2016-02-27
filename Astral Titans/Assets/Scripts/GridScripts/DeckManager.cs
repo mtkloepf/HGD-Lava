@@ -10,23 +10,22 @@ public class DeckManager {
 	public CardCollection hand;
 	public CardCollection deck;
 	public CardCollection discardPile;
-	private int handSize;
+	public static readonly int MAX_HAND_SIZE = 5;
 
 	/* Builds a deck given the types and their respective quantities in the array arguments.
 	 * NOTE: types and weights MUST be of the same length!
 	 * Also, there should be no null values in types and weights should contain no nonpositive values either! */
 	public DeckManager(CardScript.CardType[] types, int[] weights) {
 		deck = new CardCollection ();
-
+		// Adds a number of each card type equal to their respective weights
 		for (int idx = 0; idx < types.Length; ++idx) {
 			for (int qty = 0; qty < weights[idx]; ++qty) {
-				deck.add( new CardScript().init(types[idx]) );
+				deck.add(new CardScript(types[idx]));
 			}
 		}
-
+		
 		hand = new CardCollection();
 		discardPile = new CardCollection();
-		handSize = 5;
 	}
 	
 	/// <summary>
@@ -55,30 +54,12 @@ public class DeckManager {
 	public void deal ()
 	{
 		discardHand ();
-		hand.addList (deck.removeCount (handSize));
-		int count = handSize - hand.getSize ();
+		hand.addList (deck.removeCount (MAX_HAND_SIZE));
+		int count = MAX_HAND_SIZE - hand.getSize ();
 		if (count > 0) {
 			discardToDeck ();
 			hand.addList (deck.removeCount (count));
 		}
-	}
-	
-	/// <summary>
-	/// Gets the maximum size of the hand.
-	/// </summary>
-	/// <returns>The maximum hand size.</returns>
-	public int getHandSize ()
-	{
-		return handSize;
-	}
-	
-	/// <summary>
-	/// Sets the maximum size of the hand.
-	/// </summary>
-	/// <param name="size">The new maximum hand size.</param>
-	public void setHandSize (int size)
-	{
-		handSize = size;
 	}
 
 	public CardCollection getAllCards() {
@@ -100,7 +81,7 @@ public class DeckManager {
 			// Exit after removing the quantity of a card type
 			if (left <= 0) {
 				break;
-			} else if (discard[idx].getType().CompareTo(toRemove) == 0) {
+			} else if (discard[idx].type.CompareTo(toRemove) == 0) {
 				discard.RemoveAt(idx);
 				--left;
 			} else {

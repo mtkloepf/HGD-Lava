@@ -19,6 +19,8 @@ public class HexScript : MonoBehaviour {
 	void Start () {
 		transform.SetParent (GameObject.Find("HexManager").transform);
         startRenderer();
+		// Do not remove this or the hexes will not be displayed!!
+		gameObject.transform.localScale = new Vector3(1, 1, 0);
 	}
 	
 	// Update is called once per frame
@@ -123,6 +125,7 @@ public class HexScript : MonoBehaviour {
 		hex.startRenderer();
 		hex.setType(type);
 
+		//Debug.Log(hex.gameObject.layer);
 		return hex;
 	}
 
@@ -168,5 +171,9 @@ public class HexScript : MonoBehaviour {
 		blueSprite = blue;
 
 		render.sprite = standardSprite;
+	}
+
+	public override string ToString() {
+		return type.ToString () + ": (" + position.x + ", " + position.y + ")";
 	}
 }
