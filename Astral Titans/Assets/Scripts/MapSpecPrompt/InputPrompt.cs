@@ -127,6 +127,12 @@ public class InputPrompt : MonoBehaviour {
 				}
 
 				msg_3 = "";
+			} else if ( in_3.Length > 0 && in_3[0] == '$' && MapGeneration.containsType(in_3.Substring(1, in_3.Length - 1) ) ) {
+				if (w_in > 0 && h_in > 0) {
+					MapGeneration.map_type = in_3.Substring(1, in_3.Length - 1);
+					Debug.Log( in_3.Substring(1, in_3.Length - 1) );
+					SceneManager.LoadScene("test_map_generation");
+				}
 			} else {
 				msg_3 = "Not a valid map type!";
 			}

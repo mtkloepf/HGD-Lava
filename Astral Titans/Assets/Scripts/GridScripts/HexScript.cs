@@ -98,7 +98,7 @@ public class HexScript : MonoBehaviour {
 	
 	// Moves the currently focused unit to this hex
 	void OnMouseDown() {
-		Vector2 v = new Vector2 (position.x, position.y);
+		// Vector2 v = new Vector2 (position.x, position.y);
 		bool occ = GameManagerScript.instance.hexClicked(this);
         occupied = occ;
 		// Debug.Log("(" + position.x + " , " + position.y + ")\n");
