@@ -30,7 +30,7 @@ public class CycleMap : MonoBehaviour {
 	/* Creates a map based on the current width, height, and type values */
 	private void createMap() {
 		// If type is not valid, then the map is not created
-		if ( SceneTransitionStorage.containsType(map_type) ) {
+		if ( SceneTransitionStorage.containsType(map_type) && map_width >= 0 && map_height >= 0) {
 			if ( Map != null ) {
 				Map.removeHexes();
 			}

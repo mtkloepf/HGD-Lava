@@ -10,6 +10,8 @@ public class UnitScript : MonoBehaviour
 	public SortedDictionary<HexScript.HexEnum, int> terrainMap = new SortedDictionary<HexScript.HexEnum, int> ();
 	public static UnitScript instance;
 	private Animator animator;
+	// Used to disable the Unit in fog tiles
+	private SpriteRenderer _renderer;
 
 	public Vector2 position = Vector2.zero;
 	public bool focus = false;
@@ -48,6 +50,7 @@ public class UnitScript : MonoBehaviour
 	void Start () {
 		health = 100;
 		animator = GetComponent<Animator>();
+		_renderer = GetComponent<SpriteRenderer>();
 		hasMoved = false;
 		hasAttacked = false;
 		// Fix local positioning of the unit
@@ -297,21 +300,46 @@ public class UnitScript : MonoBehaviour
 		HpGreenPosition.localPosition = new Vector3 (x_value, HpGreenPosition.localPosition.y, HpGreenPosition.localPosition.z);
 		HpGreenPosition.localScale = new Vector3 ( x_scale, HpGreenPosition.transform.localScale.y, HpGreenPosition.transform.localScale.z);
 
+		// Disable the Unit in fog tiles
+		disable_in_fog( GameManagerScript.Map.map[(int)position.x][(int)position.y].covered_in_fog() );
+	}
+
+	/* Disable/Enable unit rendering and interaction with the mouse */
+	private void disable_in_fog(bool covered) {
+		
+		if (_renderer.enabled == covered) {
+			// Modify all sprite renderers for a Unit (including HP bars)
+			_renderer.enabled = !covered;
+			SpriteRenderer[] renderers = (SpriteRenderer[])GetComponentsInChildren<SpriteRenderer>();
+
+			foreach (SpriteRenderer sr in renderers) {
+				sr.enabled = !covered;
+			}
+
+			// Mouse ignores objects in Ignore Raycast layer
+			gameObject.layer = (covered) ? LayerMask.NameToLayer("Ignore Raycast") : 0;
+		}
 	}
 
 	// Selects the unit and sets it to be focused in the game manager
 	void OnMouseDown () {
-		if (GameManagerScript.getTurn() == player) {
-			GameManagerScript.instance.selectFocus (this);
-			Debug.Log ("Player selected");
+		// Unit not hidden in fog
+		if (_renderer.enabled) {
+			if (GameManagerScript.getTurn() == player) {
+				GameManagerScript.instance.selectFocus(this);
+				Debug.Log("Player selected");
+			} else {
+				GameManagerScript.instance.attack(this);
+			}
 		} else {
-			GameManagerScript.instance.attack (this);
+			// TODO add movement conflict handling . . .
+			Debug.Log("Hidden in fog . . .");
 		}
 	}
 
 	// Check if the mouse is over the unit and display the stats if it is
 	void OnMouseEnter() {
-		mouseOver = true;
+		mouseOver = _renderer.enabled;
 	}
 
 	// Check if the mouse has left the unit and stop displaying the stats if it has

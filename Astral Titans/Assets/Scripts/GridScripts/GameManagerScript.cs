@@ -483,7 +483,7 @@ public class GameManagerScript : MonoBehaviour
 
     // Returns if the hex that was clicked is occupied by a unit
     public bool hexClicked (HexScript hex) {
-		
+		// TODO handle fog tiles
 		if (!paused) {
 			
 			if (focusedUnit != null) {

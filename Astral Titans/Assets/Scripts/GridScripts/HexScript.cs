@@ -7,12 +7,11 @@ public class HexScript : MonoBehaviour {
 	public Sprite standardSprite;
 	public Sprite redSprite;
 	public Sprite blueSprite;
-	// Used for changing hex types at runtime
-	private static bool EDIT_HEX;
-	private static int EDIT_TYPE;
 
 	public enum HexEnum : int { plains = 0, water = 1, mountain = 2, desert = 3 };
 	HexEnum type = HexEnum.plains; //Default to plains
+	// Determine if the tile is out of sight range
+	private bool fog_cover;
 
 	SpriteRenderer render;
 	bool focus = false;
@@ -22,8 +21,8 @@ public class HexScript : MonoBehaviour {
 	void Start () {
 		transform.SetParent (GameObject.Find("HexManager").transform);
         startRenderer();
-		EDIT_HEX = false;
-		EDIT_TYPE = (int)HexEnum.plains;
+		fog_cover = false;
+
 		// Do not remove this or the hexes will not be displayed!!
 		gameObject.transform.localScale = new Vector3(1, 1, 0);
 	}
@@ -61,22 +60,22 @@ public class HexScript : MonoBehaviour {
     // Mouse is hovered over a hex
     void OnMouseEnter() {
     	if(!getFocus() && render.sprite != redSprite)
-			render.sprite = blueSprite;
+			makeFocused();
 	}
 	
     // Mouse leaves a hovered hex
     void OnMouseExit() {
         if(!getFocus() && render.sprite != redSprite)
-			render.sprite = standardSprite;
+			makeDefault();
 	}
 
 	// Sets the focus of the hex
 	public void setFocus (bool focused) {
 		focus = focused;
 		if (focused) {
-        	render.sprite = blueSprite;
+			makeFocused();
 		} else {
-            render.sprite = standardSprite;
+			makeDefault();
 		}
 	}
 
@@ -87,13 +86,37 @@ public class HexScript : MonoBehaviour {
 
 	// Makes the hex red, indicating that that unit has already moved
 	public void makeRed() {
-           render.sprite = redSprite;
+		render.sprite = (fog_cover) ? SpriteManagerScript.fogSprite : redSprite;
 	}
 
 	// Makes the hex the default color
 	public void makeDefault() {
-		render.sprite = standardSprite;
+		render.sprite = (fog_cover) ? SpriteManagerScript.fogSprite : standardSprite;
 	}
+
+	public void  makeFocused() {
+		render.sprite = (fog_cover) ? SpriteManagerScript.blueFogSprite : blueSprite;
+	}
+
+	/* Set if the tile is covered in fog */
+	public void set_fog_cover(bool covered) {
+		if (covered != fog_cover) {
+			if (covered) { // The tile is now covered in fog
+				makeDefault();
+			} else { // The tile is not covered in fog
+				if (occupied) {
+					makeRed();
+				} else {
+					makeDefault();
+				}
+			}
+
+			fog_cover = covered;
+		}
+	}
+
+	/* Return if the tile is covered in fog */
+	public bool covered_in_fog() { return fog_cover; }
 
 	// Gets the position of the transform of the hex
 	public Vector2 getTransformPosition() {
@@ -104,8 +127,13 @@ public class HexScript : MonoBehaviour {
 	// Moves the currently focused unit to this hex
 	void OnMouseDown() {
 		// Will only work for non-occupied tiles and will override unit movement!
-		if (EDIT_HEX) {
-			setType(EDIT_TYPE);
+		if (HexManagerScript.edit_hex()) {
+			// If fog tile editing is enabled then toggle the hexes fog cover flag
+			if (HexManagerScript.fog_toggle()) {
+				set_fog_cover(!fog_cover);
+			} else { // Switch the hex type to the current edit type
+				setType(HexManagerScript.edit_type());
+			}
 		} else {
 			// Necessary for clicking hexes to work in test map generation scene
 			if (GameManagerScript.instance != null) {
@@ -186,18 +214,6 @@ public class HexScript : MonoBehaviour {
 		blueSprite = blue;
 
 		render.sprite = standardSprite;
-	}
-
-	/* Toggles hex editing on/off */
-	public static void toggle_editing() {
-		EDIT_HEX = !EDIT_HEX;
-		Debug.Log( "Hex editing " + ((EDIT_HEX) ? "enabled" : "disabled") );
-	}
-
-	/* Transitions EDIT_TYPE to the next HexEnum type */
-	public static void cycle_edit_type() {
-		EDIT_TYPE = (EDIT_TYPE + 1) % 4;
-		Debug.Log("Edit type: " + (HexEnum)EDIT_TYPE);
 	}
 
 	public override string ToString() {

@@ -20,6 +20,9 @@ public static class SpriteManagerScript {
 	public static readonly Sprite mountainSprite;
 	public static readonly Sprite redMountainSprite;
 	public static readonly Sprite blueMountainSprite;
+	public static readonly Sprite fogSprite;
+	public static readonly Sprite blueFogSprite;
+
     // Card Sprites
 	public static readonly Sprite empty_card;
 	public static readonly Sprite bronze_card;
@@ -50,6 +53,8 @@ public static class SpriteManagerScript {
 		mountainSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/volcano_tile");
 		redMountainSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/volcano_tile_red");
 		blueMountainSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/volcano_tile_blue");
+		fogSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/fog_tile");
+		blueFogSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/fog_tile_blue");
 
 		// Load sprites from folder: Assets/Resources/Cards
 		empty_card = Resources.Load<Sprite>("Sprites/Cards/Human_Card");
