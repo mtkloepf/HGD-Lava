@@ -36,10 +36,10 @@ public class GameManagerScript : MonoBehaviour
 	private UnitScript p2Base;
 
 	// List of all the units in the game
-	static List <UnitScript> units = new List<UnitScript> ();
+	static List <UnitScript> units;
 
 	// Set containing all hexes that a unit can move to
-	HashSet<HexScript> hexSet = new HashSet<HexScript> ();
+	HashSet<HexScript> hexSet = new HashSet<HexScript>();
 
 	// Clicking on a unit will make it focused
 	private static UnitScript focusedUnit;
@@ -67,6 +67,8 @@ public class GameManagerScript : MonoBehaviour
 		musicSlider = GameObject.Find ("Slider");
 		UI.GetComponentInChildren<Canvas> ().enabled = false;
 		shopCanvas.enabled = false;
+
+		units = new List<UnitScript>();
 
 		// map setup
 		Map.generatePseudoRandomMap();
@@ -783,9 +785,9 @@ public class GameManagerScript : MonoBehaviour
 		}
 	}
 
-	public void endGame () {			
+	public void endGame() {			
 		Debug.Log ("Game Over!");
-		SceneManager.LoadScene ("grid_scene");
+		SceneManager.LoadScene("start_menu");
 	}
 
 	public void togglePauseMenu ()
