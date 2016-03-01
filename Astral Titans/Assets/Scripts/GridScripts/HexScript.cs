@@ -7,8 +7,11 @@ public class HexScript : MonoBehaviour {
 	public Sprite standardSprite;
 	public Sprite redSprite;
 	public Sprite blueSprite;
+	// Used for changing hex types at runtime
+	private static bool EDIT_HEX;
+	private static int EDIT_TYPE;
 
-	public enum HexEnum{plains, water, mountain, desert};
+	public enum HexEnum : int { plains = 0, water = 1, mountain = 2, desert = 3 };
 	HexEnum type = HexEnum.plains; //Default to plains
 
 	SpriteRenderer render;
@@ -19,6 +22,8 @@ public class HexScript : MonoBehaviour {
 	void Start () {
 		transform.SetParent (GameObject.Find("HexManager").transform);
         startRenderer();
+		EDIT_HEX = false;
+		EDIT_TYPE = (int)HexEnum.plains;
 		// Do not remove this or the hexes will not be displayed!!
 		gameObject.transform.localScale = new Vector3(1, 1, 0);
 	}
@@ -98,12 +103,15 @@ public class HexScript : MonoBehaviour {
 	
 	// Moves the currently focused unit to this hex
 	void OnMouseDown() {
-		// Vector2 v = new Vector2 (position.x, position.y);
-
-		// Necessary for clicking hexes to work in test map generation scene
-		if (GameManagerScript.instance != null) {
-			bool occ = GameManagerScript.instance.hexClicked(this);
-			occupied = occ;
+		// Will only work for non-occupied tiles and will override unit movement!
+		if (EDIT_HEX) {
+			setType(EDIT_TYPE);
+		} else {
+			// Necessary for clicking hexes to work in test map generation scene
+			if (GameManagerScript.instance != null) {
+				bool occ = GameManagerScript.instance.hexClicked(this);
+				occupied = occ;
+			}
 		}
 
 		Debug.Log("(" + position.x + " , " + position.y + ")\n");
@@ -134,30 +142,32 @@ public class HexScript : MonoBehaviour {
 		return hex;
 	}
 
+	/* Sets the type of the hex based on the integer-hex type pairing
+	 * established by the HexEnum enumeration.*/
 	public void setType(int type) {
 		// Generate a plains
-		if (type == 0) {
+		if (type == (int)HexEnum.plains) {
 			setType (HexScript.HexEnum.plains,
 				SpriteManagerScript.plainsSprite, 
 				SpriteManagerScript.redPlainsSprite,
 				SpriteManagerScript.bluePlainsSprite);
 		}
 		// Generate a desert
-		else if (type == 1) {
+		else if (type == (int)HexEnum.desert) {
 			setType (HexScript.HexEnum.desert,
 				SpriteManagerScript.desertSprite, 
 				SpriteManagerScript.redDesertSprite,
 				SpriteManagerScript.blueDesertSprite);
 		}
 		// Generate water
-		else if (type == 2) {
+		else if (type == (int)HexEnum.water) {
 			setType (HexScript.HexEnum.water,
 				SpriteManagerScript.waterSprite, 
 				SpriteManagerScript.redWaterSprite,
 				SpriteManagerScript.blueWaterSprite);
 		}
 		// Generate a mountain
-		else if (type == 3) {
+		else if (type == (int)HexEnum.mountain) {
 			setType (HexScript.HexEnum.mountain,
 				SpriteManagerScript.mountainSprite, 
 				SpriteManagerScript.redMountainSprite,
@@ -176,6 +186,18 @@ public class HexScript : MonoBehaviour {
 		blueSprite = blue;
 
 		render.sprite = standardSprite;
+	}
+
+	/* Toggles hex editing on/off */
+	public static void toggle_editing() {
+		EDIT_HEX = !EDIT_HEX;
+		Debug.Log( "Hex editing " + ((EDIT_HEX) ? "enabled" : "disabled") );
+	}
+
+	/* Transitions EDIT_TYPE to the next HexEnum type */
+	public static void cycle_edit_type() {
+		EDIT_TYPE = (EDIT_TYPE + 1) % 4;
+		Debug.Log("Edit type: " + (HexEnum)EDIT_TYPE);
 	}
 
 	public override string ToString() {

@@ -40,8 +40,10 @@ public class Test_Button_Action : MonoBehaviour {
 		_renderer.sprite = clicked_on;
 		// Tests the hex_at_offset_from method
 		MapManager current = CycleMap.getMap();
+		HexScript h = current.hex_at_offset_from(current.map[pos_x][pos_y], opp_x, opp_y, offset);
 		// print out type and position of the returned hex
-		Debug.Log( current.hex_at_offset_from(current.map[pos_x][pos_y], opp_x, opp_y, offset) );
+		Debug.Log(h);
+		h.setType((int)type);
 	}
 
 	/* Resets the image of the game object */

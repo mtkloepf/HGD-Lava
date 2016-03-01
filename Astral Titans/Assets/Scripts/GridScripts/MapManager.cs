@@ -281,13 +281,13 @@ public class MapManager {
 			pos_y = height - pos_y - 1;
 		}
 
-		// Find a random position from the current position at range [-offset, offset], which is within the bounds of the map
-		pos_x = UnityEngine.Random.Range( cap_at_bounds( (pos_x - offset), 0, width ),
-										  cap_at_bounds( (pos_x + offset), 0, width ) + 1 );
-		pos_y = UnityEngine.Random.Range( cap_at_bounds( (pos_y - offset), 0, height ),
-										  cap_at_bounds( (pos_y + offset), 0, height ) + 1 );
+		List<HexScript> area = findArea(hex, offset, null);
+		// Remove the current hex if the radius is greater than zero
+		if (area.Count > 1) { area.Remove(hex); }
+		// Find a random hex at a radius of the given offset away from the given hex
+		int hex_idx = UnityEngine.Random.Range(0, area.Count);
 
-		return map[pos_x][pos_y];
+		return area[hex_idx];
 	}
 
 	/* Given an integer value along with a lower and upper bound (lower <= upper),
