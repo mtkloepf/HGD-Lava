@@ -3,6 +3,13 @@ using UnityEngine.SceneManagement;
 using System;
 using System.Collections;
 
+/**
+ * A class designed to prompt the user for information used to create a pseudo-random map.
+ * You can add the prefix '$' to the map type to jump to the testing scene instead of an actual game.
+ * 
+ * @author Joshua Hooker
+ * 29 February 2016
+ */
 public class InputPrompt : MonoBehaviour {
 
 	private Rect window_dimensions;
@@ -127,7 +134,7 @@ public class InputPrompt : MonoBehaviour {
 				}
 
 				msg_3 = "";
-			} else if ( in_3.Length > 0 && in_3[0] == '$' && SceneTransitionStorage.containsType(in_3.Substring(1, in_3.Length - 1) ) ) {
+			} else if ( in_3.Length > 0 && in_3[0] == '$' && SceneTransitionStorage.containsType(in_3.Substring(1, in_3.Length - 1) ) ) { // jump to map generation testing
 				if (w_in > 0 && h_in > 0) {
 					SceneTransitionStorage.map_type = in_3.Substring(1, in_3.Length - 1);
 					Debug.Log( in_3.Substring(1, in_3.Length - 1) );

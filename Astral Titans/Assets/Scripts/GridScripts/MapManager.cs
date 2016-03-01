@@ -159,7 +159,7 @@ public class MapManager {
 		while (--counter >= 0) {
 			pos_x = width / 2;
 			pos_y = height / 2;
-			Debug.Log("(" + pos_x + " , " + pos_y + ") " + (2 * height / 10) + "\n");
+			// Debug.Log("(" + pos_x + " , " + pos_y + ") " + (2 * height / 10) + "\n");
 			area = findArea(map[pos_x][pos_y], (2 * height / 10), null);
 
 			foreach (HexScript h in area) {
