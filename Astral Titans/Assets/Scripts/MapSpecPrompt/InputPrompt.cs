@@ -72,7 +72,7 @@ public class InputPrompt : MonoBehaviour {
 	 */
 	void EvaluateInput(int ID) {
 		/* Display general guidelines */
-		GUI.Label(components[0], "Please input the size and type of the map you wish to create: width and height must be within the bounds of 12 and 46 inclusive and the width must be even.\n\nGame types: " + MapGeneration.allTypes() );
+		GUI.Label(components[0], "Please input the size and type of the map you wish to create: width and height must be within the bounds of 12 and 46 inclusive and the width must be even.\n\nGame types: " + SceneTransitionStorage.allTypes() );
 		/* Display width and height prompts */
 		GUI.Label(components[1], "Width of the map?");
 		GUI.Label(components[2], "Height of the map?");
@@ -90,7 +90,7 @@ public class InputPrompt : MonoBehaviour {
 			if ( Int32.TryParse (in_1, out w_in) ) {
 				if ( w_in >= bounds[0] && w_in <= bounds[1] ) {
 					if (w_in % 2 == 0) {
-						MapGeneration.width = w_in / 2;
+						SceneTransitionStorage.map_width = w_in / 2;
 						msg_1 = "";
 					} else {
 						msg_1 = "Width must be even!";
@@ -108,7 +108,7 @@ public class InputPrompt : MonoBehaviour {
 			/* Parse user input for height value */
 			if ( Int32.TryParse (in_2, out h_in) ) {
 				if (h_in >= bounds[2] && h_in <= bounds[3]) {
-					MapGeneration.height = h_in * 2;
+					SceneTransitionStorage.map_height = h_in * 2;
 					msg_2 = "";
 				} else {
 					msg_2 = "Not a valid height value!";
@@ -119,17 +119,17 @@ public class InputPrompt : MonoBehaviour {
 				h_in = -1;
 			}
 			/* Parse user input for map type */
-			if ( MapGeneration.containsType(in_3) ) {
+			if ( SceneTransitionStorage.containsType(in_3) ) {
 				/* if all input fields are valid, then jump to creation of the map */
 				if (w_in > 0 && h_in > 0) {
-					MapGeneration.map_type = in_3;
+					SceneTransitionStorage.map_type = in_3;
 					SceneManager.LoadScene("grid_scene");
 				}
 
 				msg_3 = "";
-			} else if ( in_3.Length > 0 && in_3[0] == '$' && MapGeneration.containsType(in_3.Substring(1, in_3.Length - 1) ) ) {
+			} else if ( in_3.Length > 0 && in_3[0] == '$' && SceneTransitionStorage.containsType(in_3.Substring(1, in_3.Length - 1) ) ) {
 				if (w_in > 0 && h_in > 0) {
-					MapGeneration.map_type = in_3.Substring(1, in_3.Length - 1);
+					SceneTransitionStorage.map_type = in_3.Substring(1, in_3.Length - 1);
 					Debug.Log( in_3.Substring(1, in_3.Length - 1) );
 					SceneManager.LoadScene("test_map_generation");
 				}

@@ -226,7 +226,7 @@ public class UnitScript : MonoBehaviour
 		transform.position = new Vector3 (
 			hex.transform.position.x,
 			hex.transform.position.y,
-			0);
+			-1);
 	}
 
 	// Returns the position of the unit
@@ -289,7 +289,7 @@ public class UnitScript : MonoBehaviour
 		var x_scale = 0.5f * health / maxHealth;
 		var x_value = 0.5f * x_scale - 0.25f;
 		// update x position and scale
-		HpGreenPosition.localPosition = new Vector3 (x_value, HpGreenPosition.localPosition.y,   HpGreenPosition.localPosition.z);
+		HpGreenPosition.localPosition = new Vector3 (x_value, HpGreenPosition.localPosition.y, HpGreenPosition.localPosition.z);
 		HpGreenPosition.localScale = new Vector3 ( x_scale, HpGreenPosition.transform.localScale.y, HpGreenPosition.transform.localScale.z);
 
 	}

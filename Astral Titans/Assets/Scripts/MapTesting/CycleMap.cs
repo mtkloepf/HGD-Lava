@@ -11,7 +11,7 @@ using System.Collections;
 public class CycleMap : MonoBehaviour {
 
 	public void OnMouseDown() {
-		MapGeneration.generatePseudoRandomMap();
+		// MapGeneration.generatePseudoRandomMap();
 	}
 }
 
