@@ -214,7 +214,7 @@ public class MapManager {
 				}
 			}
 		}
-		// avoid cutting off the generation of the area, because of an empty layer
+		// avoid cutting off the generation of the area because of an empty layer
 		if (cur_layer.Count == 0) { cur_layer = prev_layer; }
 
 		if (variation != null) { variation.reduce(); }
@@ -260,36 +260,62 @@ public class MapManager {
 		}
 	}
 
-	/* Return the x and y coordiantes of the center of the map */
-	private Point center() {
-		return new Point(width / 2, height / 2);
-	}
+	/* Finds a hex at a given offset from a point relative to the given hex in the map.
+	 * 
+	 * If opp_x is set to true, then the point's x position will be equal to the complement
+	 * of the given hex's x position relative to the map's width bounds: likewise for opp_y,
+	 * the point's y position, and the map's height bounds.
+	 * 
+	 * If the given hex is null, then null is returned. */
+	public HexScript hex_at_offset_from(HexScript hex, bool opp_x, bool opp_y, int offset) {
+		if (hex == null) { return null; }
 
-	/* Return the point (0,0) */
-	private Point topLeft() { return new Point (0, 0); }
-
-	/* Return the bottom-right most hex in the map */
-	private Point bottomRight() { return new Point(width - 1, height - 1); }
-
-	/**
-	 * A simple class to hold a coordinate pair (x,y)
-	 */
-	private class Point {
-		public int x;
-		public int y;
-
-		public Point(int x, int y) {
-			this.x = x;
-			this.y = y;
+		var pos_x = (int)hex.position.x;
+		var pos_y = (int)hex.position.y;
+		// flip x position
+		if (opp_x) {
+			pos_x = width - pos_x - 1;
+		}
+		// flip y position
+		if (opp_y) {
+			pos_y = height - pos_y - 1;
 		}
 
-		public override string ToString() {
-			return string.Format("[Point]");
+		// Find a random position from the current position at range [-offset, offset], which is within the bounds of the map
+		pos_x = UnityEngine.Random.Range( cap_at_bounds( (pos_x - offset), 0, width ),
+										  cap_at_bounds( (pos_x + offset), 0, width ) + 1 );
+		pos_y = UnityEngine.Random.Range( cap_at_bounds( (pos_y - offset), 0, height ),
+										  cap_at_bounds( (pos_y + offset), 0, height ) + 1 );
+
+		return map[pos_x][pos_y];
+	}
+
+	/* Given an integer value along with a lower and upper bound (lower <= upper),
+	 * if the value rises above the upper bound or falls below the lower bound,
+	 * then the violated bound is returned, otherwise the value is returned.*/
+	public static int cap_at_bounds(int value, int l_bound, int u_bound) {
+		if (value < l_bound) {
+			return l_bound;
+		} else if (value > u_bound) {
+			return u_bound;
+		} else {
+			return value;
 		}
 	}
 
+	/* Removes all tiles from the map */
+	public void removeHexes() {
+		for (int x = 0; x < width; ++x) {
+			for (int y = 0; y < height; ++y) {
+				GameObject.Destroy( map[x][y].gameObject );
+			}
+		}
+
+	}
+
 	/**
-	 * A simple class designed to a float value between 0.0 and 1.0 that can be reduced by a fix value down to 0.0.
+	 * A simple class designed to a float value between 0.0 and 1.0 that
+	 * can be modified by a percentage of its current value down.
 	 */
 	private class Probability {
 		private float probability;

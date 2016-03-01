@@ -28,7 +28,7 @@ public class HexScript : MonoBehaviour {
 		
 	}
 
-        // Start the sprite renderer
+    // Start the sprite renderer
 	public void startRenderer() {
 		render = GetComponent<SpriteRenderer> ();
 	}
@@ -99,9 +99,14 @@ public class HexScript : MonoBehaviour {
 	// Moves the currently focused unit to this hex
 	void OnMouseDown() {
 		// Vector2 v = new Vector2 (position.x, position.y);
-		bool occ = GameManagerScript.instance.hexClicked(this);
-        occupied = occ;
-		// Debug.Log("(" + position.x + " , " + position.y + ")\n");
+
+		// Necessary for clicking hexes to work in test map generation scene
+		if (GameManagerScript.instance != null) {
+			bool occ = GameManagerScript.instance.hexClicked(this);
+			occupied = occ;
+		}
+
+		Debug.Log("(" + position.x + " , " + position.y + ")\n");
 	}
 
 	/* Creates a hex at the given row and column value on the map with the given type.

@@ -31,6 +31,10 @@ public class CycleMap : MonoBehaviour {
 	private void createMap() {
 		// If type is not valid, then the map is not created
 		if ( SceneTransitionStorage.containsType(map_type) ) {
+			if ( Map != null ) {
+				Map.removeHexes();
+			}
+
 			Map = new MapManager(map_width, map_height, map_type);
 			Map.generatePseudoRandomMap();
 		}
