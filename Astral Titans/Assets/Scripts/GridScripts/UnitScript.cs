@@ -38,6 +38,7 @@ public class UnitScript : MonoBehaviour
 
 	private int attack;
 	private int defense;
+    private int range;
 
 	public readonly int maxHealth = 100;
 	private int health;
@@ -77,6 +78,7 @@ public class UnitScript : MonoBehaviour
 		case Types.H_Infantry:
 			attack = 2;
 			defense = 1;
+                range = 3;
 			maxMovement = 4;
 			movement = 4;
 			terrainMap.Add(HexScript.HexEnum.water, 100);
@@ -88,7 +90,8 @@ public class UnitScript : MonoBehaviour
 		case Types.H_Exo:
 			attack = 4;
 			defense = 3;
-			maxMovement = 3;
+                range = 1;
+                maxMovement = 3;
 			movement = 3;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
 			terrainMap.Add (HexScript.HexEnum.mountain, 1);
@@ -99,7 +102,8 @@ public class UnitScript : MonoBehaviour
 		case Types.H_Tank:
 			attack = 7;
 			defense = 8;
-			maxMovement = 5;
+                range = 1;
+                maxMovement = 5;
 			movement = 5;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
 			terrainMap.Add (HexScript.HexEnum.mountain, 100);
@@ -110,7 +114,8 @@ public class UnitScript : MonoBehaviour
 		case Types.H_Artillery:
 			attack = 8;
 			defense = 5;
-			maxMovement = 3;
+                range = 1;
+                maxMovement = 3;
 			movement = 3;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
 			terrainMap.Add (HexScript.HexEnum.mountain, 100);
@@ -121,7 +126,8 @@ public class UnitScript : MonoBehaviour
 		case Types.H_Base:
 			attack = 0;
 			defense = 9;
-			maxMovement = 4;
+                range = 1;
+                maxMovement = 4;
 			movement = 4;
 			terrainMap.Add (HexScript.HexEnum.water, 1);
 			terrainMap.Add (HexScript.HexEnum.mountain, 1);
@@ -132,7 +138,8 @@ public class UnitScript : MonoBehaviour
 		case Types.A_Infantry:
 			attack = 2;
 			defense = 1;
-			maxMovement = 4;
+                range = 1;
+                maxMovement = 4;
 			movement = 4;
 			terrainMap.Add(HexScript.HexEnum.water, 100);
 			terrainMap.Add(HexScript.HexEnum.mountain, 2);
@@ -143,7 +150,8 @@ public class UnitScript : MonoBehaviour
 		case Types.A_Elite:
 			attack = 4;
 			defense = 3;
-			maxMovement = 3;
+                range = 1;
+                maxMovement = 3;
 			movement = 3;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
 			terrainMap.Add (HexScript.HexEnum.mountain, 1);
@@ -154,7 +162,8 @@ public class UnitScript : MonoBehaviour
 		case Types.A_Tank:
 			attack = 7;
 			defense = 8;
-			maxMovement = 5;
+                range = 1;
+                maxMovement = 5;
 			movement = 5;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
 			terrainMap.Add (HexScript.HexEnum.mountain, 100);
@@ -165,7 +174,8 @@ public class UnitScript : MonoBehaviour
 		case Types.A_Artillery:
 			attack = 8;
 			defense = 5;
-			maxMovement = 3;
+                range = 1;
+                maxMovement = 3;
 			movement = 3;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
 			terrainMap.Add (HexScript.HexEnum.mountain, 100);
@@ -176,7 +186,8 @@ public class UnitScript : MonoBehaviour
 		case Types.A_Base:
 			attack = 0;
 			defense = 9;
-			maxMovement = 4;
+                range = 1;
+                maxMovement = 4;
 			movement = 4;
 			terrainMap.Add (HexScript.HexEnum.water, 1);
 			terrainMap.Add (HexScript.HexEnum.mountain, 1);
@@ -265,6 +276,11 @@ public class UnitScript : MonoBehaviour
 	{
 		return defense;
 	}
+
+    public int getRange()
+    {
+        return range;
+    }
 
 	// Sets the unit to be focused.
 	// NOTE: I am not sure if this is necessary. We

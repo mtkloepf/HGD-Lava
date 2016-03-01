@@ -382,7 +382,7 @@ public class GameManagerScript : MonoBehaviour
 	{
 		if (!paused) {
 			if (focusedUnit != null && focusedUnit.getAttack() > 0 && focusedUnit.canAttack && !focusedUnit.hasAttacked) {
-				bool adj = false;
+				bool inRange = false;
 				List<HexScript> focMapRow = Map.map [(int)focusedUnit.getPosition ().x];
 				HexScript focHex = focMapRow [(int)focusedUnit.getPosition ().y];
 
@@ -390,13 +390,27 @@ public class GameManagerScript : MonoBehaviour
 				HexScript curHex = curMapRow [(int)unit.getPosition ().y];
 
 
-				HashSet<HexScript> adjHexes = findAdj (curHex);
-				foreach (HexScript hex in adjHexes) {
-					if (hex == focHex) {
-						adj = true;
-					}
-				}
-				if (adj) {
+                HashSet<HexScript> tempRange = findAdj(curHex);
+                HashSet<HexScript> totalRange = new HashSet<HexScript>();
+                int range = focusedUnit.getRange();
+                Debug.Log("attack " + range);
+                if (range != 1)
+                {
+                    attackRange(range - 1, tempRange, totalRange);
+                }
+                else
+                {
+                    totalRange = findAdj(curHex);
+                }
+                foreach (HexScript hex in totalRange)
+                {
+                    if (hex == focHex)
+                    {
+                        inRange = true;
+                    }
+                }
+            
+				if (inRange) {
 					Debug.Log (focusedUnit.getPosition () + " attacked " + unit.getPosition ());
 
 					int h = unit.getHealth ();
@@ -437,8 +451,36 @@ public class GameManagerScript : MonoBehaviour
 		}
 	}
 
-	// Returns if the hex that was clicked is occupied by a unit
-	public bool hexClicked (HexScript hex) {
+    public void attackRange(int range, HashSet<HexScript> tempRange, HashSet<HexScript> totalRange)
+    {
+        if (range == 0)
+        {
+            Debug.Log("end attackrange method");
+        }
+        else
+        {
+            Debug.Log("attackRange " + range);
+            HashSet<HexScript> prevHexes = new HashSet<HexScript>();
+            foreach (HexScript hex in tempRange)
+            {
+                HashSet<HexScript> adjHexes = findAdj(hex);
+                foreach (HexScript adj in adjHexes)
+                {
+
+                    if (!totalRange.Contains(adj))
+                    {
+                        totalRange.Add(adj);
+                        prevHexes.Add(adj);
+                    }
+                }
+            }
+            range--;
+            attackRange(range, prevHexes, totalRange);
+        }
+    }
+
+    // Returns if the hex that was clicked is occupied by a unit
+    public bool hexClicked (HexScript hex) {
 		
 		if (!paused) {
 			
