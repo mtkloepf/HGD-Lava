@@ -109,18 +109,43 @@ public class MapManager {
 		List<HexScript> area;
 		int average = (2 * width + height / 2) / 2;
 
-		/* build  a pontentially large desert */
-		counter = 1;
-		while (--counter >= 0) {
-			pos_x = width / 2;
-			pos_y = height / 2;
-
-			area = findArea(map[pos_x][pos_y], 2 * System.Math.Max(2 * width, height / 2) / 3, new Probability(0.35f, -0.02f));
-
-			foreach (HexScript h in area) {
-				h.setType(1);
+		/* Fill map with desert */
+		for (int row = 0; row < width; ++row) {
+			for (int col = 0; col < height; ++col) {
+				map[row][col].setType((int)HexScript.HexEnum.desert);
 			}
 		}
+
+		/* build multiple mountain ranges */
+		counter = (int)(1.5f + 0.149f * average);
+
+		while (--counter >= 0) {
+			pos_x = UnityEngine.Random.Range(0, width - 1);
+			pos_y = UnityEngine.Random.Range (0, height - 1);
+
+			area = findArea(map[pos_x][pos_y], average / 8, new Probability(0.65f, 0.08f));
+
+			foreach (HexScript h in area) {
+				h.setType((int)HexScript.HexEnum.mountain);
+			}
+		}
+	}
+
+	/* Method designed to store pairs of integers that will represent places to place different terrain */
+	private int[] scatter_pairs(int num_of_pairs) {
+		if (num_of_pairs < 0) { return null; }
+
+		int[] pairs = new int[2 * num_of_pairs];
+
+		pairs[0] = UnityEngine.Random.Range(0, width);
+		pairs[1] = UnityEngine.Random.Range(0, height);
+
+		for (int idx = 3; idx < pairs.Length; idx += 2) {
+			Vector2 position = map[idx - 3][idx - 2].position;
+			// TODO populate array
+		}
+
+		return pairs;
 	}
 
 	/* DON'T try this map: it is not polished!! */
@@ -168,6 +193,47 @@ public class MapManager {
 					h.setType(3);
 				}
 			}
+		}
+	}
+
+	/* Finds a hex at a given offset from a point relative to the given hex in the map.
+	 * 
+	 * If opp_x is set to true, then the point's x position will be equal to the complement
+	 * of the given hex's x position relative to the map's width bounds: likewise for opp_y,
+	 * the point's y position, and the map's height bounds.
+	 * 
+	 * If the given hex is null, then null is returned. */
+	public HexScript hex_at_offset_from(HexScript hex, bool opp_x, bool opp_y, int offset) {
+		if (hex == null) { return null; }
+
+		var pos_x = (int)hex.position.x;
+		var pos_y = (int)hex.position.y;
+		// flip x position
+		if (opp_x) {
+			pos_x = width - pos_x - 1;
+		}
+		// flip y position
+		if (opp_y) {
+			pos_y = height - pos_y - 1;
+		}
+
+		List<HexScript> area = findArea(map[pos_x][pos_y], offset, null);
+		// Find a random hex at a radius of the given offset away from the given hex
+		int hex_idx = UnityEngine.Random.Range(0, area.Count);
+
+		return area[hex_idx];
+	}
+
+	/* Given an integer value along with a lower and upper bound (lower <= upper),
+	 * if the value rises above the upper bound or falls below the lower bound,
+	 * then the violated bound is returned, otherwise the value is returned.*/
+	public static int cap_at_bounds(int value, int l_bound, int u_bound) {
+		if (value < l_bound) {
+			return l_bound;
+		} else if (value > u_bound) {
+			return u_bound;
+		} else {
+			return value;
 		}
 	}
 
@@ -257,49 +323,6 @@ public class MapManager {
 			}
 
 			throw;
-		}
-	}
-
-	/* Finds a hex at a given offset from a point relative to the given hex in the map.
-	 * 
-	 * If opp_x is set to true, then the point's x position will be equal to the complement
-	 * of the given hex's x position relative to the map's width bounds: likewise for opp_y,
-	 * the point's y position, and the map's height bounds.
-	 * 
-	 * If the given hex is null, then null is returned. */
-	public HexScript hex_at_offset_from(HexScript hex, bool opp_x, bool opp_y, int offset) {
-		if (hex == null) { return null; }
-
-		var pos_x = (int)hex.position.x;
-		var pos_y = (int)hex.position.y;
-		// flip x position
-		if (opp_x) {
-			pos_x = width - pos_x - 1;
-		}
-		// flip y position
-		if (opp_y) {
-			pos_y = height - pos_y - 1;
-		}
-
-		List<HexScript> area = findArea(hex, offset, null);
-		// Remove the current hex if the radius is greater than zero
-		if (area.Count > 1) { area.Remove(hex); }
-		// Find a random hex at a radius of the given offset away from the given hex
-		int hex_idx = UnityEngine.Random.Range(0, area.Count);
-
-		return area[hex_idx];
-	}
-
-	/* Given an integer value along with a lower and upper bound (lower <= upper),
-	 * if the value rises above the upper bound or falls below the lower bound,
-	 * then the violated bound is returned, otherwise the value is returned.*/
-	public static int cap_at_bounds(int value, int l_bound, int u_bound) {
-		if (value < l_bound) {
-			return l_bound;
-		} else if (value > u_bound) {
-			return u_bound;
-		} else {
-			return value;
 		}
 	}
 
