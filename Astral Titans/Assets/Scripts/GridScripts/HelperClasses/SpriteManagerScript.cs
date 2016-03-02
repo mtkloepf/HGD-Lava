@@ -90,35 +90,35 @@ public static class SpriteManagerScript {
 	}
 
 	/* Returns the standing Sprite for the given Unit type from the folder New Units/ */
-	public static Sprite get_unit_sprite(Unit.Type type) {
+	public static Sprite get_unit_sprite(UnitScript.Types type) {
 		switch (type) {
-			case Unit.Type.H_Infantry:		return (Sprite)Resources.Load("New Units/Human Infantry/Human_Infantry_Stand");
-			case Unit.Type.H_Exo:			return (Sprite)Resources.Load("New Units/Human Exosuit/Exo_Stand");
-			case Unit.Type.H_Tank:			return (Sprite)Resources.Load("New Units/Human Tank/Human_Tank_Stand");
-			case Unit.Type.H_Artillery:		return (Sprite)Resources.Load("New Units/Human Artillery/Human_Artillary_Stand");
-			case Unit.Type.H_Base:			return (Sprite)Resources.Load("New Units/Human HQ/Human_HQ_Stand");
-			case Unit.Type.A_Infantry:		return (Sprite)Resources.Load("New Units/Alien Infatry/Alien_Infantry_Stand");
-			case Unit.Type.A_Elite:			return (Sprite)Resources.Load("New Units/Alien Elite/Alien_Elite_Stand");
-			case Unit.Type.A_Tank:			return (Sprite)Resources.Load("New Units/Aliem Tank/Alien_Tank_Stand");
-			case Unit.Type.A_Artillery:		return (Sprite)Resources.Load("New Units/Alien Artillery/Alien_Artillary_Stand");
-			case Unit.Type.A_Base:			return (Sprite)Resources.Load("New Units/Alien Mothership/Alien_Mothership_Stand");
-			default:return null;
+			case UnitScript.Types.H_Infantry:		return Resources.Load<Sprite>("New Units/Human Infantry/Human_Infantry_Stand");
+			case UnitScript.Types.H_Exo:			return Resources.Load<Sprite>("New Units/Human Exosuit/Exo_Stand");
+			case UnitScript.Types.H_Tank:			return Resources.Load<Sprite>("New Units/Human Tank/Human_Tank_Stand");
+			case UnitScript.Types.H_Artillery:		return Resources.Load<Sprite>("New Units/Human Artillery/Human_Artillary_Stand");
+			case UnitScript.Types.H_Base:			return Resources.Load<Sprite>("New Units/Human HQ/Human_HQ_Stand");
+			case UnitScript.Types.A_Infantry:		return Resources.Load<Sprite>("New Units/Alien Infatry/Alien_Infantry_Stand");
+			case UnitScript.Types.A_Elite:			return Resources.Load<Sprite>("New Units/Alien Elite/Alien_Elite_Stand");
+			case UnitScript.Types.A_Tank:			return Resources.Load<Sprite>("New Units/Aliem Tank/Alien_Tank_Stand");
+			case UnitScript.Types.A_Artillery:		return Resources.Load<Sprite>("New Units/Alien Artillery/Alien_Artillary_Stand");
+			case UnitScript.Types.A_Base:			return Resources.Load<Sprite>("New Units/Alien Mothership/Alien_Mothership_Stand");
+			default:						return null;
 		}
 	}
 
 	/* Returns the Controller for the given Unit type found in the folder: Resources/Animations/Controllers/ */
-	public static RuntimeAnimatorController get_controller(Unit.Type type) {
+	public static RuntimeAnimatorController get_controller(UnitScript.Types type) {
 		switch (type) {
-			case Unit.Type.H_Infantry:		return (RuntimeAnimatorController)Resources.Load("Animations/Controllers/Human_Infantry_Controller");
-			case Unit.Type.H_Exo:			return (RuntimeAnimatorController)Resources.Load("Animations/Controllers/Human_Exo");
-			case Unit.Type.H_Tank:			return (RuntimeAnimatorController)Resources.Load("Animations/Controllers/Human_Tank_Controller");
-			case Unit.Type.H_Artillery:		return (RuntimeAnimatorController)Resources.Load("Animations/Controllers/Human_Artillery");
-			case Unit.Type.H_Base:			return (RuntimeAnimatorController)Resources.Load("Animations/Controllers/Human_Mobile_Base");
-			case Unit.Type.A_Infantry:		return (RuntimeAnimatorController)Resources.Load("Animations/Controllers/Alien_Infantry_Controller");
-			case Unit.Type.A_Elite:			return (RuntimeAnimatorController)Resources.Load("Animations/Controllers/Alien_Elite_Controller");
-			case Unit.Type.A_Tank:			return (RuntimeAnimatorController)Resources.Load("Animations/Controllers/Alien_Tank_Controller");
-			case Unit.Type.A_Artillery:		return (RuntimeAnimatorController)Resources.Load("Animations/Controllers/Alien_Artillery_Controller");
-			case Unit.Type.A_Base:			return (RuntimeAnimatorController)Resources.Load("Animations/Controllers/Alien_Mobile_Base"); 
+			case UnitScript.Types.H_Infantry:		return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Human_Infantry_Controller");
+			case UnitScript.Types.H_Exo:			return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Human_Exo");
+			case UnitScript.Types.H_Tank:			return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Human_Tank_Controller");
+			case UnitScript.Types.H_Artillery:		return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Human_Artillery");
+			case UnitScript.Types.H_Base:			return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Human_Mobile_Base");
+			case UnitScript.Types.A_Infantry:		return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Alien_Infantry_Controller");
+			case UnitScript.Types.A_Elite:			return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Alien_Elite_Controller");
+			case UnitScript.Types.A_Tank:			return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Alien_Tank_Controller");
+			case UnitScript.Types.A_Artillery:		return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Alien_Artillery_Controller");
+			case UnitScript.Types.A_Base:			return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Alien_Mobile_Base"); 
 			default:						return null;
 		}
 	}

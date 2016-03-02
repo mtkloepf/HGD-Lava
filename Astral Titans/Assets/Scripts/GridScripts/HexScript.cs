@@ -26,11 +26,6 @@ public class HexScript : MonoBehaviour {
 		// Do not remove this or the hexes will not be displayed!!
 		gameObject.transform.localScale = new Vector3(1, 1, 0);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     // Start the sprite renderer
 	public void startRenderer() {

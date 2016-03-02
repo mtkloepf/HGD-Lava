@@ -8,18 +8,16 @@ public class UnitScript : MonoBehaviour
 
 	public Sprite Sprite;
 	public SortedDictionary<HexScript.HexEnum, int> terrainMap = new SortedDictionary<HexScript.HexEnum, int> ();
-	public static UnitScript instance;
 	private Animator animator;
 	// Used to disable the Unit in fog tiles
 	private SpriteRenderer _renderer;
 
 	public Vector2 position = Vector2.zero;
 	public bool focus = false;
-	public int mapSize = 11;
 	public int player;
 	public bool hasMoved;
 
-	public bool canAttack = true;
+	//public bool canAttack = true;
 	public bool hasAttacked;
 
 	public bool mouseOver = false;
@@ -38,28 +36,27 @@ public class UnitScript : MonoBehaviour
 		A_Base
 	};
 
+	private static readonly int MAX_HEALTH = 100;
+	private int health;
+
 	private int attack;
 	private int defense;
     private int range;
-
-	public readonly int maxHealth = 100;
-	private int health;
 	private int movement;
 
 	// Use this for initialization
 	void Start () {
-		health = 100;
+		health =  MAX_HEALTH;
 		animator = GetComponent<Animator>();
 		_renderer = GetComponent<SpriteRenderer>();
 		hasMoved = false;
 		hasAttacked = false;
 		// Fix local positioning of the unit
 		Vector3 pos = gameObject.transform.localPosition;
-		gameObject.transform.localPosition = new Vector3(pos.x, pos.y, -1);
+		gameObject.transform.localPosition = new Vector3(pos.x, pos.y, -0.5f);
 	}
 
-	public void updateTurn ()
-	{
+	public void updateTurn () {
 		hasMoved = false;
 		hasAttacked = false;
 	}
@@ -102,7 +99,7 @@ public class UnitScript : MonoBehaviour
 		case Types.H_Tank:
 			attack = 7;
 			defense = 8;
-            range = 2;
+            range = 1;
 			movement = 5;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
 			terrainMap.Add (HexScript.HexEnum.mountain, 100);
@@ -113,7 +110,7 @@ public class UnitScript : MonoBehaviour
 		case Types.H_Artillery:
 			attack = 8;
 			defense = 5;
-            range = 4;
+            range = 3;
 			movement = 3;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
 			terrainMap.Add (HexScript.HexEnum.mountain, 100);
@@ -157,7 +154,7 @@ public class UnitScript : MonoBehaviour
 		case Types.A_Tank:
 			attack = 7;
 			defense = 8;
-            range = 2;
+            range = 1;
 			movement = 5;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
 			terrainMap.Add (HexScript.HexEnum.mountain, 100);
@@ -168,7 +165,7 @@ public class UnitScript : MonoBehaviour
 		case Types.A_Artillery:
 			attack = 8;
 			defense = 5;
-            range = 4;
+            range = 3;
 			movement = 3;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
 			terrainMap.Add (HexScript.HexEnum.mountain, 100);
@@ -229,7 +226,7 @@ public class UnitScript : MonoBehaviour
 		transform.position = new Vector3 (
 			hex.transform.position.x,
 			hex.transform.position.y,
-			-1);
+			-0.5f);
 	}
 
 	// Returns the position of the unit
@@ -245,15 +242,28 @@ public class UnitScript : MonoBehaviour
 		return pos;
 	}
 
-	// Sets the health
-	public void setHealth (int health)
-	{
-		this.health = health;
+	// Sets the health and modifies the Unit's hp bar
+	public void setHealth (int h) {
+		health = h;
+
+		if (health > MAX_HEALTH) {
+			health = MAX_HEALTH;
+		} else if (health < 0) {
+			health = 0;
+		}
+
+		// Original position/scale
+		Transform HpGreenPosition = HPBar.transform;
+		// x scale and position of the green bar change based on health percentage 
+		var x_scale = 0.5f * health / MAX_HEALTH;
+		var x_value = 0.5f * x_scale - 0.25f;
+		// update x position and scale
+		HpGreenPosition.localPosition = new Vector3 (x_value, HpGreenPosition.localPosition.y, HpGreenPosition.localPosition.z);
+		HpGreenPosition.localScale = new Vector3 ( x_scale, HpGreenPosition.transform.localScale.y, HpGreenPosition.transform.localScale.z);
 	}
 
 	// Gets the health
-	public int getHealth ()
-	{
+	public int getHealth () {
 		return health;
 	}
 
@@ -291,15 +301,6 @@ public class UnitScript : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
-		// Original position/scale
-		Transform HpGreenPosition = HPBar.transform;
-		// x scale and position of the green bar change based on health percentage 
-		var x_scale = 0.5f * health / maxHealth;
-		var x_value = 0.5f * x_scale - 0.25f;
-		// update x position and scale
-		HpGreenPosition.localPosition = new Vector3 (x_value, HpGreenPosition.localPosition.y, HpGreenPosition.localPosition.z);
-		HpGreenPosition.localScale = new Vector3 ( x_scale, HpGreenPosition.transform.localScale.y, HpGreenPosition.transform.localScale.z);
-
 		// Disable the Unit in fog tiles
 		disable_in_fog( GameManagerScript.Map.map[(int)position.x][(int)position.y].covered_in_fog() );
 	}
@@ -331,9 +332,6 @@ public class UnitScript : MonoBehaviour
 			} else {
 				GameManagerScript.instance.attack(this);
 			}
-		} else {
-			// TODO add movement conflict handling . . .
-			Debug.Log("Hidden in fog . . .");
 		}
 	}
 
