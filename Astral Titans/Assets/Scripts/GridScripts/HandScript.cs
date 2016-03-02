@@ -50,7 +50,7 @@ public class HandScript : MonoBehaviour {
 		if (t == CardScript.CardType.Empty) { // Ignored by Mouse
 			gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
 		} else { // Default layer
-			gameObject.layer = 0;
+			gameObject.layer = LayerMask.NameToLayer("UI");
 		}
 	}
 }

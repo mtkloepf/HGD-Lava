@@ -326,6 +326,11 @@ public class MapManager {
 		}
 	}
 
+	/* Verifies that the two hexes are at the same position in the map */
+	public static bool same_position(HexScript h1, HexScript h2) {
+		return (h1.position.x == h2.position.x) && (h1.position.y == h2.position.y);
+	}
+
 	/* Removes all tiles from the map */
 	public void removeHexes() {
 		for (int x = 0; x < width; ++x) {

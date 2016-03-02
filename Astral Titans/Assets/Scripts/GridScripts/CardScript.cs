@@ -6,18 +6,21 @@ public class CardScript {
 	public readonly CardType type;
 	public readonly int cost;
 
-	public enum CardType {
-		HumanInfantry,
-		AlienInfantry,
-		HumanTank,
-		AlienTank,
-		AlienElite,
-		HumanExo,
-		HumanArtillery,
-		Currency1,
-		Currency2,
-		Currency3,
-		Empty
+	public enum CardType : int {
+		HumanInfantry = 0,
+		HumanExo = 1,
+		HumanTank = 2,
+		HumanArtillery = 3,
+
+		AlienInfantry = 4,
+		AlienElite = 5,
+		AlienTank = 6,
+		AlienArtillery = 7,
+
+		Currency1 = 8,
+		Currency2 = 9,
+		Currency3 = 10,
+		Empty = 11
 	};
 
 	/* Creates a card based on the given type. */

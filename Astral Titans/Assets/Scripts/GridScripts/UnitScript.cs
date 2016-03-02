@@ -22,18 +22,19 @@ public class UnitScript : MonoBehaviour
 
 	public bool mouseOver = false;
 
-	public enum Types {
-		H_Infantry,
-		H_Exo,
-		H_Tank,
-		H_Artillery,
-		H_Base,
+	public enum Types : int {
+		H_Infantry = 0,
+		H_Exo = 1,
+		H_Tank = 2,
+		H_Artillery = 3,
 
-		A_Infantry,
-		A_Elite,
-		A_Tank,
-		A_Artillery,
-		A_Base
+		A_Infantry = 4,
+		A_Elite = 5,
+		A_Tank = 6,
+		A_Artillery = 7,
+
+		H_Base = 8,
+		A_Base = 9
 	};
 
 	private static readonly int MAX_HEALTH = 100;
@@ -45,7 +46,7 @@ public class UnitScript : MonoBehaviour
 	private int movement;
 
 	// Use this for initialization
-	void Start () {
+	void Start() {
 		health =  MAX_HEALTH;
 		animator = GetComponent<Animator>();
 		_renderer = GetComponent<SpriteRenderer>();
@@ -68,13 +69,11 @@ public class UnitScript : MonoBehaviour
 		Destroy (this.gameObject, 1);
 	}
 
-
-
 	// Set the unit type
-	public void setType(Types type) {
+	public void setType(int type) {
 		switch (type) {
 		
-		case Types.H_Infantry:
+		case (int)Types.H_Infantry:
 			attack = 2;
 			defense = 1;
             range = 2;
@@ -85,7 +84,7 @@ public class UnitScript : MonoBehaviour
 			terrainMap.Add(HexScript.HexEnum.desert, 2);
 			break;
 		
-		case Types.H_Exo:
+		case (int)Types.H_Exo:
 			attack = 4;
 			defense = 3;
             range = 1;
@@ -96,7 +95,7 @@ public class UnitScript : MonoBehaviour
 			terrainMap.Add (HexScript.HexEnum.desert, 1);
 			break;
 		
-		case Types.H_Tank:
+		case (int)Types.H_Tank:
 			attack = 7;
 			defense = 8;
             range = 1;
@@ -107,7 +106,7 @@ public class UnitScript : MonoBehaviour
 			terrainMap.Add (HexScript.HexEnum.desert, 2);
 			break;
 			
-		case Types.H_Artillery:
+		case (int)Types.H_Artillery:
 			attack = 8;
 			defense = 5;
             range = 3;
@@ -118,7 +117,7 @@ public class UnitScript : MonoBehaviour
 			terrainMap.Add (HexScript.HexEnum.desert, 3);
 			break;
 		
-		case Types.H_Base:
+		case (int)Types.H_Base:
 			attack = 0;
 			defense = 9;
             range = 1;
@@ -129,7 +128,7 @@ public class UnitScript : MonoBehaviour
 			terrainMap.Add (HexScript.HexEnum.desert, 1);
 			break;
 		
-		case Types.A_Infantry:
+		case (int)Types.A_Infantry:
 			attack = 2;
 			defense = 1;
             range = 2;
@@ -140,7 +139,7 @@ public class UnitScript : MonoBehaviour
 			terrainMap.Add(HexScript.HexEnum.desert, 2);
 			break;
 
-		case Types.A_Elite:
+		case (int)Types.A_Elite:
 			attack = 4;
 			defense = 3;
             range = 1;
@@ -151,7 +150,7 @@ public class UnitScript : MonoBehaviour
 			terrainMap.Add (HexScript.HexEnum.desert, 1);
 			break;
 
-		case Types.A_Tank:
+		case (int)Types.A_Tank:
 			attack = 7;
 			defense = 8;
             range = 1;
@@ -162,7 +161,7 @@ public class UnitScript : MonoBehaviour
 			terrainMap.Add (HexScript.HexEnum.desert, 2);
 			break;
 
-		case Types.A_Artillery:
+		case (int)Types.A_Artillery:
 			attack = 8;
 			defense = 5;
             range = 3;
@@ -173,7 +172,7 @@ public class UnitScript : MonoBehaviour
 			terrainMap.Add (HexScript.HexEnum.desert, 3);
 			break;
 
-		case Types.A_Base:
+		case (int)Types.A_Base:
 			attack = 0;
 			defense = 9;
             range = 1;
