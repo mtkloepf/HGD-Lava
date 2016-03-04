@@ -116,36 +116,39 @@ public class MapManager {
 			}
 		}
 
-		/* build multiple mountain ranges */
+		/* build mountain ranges */
 		counter = (int)(1.5f + 0.149f * average);
 
 		while (--counter >= 0) {
 			pos_x = UnityEngine.Random.Range(0, width - 1);
 			pos_y = UnityEngine.Random.Range (0, height - 1);
 
-			area = findArea(map[pos_x][pos_y], average / 8, new Probability(0.65f, 0.08f));
+			area = findArea(map[pos_x][pos_y], (int)(0.15f * average + 1.5f), new Probability(0.55f, 0.15f));
 
 			foreach (HexScript h in area) {
 				h.setType((int)HexScript.HexEnum.mountain);
 			}
 		}
-	}
 
-	/* Method designed to store pairs of integers that will represent places to place different terrain */
-	private int[] scatter_pairs(int num_of_pairs) {
-		if (num_of_pairs < 0) { return null; }
+		/* Build oases */
+		counter = average / 10 + UnityEngine.Random.Range(0, 3);
 
-		int[] pairs = new int[2 * num_of_pairs];
+		while (--counter >= 0) {
+			pos_x = UnityEngine.Random.Range(0, width - 1);
+			pos_y = UnityEngine.Random.Range (0, height - 1);
 
-		pairs[0] = UnityEngine.Random.Range(0, width);
-		pairs[1] = UnityEngine.Random.Range(0, height);
+			area = findArea(map[pos_x][pos_y], (int)(0.16f * average + 0.35f), new Probability(0.72f, 0.07f));
+			// fill grass area
+			foreach (HexScript h in area) {
+				h.setType((int)HexScript.HexEnum.plains);
+			}
 
-		for (int idx = 3; idx < pairs.Length; idx += 2) {
-			Vector2 position = map[idx - 3][idx - 2].position;
-			// TODO populate array
+			area = findArea(map[pos_x][pos_y], (int)(0.08f * average + 1.1f), new Probability(0.4f, 0.1f));
+			// fill resevoir
+			foreach (HexScript h in area) {
+				h.setType((int)HexScript.HexEnum.water);
+			}
 		}
-
-		return pairs;
 	}
 
 	/* DON'T try this map: it is not polished!! */
@@ -189,7 +192,7 @@ public class MapManager {
 
 			foreach (HexScript h in area) {
 				// leave outside margins passable by non-infantry units
-				if (h.position.x > 0 && h.position.x < width - 1 && h.position.y > 2 && h.position.y < (height - 2)) {
+				if (h.position.x > 1 && h.position.x < width - 2 && h.position.y > 3 && h.position.y < (height - 3)) {
 					h.setType(3);
 				}
 			}

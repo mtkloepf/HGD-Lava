@@ -137,7 +137,6 @@ public class InputPrompt : MonoBehaviour {
 			} else if ( in_3.Length > 0 && in_3[0] == '$' && SceneTransitionStorage.containsType(in_3.Substring(1, in_3.Length - 1) ) ) { // jump to map generation testing
 				if (w_in > 0 && h_in > 0) {
 					SceneTransitionStorage.map_type = in_3.Substring(1, in_3.Length - 1);
-					Debug.Log( in_3.Substring(1, in_3.Length - 1) );
 					SceneManager.LoadScene("test_map_generation");
 				}
 			} else {
