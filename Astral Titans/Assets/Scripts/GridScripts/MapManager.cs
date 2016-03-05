@@ -23,6 +23,8 @@ public class MapManager {
 	/* Initialize the size of the map */
 	static MapManager() {
 		size = 4;
+		// Sets the random number seed.
+		UnityEngine.Random.seed = Time.frameCount;
 	}
 
 	/* Creates a map of the given dimensions and type */
@@ -73,7 +75,7 @@ public class MapManager {
 			area = findArea(map[pos_x][pos_y], System.Math.Max(2 * width, height / 2) / 3, new Probability(0.45f, 0.02f));
 
 			foreach (HexScript h in area) {
-				h.setType(1);
+				h.setType((int)HexScript.HexEnum.desert);
 			}
 		}
 
@@ -86,7 +88,7 @@ public class MapManager {
 			area = findArea(map[pos_x][pos_y], average / 15 + 3, new Probability(0.5f, 0.04f));
 
 			foreach (HexScript h in area) {
-				h.setType(2);
+				h.setType((int)HexScript.HexEnum.water);
 			}
 		}
 
@@ -99,7 +101,7 @@ public class MapManager {
 			area = findArea(map[pos_x][pos_y], average / 20 + 3, new Probability(0.55f, 0.06f));
 
 			foreach (HexScript h in area) {
-				h.setType(3);
+				h.setType((int)HexScript.HexEnum.mountain);
 			}
 		}
 	}
@@ -155,6 +157,7 @@ public class MapManager {
 	private void centralMountainMap() {
 		int pos_x, pos_y, counter;
 		List<HexScript> area;
+		int average = (2 * width + height / 2) / 2;
 
 		/* build 1 ~ 3 pontentially large deserts */
 		counter = (int)( (2.0f * width + height / 2.0f) / 30.0f + 0.5f );
@@ -165,7 +168,7 @@ public class MapManager {
 			area = findArea(map[pos_x][pos_y], System.Math.Max(2 * width, height / 2) / 3, null);
 
 			foreach (HexScript h in area) {
-				h.setType(1);
+				h.setType((int)HexScript.HexEnum.desert);
 			}
 		}
 
@@ -178,7 +181,7 @@ public class MapManager {
 			area = findArea(map[pos_x][pos_y], 2, null);
 
 			foreach (HexScript h in area) {
-				h.setType(2);
+				h.setType((int)HexScript.HexEnum.water);
 			}
 		}
 
@@ -188,12 +191,15 @@ public class MapManager {
 			pos_x = width / 2;
 			pos_y = height / 2;
 			// Debug.Log("(" + pos_x + " , " + pos_y + ") " + (2 * height / 10) + "\n");
-			area = findArea(map[pos_x][pos_y], (2 * height / 10), null);
+			area = findArea(map[pos_x][pos_y], (int)(0.8f * average - 0.3f) / 2, new Probability(0.72f, 0.08f));
 
 			foreach (HexScript h in area) {
 				// leave outside margins passable by non-infantry units
-				if (h.position.x > 1 && h.position.x < width - 2 && h.position.y > 3 && h.position.y < (height - 3)) {
-					h.setType(3);
+				if ( ((h.position.y % 2 == 1 && h.position.x > 0) || h.position.x > 1) &&
+					 ((h.position.y % 2 == 0 && h.position.x < width - 1) || h.position.x < width - 2) &&
+					   h.position.y > 3 && h.position.y < (height - 4)) {
+
+					   h.setType((int)HexScript.HexEnum.mountain);
 				}
 			}
 		}
