@@ -23,8 +23,6 @@ public class MapManager {
 	/* Initialize the size of the map */
 	static MapManager() {
 		size = 4;
-		// Sets the random number seed.
-		UnityEngine.Random.seed = Time.frameCount;
 	}
 
 	/* Creates a map of the given dimensions and type */
@@ -37,6 +35,9 @@ public class MapManager {
 	// TODO: base map generation off of size and map type
 
 	public void generatePseudoRandomMap() {
+		// Sets the random number seed.
+		UnityEngine.Random.seed = Time.frameCount;
+
 		map = new List<List<HexScript>>();
 
 		// generate all hexes initially
