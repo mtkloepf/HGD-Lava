@@ -113,6 +113,14 @@ public class HexScript : MonoBehaviour {
 	/* Return if the tile is covered in fog */
 	public bool covered_in_fog() { return fog_cover; }
 
+	public void checkForFog() {
+		if (!GameManagerScript.instance.getVisibleHexes ().Contains (this)) {
+			set_fog_cover (true);
+		} else {
+			set_fog_cover (false);
+		}
+	}
+
 	// Gets the position of the transform of the hex
 	public Vector2 getTransformPosition() {
 		Vector2 pos = new Vector2 (transform.position.x, transform.position.y);

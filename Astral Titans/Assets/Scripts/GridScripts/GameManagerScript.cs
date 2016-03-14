@@ -41,6 +41,9 @@ public class GameManagerScript : MonoBehaviour
 	// Set containing all hexes that a unit can move to
 	HashSet<HexScript> hexSet = new HashSet<HexScript>();
 
+	// Set containing all hexes that can be seen
+	HashSet<HexScript> visibleHexes = new HashSet<HexScript>();
+
 	// Clicking on a unit will make it focused
 	private static UnitScript focusedUnit;
 	private static HexScript focusedHex;
@@ -486,6 +489,12 @@ public class GameManagerScript : MonoBehaviour
 			
 			if (focusedUnit != null) {
 				moveCurrentUnit(hex);
+				updateVisibleHexes ();
+				foreach (List<HexScript> hexList in Map.map) {
+					foreach (HexScript tempHex in hexList) {
+						tempHex.checkForFog ();
+					}
+				}
 				return true;
 			} else if ( focusedCard != null && adjacent_to_base(hex) && placeUnitWithCard(focusedCard, (int)hex.position.x, (int)hex.position.y) ) {
 					// Attempt to place the unit of the focusedCard
@@ -692,5 +701,51 @@ public class GameManagerScript : MonoBehaviour
 		} else {
 			paused = false;
 		}
+	}
+
+	public HashSet<HexScript> getVisibleHexes() {
+		return visibleHexes;
+	}
+
+	public void updateVisibleHexes() {
+		Debug.Log ("test");
+
+		UnitScript origFocusedUnit = focusedUnit;
+
+		visibleHexes = new HashSet<HexScript> ();
+		if (turn == 1) {
+			foreach (UnitScript unit in units) {
+				if (unit.player == 1) {
+					focusedUnit = unit;
+					List<HexScript> mapRow = Map.map [(int)unit.getPosition ().x];
+					HexScript curHex = mapRow [(int)unit.getPosition ().y];
+					// Reinitialize the hexSet to an empty set
+					hexSet = new HashSet<HexScript> ();
+					// Populate the hexSet with moveable hexes
+					findMovement (unit.getMovement (), (Map.map [(int)unit.getPosition ().x]) [(int)unit.getPosition ().y], false);
+					// For each moveable hex, indicate that it is moveable
+					foreach (HexScript moveable in hexSet) {
+						visibleHexes.Add(moveable);
+					}
+				}
+			}
+		} else {
+			foreach (UnitScript unit in units) {
+				if (unit.player == 2) {
+					List<HexScript> mapRow = Map.map [(int)unit.getPosition ().x];
+					HexScript curHex = mapRow [(int)unit.getPosition ().y];
+					// Reinitialize the hexSet to an empty set
+					hexSet = new HashSet<HexScript> ();
+					// Populate the hexSet with moveable hexes
+					findMovement (unit.getMovement (), (Map.map [(int)unit.getPosition ().x]) [(int)unit.getPosition ().y], false);
+					// For each moveable hex, indicate that it is moveable
+					foreach (HexScript moveable in hexSet) {
+						visibleHexes.Add(moveable);
+					}
+					focusedUnit = unit;
+				}
+			}
+		}
+		focusedUnit = origFocusedUnit;
 	}
 }
