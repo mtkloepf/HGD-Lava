@@ -221,6 +221,13 @@ public class GameManagerScript : MonoBehaviour
 
 			updateHexes();
 			drawCards();
+			updateVisibleHexes ();
+			foreach (List<HexScript> hexList in Map.map) {
+				foreach (HexScript tempHex in hexList) {
+					tempHex.checkForFog (); 
+					tempHex.refreshFog ();
+				}
+			}
 
 			TurnIndicator.updateTurn(turn);
 		}
@@ -492,7 +499,8 @@ public class GameManagerScript : MonoBehaviour
 				updateVisibleHexes ();
 				foreach (List<HexScript> hexList in Map.map) {
 					foreach (HexScript tempHex in hexList) {
-						tempHex.checkForFog ();
+						tempHex.checkForFog (); 
+					    tempHex.refreshFog ();
 					}
 				}
 				return true;

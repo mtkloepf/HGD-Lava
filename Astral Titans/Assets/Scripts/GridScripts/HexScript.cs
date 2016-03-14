@@ -15,7 +15,7 @@ public class HexScript : MonoBehaviour {
 
 	SpriteRenderer render;
 	bool focus = false;
-        bool occupied = false;
+    bool occupied = false;
 	
 	// Use this for initialization
 	void Start () {
@@ -93,6 +93,10 @@ public class HexScript : MonoBehaviour {
 		render.sprite = (fog_cover) ? SpriteManagerScript.blueFogSprite : blueSprite;
 	}
 
+	public void refreshFog() {
+		render.sprite = (fog_cover) ? SpriteManagerScript.fogSprite : standardSprite;
+	}
+
 	/* Set if the tile is covered in fog */
 	public void set_fog_cover(bool covered) {
 		if (covered != fog_cover) {
@@ -113,12 +117,13 @@ public class HexScript : MonoBehaviour {
 	/* Return if the tile is covered in fog */
 	public bool covered_in_fog() { return fog_cover; }
 
-	public void checkForFog() {
+	public bool checkForFog() {
 		if (!GameManagerScript.instance.getVisibleHexes ().Contains (this)) {
 			set_fog_cover (true);
 		} else {
 			set_fog_cover (false);
 		}
+		return fog_cover;
 	}
 
 	// Gets the position of the transform of the hex
