@@ -11,12 +11,12 @@ public class HexScript : MonoBehaviour {
 	public enum HexEnum : int { plains = 0, water = 1, mountain = 2, desert = 3 };
 	HexEnum type = HexEnum.plains; //Default to plains
 	// Determine if the tile is out of sight range
-	private bool fog_cover;
+	private bool fog_cover = false;
 
 	SpriteRenderer render;
 	bool focus = false;
     bool occupied = false;
-	
+
 	// Use this for initialization
 	void Start () {
 		transform.SetParent (GameObject.Find("HexManager").transform);
@@ -54,8 +54,9 @@ public class HexScript : MonoBehaviour {
 	
     // Mouse is hovered over a hex
     void OnMouseEnter() {
-    	if(!getFocus() && render.sprite != redSprite)
-			makeFocused();
+		if (!getFocus () && render.sprite != redSprite) {
+			makeFocused ();
+		}
 	}
 	
     // Mouse leaves a hovered hex
