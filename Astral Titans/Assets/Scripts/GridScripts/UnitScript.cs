@@ -108,7 +108,7 @@ public class UnitScript : MonoBehaviour
 			
 		case (int)Types.H_Artillery:
 			attack = 8;
-			defense = 5;
+			defense = 2;
             range = 3;
 			movement = 3;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
@@ -163,7 +163,7 @@ public class UnitScript : MonoBehaviour
 
 		case (int)Types.A_Artillery:
 			attack = 8;
-			defense = 5;
+			defense = 2;
             range = 3;
 			movement = 3;
 			terrainMap.Add (HexScript.HexEnum.water, 100);
