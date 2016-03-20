@@ -7,6 +7,7 @@ public class HexScript : MonoBehaviour {
 	public Sprite standardSprite;
 	public Sprite redSprite;
 	public Sprite blueSprite;
+	public Sprite pinkSprite;
 
 	public enum HexEnum : int { plains = 0, water = 1, mountain = 2, desert = 3 };
 	HexEnum type = HexEnum.plains; //Default to plains
@@ -85,9 +86,14 @@ public class HexScript : MonoBehaviour {
 		return focus;
 	}
 
-	// Makes the hex red, indicating that that unit has already moved
+	// Makes the hex red, indicating that that unit has already attacked
 	public void makeRed() {
 		render.sprite = (fog_cover) ? SpriteManagerScript.fogSprite : redSprite;
+	}
+
+	// Makes the hex pink, indicating that the unit has already moved but can still attack
+	public void makePink() {
+		render.sprite = (fog_cover) ? SpriteManagerScript.fogSprite : pinkSprite;
 	}
 
 	// Makes the hex the default color
@@ -192,40 +198,45 @@ public class HexScript : MonoBehaviour {
 			setType (HexScript.HexEnum.plains,
 				SpriteManagerScript.plainsSprite, 
 				SpriteManagerScript.redPlainsSprite,
-				SpriteManagerScript.bluePlainsSprite);
+				SpriteManagerScript.bluePlainsSprite,
+				SpriteManagerScript.pinkPlainsSprite);
 		}
 		// Generate a desert
 		else if (type == (int)HexEnum.desert) {
 			setType (HexScript.HexEnum.desert,
 				SpriteManagerScript.desertSprite, 
 				SpriteManagerScript.redDesertSprite,
-				SpriteManagerScript.blueDesertSprite);
+				SpriteManagerScript.blueDesertSprite,
+				SpriteManagerScript.pinkDesertSprite);
 		}
 		// Generate water
 		else if (type == (int)HexEnum.water) {
 			setType (HexScript.HexEnum.water,
 				SpriteManagerScript.waterSprite, 
 				SpriteManagerScript.redWaterSprite,
-				SpriteManagerScript.blueWaterSprite);
+				SpriteManagerScript.blueWaterSprite,
+				SpriteManagerScript.pinkWaterSprite);
 		}
 		// Generate a mountain
 		else if (type == (int)HexEnum.mountain) {
 			setType (HexScript.HexEnum.mountain,
 				SpriteManagerScript.mountainSprite, 
 				SpriteManagerScript.redMountainSprite,
-				SpriteManagerScript.blueMountainSprite);
+				SpriteManagerScript.blueMountainSprite,
+				SpriteManagerScript.pinkMountainSprite);
 		}
 	}
 
 	// Sets the type of terrain
 	private void setType(HexEnum type, Sprite standard, 
-		Sprite red, Sprite blue) {
+		Sprite red, Sprite blue, Sprite pink) {
 		this.type = type;
 		if(type == HexEnum.mountain || 
 			type == HexEnum.water) occupied = true;
 		standardSprite = standard;
 		redSprite = red;
 		blueSprite = blue;
+		pinkSprite = pink;
 
 		render.sprite = standardSprite;
 	}
