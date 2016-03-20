@@ -59,6 +59,7 @@ public class GameManagerScript : MonoBehaviour
 	
 	// Use this for initialization
 	void Start () {
+		Debug.Log (SpriteManagerScript.pinkPlainsSprite == null);
 		// Initialize hand display
 		GameObject[] card_frames = GameObject.FindGameObjectsWithTag("Hand");
 		hand_display = new HandScript[DeckManager.MAX_HAND_SIZE];
@@ -103,6 +104,7 @@ public class GameManagerScript : MonoBehaviour
 				tempHex.makeDefault ();
 			}
 		}
+		updateHexes();
 	}
 
 	int stupidFix = 0;
@@ -209,7 +211,11 @@ public class GameManagerScript : MonoBehaviour
 				// make hex red
 				List<HexScript> mapRow = Map.map [(int)unit.getPosition ().x];
 				HexScript hex = mapRow [(int)unit.getPosition ().y];
-				hex.makeRed ();
+				if (unit.hasAttacked) {
+					hex.makeRed ();
+				} else {
+					hex.makePink ();
+				}
 			}
                         // DOES NOTHING AT THE MOMENT
 			else if (!unit.hasMoved && unit.getPlayer () == turn) {
@@ -238,7 +244,7 @@ public class GameManagerScript : MonoBehaviour
 			Player1.setCurrency(0);
 			Player2.setCurrency(0);
 
-			updateHexes();
+
 			drawCards();
 			updateVisibleHexes ();
 			foreach (List<HexScript> hexList in Map.map) {
@@ -247,6 +253,8 @@ public class GameManagerScript : MonoBehaviour
 					tempHex.refreshFog ();
 				}
 			}
+			updateHexes();
+
 
 			TurnIndicator.updateTurn(turn);
 		}
@@ -602,7 +610,6 @@ public class GameManagerScript : MonoBehaviour
 		}
 		// Create the Unit if its type is valid
 		if (origin != null) {
-			//Debug.Log( ((UnitScript.Types)type) + " (" + x + ", " + y + ")");
 			unit = ((GameObject)Instantiate(origin, new Vector3(4 - Mathf.Floor(MapManager.size / 2), -5 + Mathf.Floor(MapManager.size / 2), -0.5f), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
 			unit.setType(type);
 			unit.setPlayer(turn);
@@ -651,9 +658,9 @@ public class GameManagerScript : MonoBehaviour
 				foreach (HexScript tempHex in hexList) {
 					tempHex.checkForFog (); 
 					tempHex.makeDefault ();
-					Debug.Log(tempHex.covered_in_fog());
 				}
 			}
+			updateHexes();
 			focusedUnit = unit;
 			if (!unit.hasMoved) {
 				updateHexes ();
@@ -762,5 +769,9 @@ public class GameManagerScript : MonoBehaviour
 			}
 		}
 		focusedUnit = origFocusedUnit;
+
+		updateHexes ();
 	}
+
+
 }

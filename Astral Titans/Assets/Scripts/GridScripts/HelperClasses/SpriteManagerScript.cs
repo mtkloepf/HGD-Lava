@@ -11,15 +11,19 @@ public static class SpriteManagerScript {
 	public static readonly Sprite desertSprite;
 	public static readonly Sprite redDesertSprite;
 	public static readonly Sprite blueDesertSprite;
+	public static readonly Sprite pinkDesertSprite;
 	public static readonly Sprite plainsSprite;
 	public static readonly Sprite redPlainsSprite;
 	public static readonly Sprite bluePlainsSprite;
+	public static readonly Sprite pinkPlainsSprite;
 	public static readonly Sprite waterSprite;
 	public static readonly Sprite redWaterSprite;
 	public static readonly Sprite blueWaterSprite;
+	public static readonly Sprite pinkWaterSprite;
 	public static readonly Sprite mountainSprite;
 	public static readonly Sprite redMountainSprite;
 	public static readonly Sprite blueMountainSprite;
+	public static readonly Sprite pinkMountainSprite;
 	public static readonly Sprite fogSprite;
 	public static readonly Sprite blueFogSprite;
 
@@ -44,15 +48,19 @@ public static class SpriteManagerScript {
 		desertSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/desert_tile");
 		redDesertSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/desert_tile_red");
 		blueDesertSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/desert_tile_blue");
+		pinkDesertSprite = Resources.Load<Sprite> ("Sprites/Terrain_Tiles/desert_tile_pink");
 		plainsSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/grass_tile");
 		redPlainsSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/grass_tile_red");
 		bluePlainsSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/grass_tile_blue");
+		pinkPlainsSprite = Resources.Load<Sprite> ("Sprites/Terrain_Tiles/grass_tile_pink");
 		waterSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/water_tile");
 		redWaterSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/water_tile_red");
 		blueWaterSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/water_tile_blue");
+		pinkWaterSprite = Resources.Load<Sprite> ("Sprites/Terrain_Tiles/water_tile_pink");
 		mountainSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/volcano_tile");
 		redMountainSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/volcano_tile_red");
 		blueMountainSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/volcano_tile_blue");
+		pinkMountainSprite = Resources.Load<Sprite> ("Sprites/Terrain_Tiles/volcano_tile_pink");
 		fogSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/fog_tile");
 		blueFogSprite = Resources.Load<Sprite>("Sprites/Terrain_Tiles/fog_tile_blue");
 
