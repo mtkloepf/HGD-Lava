@@ -567,12 +567,13 @@ public class GameManagerScript : MonoBehaviour
 				Debug.Log("Invalid index!\n");
 				return false;
 			}
-
-			// use the card
-			hand_display[idx].reset(-1, CardScript.CardType.Empty);
-			getPlayer().changeCurrency(-card.cost);
-			// place the unit
-			return placeUnit((int)card.type, x, y) != null;
+				
+			if (placeUnit ((int)card.type, x, y) != null) {
+				// use the card
+				hand_display[idx].reset(-1, CardScript.CardType.Empty);
+				getPlayer ().changeCurrency (-card.cost);
+			} else
+				return false;
 		}
 
 		return false;
@@ -583,41 +584,46 @@ public class GameManagerScript : MonoBehaviour
 		if (paused) {
 			return null;
 		}
+		List<HexScript> hexes = Map.map [x];
+		HexScript hex = hexes [y];
+		if (hex.getType () != HexScript.HexEnum.water) {
 
-		UnitScript unit = null;
-		Object origin = null;
-		// Determines which prefab to use base on the type value
-		if (type == (int)UnitScript.Types.H_Infantry) {
-			origin = PrefabManager.HumanInfantryPrefab;
-		} else if (type == (int)UnitScript.Types.H_Exo) {
-			origin = PrefabManager.HumanExoPrefab;
-		} else if (type == (int)UnitScript.Types.H_Tank) {
-			origin = PrefabManager.HumanTankPrefab;
-		} else if (type == (int)UnitScript.Types.H_Artillery) {
-			origin = PrefabManager.HumanArtilleryPrefab;
-		} else if (type == (int)UnitScript.Types.H_Base) {
-			origin = PrefabManager.HumanMobileBasePrefab;
-		} else if (type == (int)UnitScript.Types.A_Infantry) {
-			origin = PrefabManager.AlienInfantryPrefab;
-		} else if (type == (int)UnitScript.Types.A_Elite) {
-			origin = PrefabManager.AlienElitePrefab;
-		} else if (type == (int)UnitScript.Types.A_Artillery) {
-			origin = PrefabManager.AlienArtilleryPrefab;
-		} else if (type == (int)UnitScript.Types.A_Tank) {
-			origin = PrefabManager.AlienTankPrefab;
-		} else if (type == (int)UnitScript.Types.A_Base) {
-			origin = PrefabManager.AlienMobileBasePrefab;
-		}
-		// Create the Unit if its type is valid
-		if (origin != null) {
-			unit = ((GameObject)Instantiate(origin, new Vector3(4 - Mathf.Floor(MapManager.size / 2), -5 + Mathf.Floor(MapManager.size / 2), -0.5f), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
-			unit.setType(type);
-			unit.setPlayer(turn);
-			unit.move(Map.map[x][y]);
-			units.Add(unit);
-		}
+			UnitScript unit = null;
+			Object origin = null;
+			// Determines which prefab to use base on the type value
+			if (type == (int)UnitScript.Types.H_Infantry) {
+				origin = PrefabManager.HumanInfantryPrefab;
+			} else if (type == (int)UnitScript.Types.H_Exo) {
+				origin = PrefabManager.HumanExoPrefab;
+			} else if (type == (int)UnitScript.Types.H_Tank) {
+				origin = PrefabManager.HumanTankPrefab;
+			} else if (type == (int)UnitScript.Types.H_Artillery) {
+				origin = PrefabManager.HumanArtilleryPrefab;
+			} else if (type == (int)UnitScript.Types.H_Base) {
+				origin = PrefabManager.HumanMobileBasePrefab;
+			} else if (type == (int)UnitScript.Types.A_Infantry) {
+				origin = PrefabManager.AlienInfantryPrefab;
+			} else if (type == (int)UnitScript.Types.A_Elite) {
+				origin = PrefabManager.AlienElitePrefab;
+			} else if (type == (int)UnitScript.Types.A_Artillery) {
+				origin = PrefabManager.AlienArtilleryPrefab;
+			} else if (type == (int)UnitScript.Types.A_Tank) {
+				origin = PrefabManager.AlienTankPrefab;
+			} else if (type == (int)UnitScript.Types.A_Base) {
+				origin = PrefabManager.AlienMobileBasePrefab;
+			}
+			// Create the Unit if its type is valid
+			if (origin != null) {
+				unit = ((GameObject)Instantiate (origin, new Vector3 (4 - Mathf.Floor (MapManager.size / 2), -5 + Mathf.Floor (MapManager.size / 2), -0.5f), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
+				unit.setType (type);
+				unit.setPlayer (turn);
+				unit.move (Map.map [x] [y]);
+				units.Add (unit);
+			}
 
-		return unit;
+			return unit;
+		} else
+			return null;
 	}
 
 	/* Evaluates the card at the given index in the hand being clicked.
