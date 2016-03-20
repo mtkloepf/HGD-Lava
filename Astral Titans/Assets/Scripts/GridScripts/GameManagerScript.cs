@@ -96,15 +96,6 @@ public class GameManagerScript : MonoBehaviour
 		p1Base.setPlayer (1);
 		p2Base = placeUnit ( (int)UnitScript.Types.A_Base, Map.width - 2, Map.height - 3 );
 		p2Base.setPlayer (2);
-		selectFocus (p1Base);
-		updateVisibleHexes ();
-		foreach (List<HexScript> hexList in Map.map) {
-			foreach (HexScript tempHex in hexList) {
-				tempHex.checkForFog (); 
-				tempHex.makeDefault ();
-			}
-		}
-		updateHexes();
 	}
 
 	int stupidFix = 0;
@@ -114,12 +105,20 @@ public class GameManagerScript : MonoBehaviour
 		if (stupidFix == 0) {
 			stupidFix++;
 			selectFocus (p1Base);
+			updateVisibleHexes ();
+			foreach (List<HexScript> hexList in Map.map) {
+				foreach (HexScript tempHex in hexList) {
+					tempHex.checkForFog(); 
+					tempHex.makeDefault();
+				}
+			}
+			updateHexes ();
 		}
 		if (stupidFix == 1) {
 			stupidFix++;
 			focusedUnit = null;
-			updateHexes ();
 		}
+
 		timer = Time.deltaTime;
 		
 		if (Input.GetKey ("w")) {
@@ -199,7 +198,7 @@ public class GameManagerScript : MonoBehaviour
 	}
 
 	// Updates the colors of the hexes
-	private static void updateHexes ()
+	public static void updateHexes ()
 	{
 		foreach (List<HexScript> hexlist in Map.map) {
 			foreach (HexScript hex in hexlist) {
@@ -211,9 +210,10 @@ public class GameManagerScript : MonoBehaviour
 				// make hex red
 				List<HexScript> mapRow = Map.map [(int)unit.getPosition ().x];
 				HexScript hex = mapRow [(int)unit.getPosition ().y];
-				if (unit.hasAttacked) {
+
+				if (unit.getAttack() == 0 || unit.hasAttacked) {
 					hex.makeRed ();
-				} else {
+				} else if (unit.hasMoved) {
 					hex.makePink ();
 				}
 			}
@@ -246,15 +246,14 @@ public class GameManagerScript : MonoBehaviour
 
 
 			drawCards();
-			updateVisibleHexes ();
+			updateVisibleHexes();
 			foreach (List<HexScript> hexList in Map.map) {
 				foreach (HexScript tempHex in hexList) {
-					tempHex.checkForFog (); 
-					tempHex.refreshFog ();
+					tempHex.checkForFog();
+					//tempHex.refreshFog ();
 				}
 			}
 			updateHexes();
-
 
 			TurnIndicator.updateTurn(turn);
 		}
@@ -273,12 +272,24 @@ public class GameManagerScript : MonoBehaviour
 			if (focusedUnit != null) {
 				// If the hex is in the set of moveable hexes, move to it
 				if (hexSet.Contains (hex)) {
-					focusedUnit.move (hex);
+					Map.map[(int)focusedUnit.getPosition().x][(int)focusedUnit.getPosition().y].setOccupied(false);
+					focusedUnit.move(hex);
+					hex.setOccupied(true);
 				}
+
+
+				updateVisibleHexes();
+				foreach (List<HexScript> hexList in Map.map) {
+					foreach (HexScript tempHex in hexList) {
+						tempHex.checkForFog (); 
+						tempHex.refreshFog ();
+					}
+				}
+				updateHexes();
+
 				focusedUnit = null;
 				focusedHex.setFocus (false);
 			}
-			updateHexes ();
 		}
 	}
 
@@ -523,13 +534,7 @@ public class GameManagerScript : MonoBehaviour
 			
 			if (focusedUnit != null) {
 				moveCurrentUnit(hex);
-				updateVisibleHexes ();
-				foreach (List<HexScript> hexList in Map.map) {
-					foreach (HexScript tempHex in hexList) {
-						tempHex.checkForFog (); 
-					    tempHex.refreshFog ();
-					}
-				}
+
 				return true;
 			} else if ( focusedCard != null && adjacent_to_base(hex) && placeUnitWithCard(focusedCard, (int)hex.position.x, (int)hex.position.y) ) {
 					// Attempt to place the unit of the focusedCard
@@ -550,7 +555,7 @@ public class GameManagerScript : MonoBehaviour
 			for (int adj = 0; adj < 6; ++adj) {
 				HexScript adjHex = Map.adjacentHexTo(baseHex, adj);
 				// adjHex is the desired hex
-				if (MapManager.same_position(adjHex, hex)) { return true; }
+				if (hex != null && MapManager.same_position(adjHex, hex)) { return true; }
 			}
 		}
 
@@ -584,46 +589,53 @@ public class GameManagerScript : MonoBehaviour
 		if (paused) {
 			return null;
 		}
-		List<HexScript> hexes = Map.map [x];
-		HexScript hex = hexes [y];
-		if (hex.getType () != HexScript.HexEnum.water) {
+		UnitScript unit = null;
+		Object origin = null;
+		// Determines which prefab to use base on the type value
+		if (type == (int)UnitScript.Types.H_Infantry) {
+			origin = PrefabManager.HumanInfantryPrefab;
+		} else if (type == (int)UnitScript.Types.H_Exo) {
+			origin = PrefabManager.HumanExoPrefab;
+		} else if (type == (int)UnitScript.Types.H_Tank) {
+			origin = PrefabManager.HumanTankPrefab;
+		} else if (type == (int)UnitScript.Types.H_Artillery) {
+			origin = PrefabManager.HumanArtilleryPrefab;
+		} else if (type == (int)UnitScript.Types.H_Base) {
+			origin = PrefabManager.HumanMobileBasePrefab;
+		} else if (type == (int)UnitScript.Types.A_Infantry) {
+			origin = PrefabManager.AlienInfantryPrefab;
+		} else if (type == (int)UnitScript.Types.A_Elite) {
+			origin = PrefabManager.AlienElitePrefab;
+		} else if (type == (int)UnitScript.Types.A_Artillery) {
+			origin = PrefabManager.AlienArtilleryPrefab;
+		} else if (type == (int)UnitScript.Types.A_Tank) {
+			origin = PrefabManager.AlienTankPrefab;
+		} else if (type == (int)UnitScript.Types.A_Base) {
+			origin = PrefabManager.AlienMobileBasePrefab;
+		}
+		// Create the Unit if its type is valid
+		if (origin != null && Map.map[x][y].getType() != HexScript.HexEnum.water) {
+			unit = ((GameObject)Instantiate(origin, new Vector3(4 - Mathf.Floor(MapManager.size / 2), -5 + Mathf.Floor(MapManager.size / 2), -0.5f), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
+			unit.setType(type);
+			unit.setPlayer(turn);
+			unit.move(Map.map[x][y]);
+			units.Add(unit);
 
-			UnitScript unit = null;
-			Object origin = null;
-			// Determines which prefab to use base on the type value
-			if (type == (int)UnitScript.Types.H_Infantry) {
-				origin = PrefabManager.HumanInfantryPrefab;
-			} else if (type == (int)UnitScript.Types.H_Exo) {
-				origin = PrefabManager.HumanExoPrefab;
-			} else if (type == (int)UnitScript.Types.H_Tank) {
-				origin = PrefabManager.HumanTankPrefab;
-			} else if (type == (int)UnitScript.Types.H_Artillery) {
-				origin = PrefabManager.HumanArtilleryPrefab;
-			} else if (type == (int)UnitScript.Types.H_Base) {
-				origin = PrefabManager.HumanMobileBasePrefab;
-			} else if (type == (int)UnitScript.Types.A_Infantry) {
-				origin = PrefabManager.AlienInfantryPrefab;
-			} else if (type == (int)UnitScript.Types.A_Elite) {
-				origin = PrefabManager.AlienElitePrefab;
-			} else if (type == (int)UnitScript.Types.A_Artillery) {
-				origin = PrefabManager.AlienArtilleryPrefab;
-			} else if (type == (int)UnitScript.Types.A_Tank) {
-				origin = PrefabManager.AlienTankPrefab;
-			} else if (type == (int)UnitScript.Types.A_Base) {
-				origin = PrefabManager.AlienMobileBasePrefab;
+			focusedUnit = unit;
+			// update vision of new unit
+			updateVisibleHexes();
+			foreach (List<HexScript> hexList in Map.map) {
+				foreach (HexScript tempHex in hexList) {
+					tempHex.checkForFog (); 
+					tempHex.refreshFog ();
+				}
 			}
-			// Create the Unit if its type is valid
-			if (origin != null) {
-				unit = ((GameObject)Instantiate (origin, new Vector3 (4 - Mathf.Floor (MapManager.size / 2), -5 + Mathf.Floor (MapManager.size / 2), -0.5f), Quaternion.Euler (new Vector3 ()))).GetComponent<UnitScript> ();
-				unit.setType (type);
-				unit.setPlayer (turn);
-				unit.move (Map.map [x] [y]);
-				units.Add (unit);
-			}
+			updateHexes();
 
-			return unit;
-		} else
-			return null;
+			focusedUnit = null;
+		}
+
+		return unit;
 	}
 
 	/* Evaluates the card at the given index in the hand being clicked.
@@ -659,17 +671,10 @@ public class GameManagerScript : MonoBehaviour
 	public void selectFocus (UnitScript unit)
 	{
 		if (!paused) {
-			updateVisibleHexes ();
-			foreach (List<HexScript> hexList in Map.map) {
-				foreach (HexScript tempHex in hexList) {
-					tempHex.checkForFog (); 
-					tempHex.makeDefault ();
-				}
-			}
-			updateHexes();
+
 			focusedUnit = unit;
-			if (!unit.hasMoved) {
-				updateHexes ();
+			updateHexes ();
+			if (unit != null && !unit.hasMoved) {
 				List<HexScript> mapRow = Map.map [(int)unit.getPosition ().x];
 				HexScript curHex = mapRow [(int)unit.getPosition ().y];
 				// Reinitialize the hexSet to an empty set
@@ -775,8 +780,6 @@ public class GameManagerScript : MonoBehaviour
 			}
 		}
 		focusedUnit = origFocusedUnit;
-
-		updateHexes ();
 	}
 
 

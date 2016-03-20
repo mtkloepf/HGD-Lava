@@ -38,6 +38,11 @@ public class HexScript : MonoBehaviour {
 		return type;
 	}
 
+	// Sets the occupied variable to the given value
+	public void setOccupied(bool occ) {
+		occupied = occ;
+	}
+
         // Returns if a hex cannot be traveled to
         public bool getOccupied() {
            return occupied;
