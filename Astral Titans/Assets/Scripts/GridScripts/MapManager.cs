@@ -59,16 +59,6 @@ public class MapManager {
 		} else {
 			defaultMap();
 		}
-		GameManagerScript game = GameManagerScript.instance;
-		game.updateVisibleHexes ();
-		foreach (List<HexScript> hexList in map) {
-			foreach (HexScript tempHex in hexList) {
-				tempHex.checkForFog (); 
-				tempHex.makeDefault ();
-				Debug.Log(tempHex.covered_in_fog());
-			}
-		}
-
 	}
 
 	private void defaultMap() {
@@ -257,7 +247,7 @@ public class MapManager {
 	}
 
 	public List<HexScript> findArea(HexScript center, int radius) {
-		return findArea (center, radius, null);
+		return findArea(center, radius, null);
 	}
 
 	/**
