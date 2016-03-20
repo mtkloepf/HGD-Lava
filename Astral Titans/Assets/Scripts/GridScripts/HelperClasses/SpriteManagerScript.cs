@@ -113,21 +113,4 @@ public static class SpriteManagerScript {
 			default:						return null;
 		}
 	}
-
-	/* Returns the Controller for the given Unit type found in the folder: Resources/Animations/Controllers/ */
-	public static RuntimeAnimatorController get_controller(UnitScript.Types type) {
-		switch (type) {
-			case UnitScript.Types.H_Infantry:		return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Human_Infantry_Controller");
-			case UnitScript.Types.H_Exo:			return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Human_Exo");
-			case UnitScript.Types.H_Tank:			return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Human_Tank_Controller");
-			case UnitScript.Types.H_Artillery:		return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Human_Artillery");
-			case UnitScript.Types.H_Base:			return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Human_Mobile_Base");
-			case UnitScript.Types.A_Infantry:		return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Alien_Infantry_Controller");
-			case UnitScript.Types.A_Elite:			return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Alien_Elite_Controller");
-			case UnitScript.Types.A_Tank:			return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Alien_Tank_Controller");
-			case UnitScript.Types.A_Artillery:		return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Alien_Artillery_Controller");
-			case UnitScript.Types.A_Base:			return Resources.Load<RuntimeAnimatorController>("Animations/Controllers/Alien_Mobile_Base"); 
-			default:						return null;
-		}
-	}
 }
