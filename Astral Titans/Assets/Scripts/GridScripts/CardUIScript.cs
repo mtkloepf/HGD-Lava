@@ -9,6 +9,7 @@ public class CardUIScript : MonoBehaviour
 	public Text health;
 	public Text attack;
 	public Text defense;
+    public Text range;
 	public Text movement;
 	public Text deckCount;
 	public Text discardCount;
@@ -30,6 +31,7 @@ public class CardUIScript : MonoBehaviour
 			health.text = "" + unit.getHealth ();
 			attack.text = "" + unit.getAttack ();
 			defense.text = "" + unit.getDefense ();
+            range.text = "" + unit.getRange();
 			movement.text = "" + unit.getMovement ();
 			if (unitSprite != null) {
 				unitSprite.sprite = unit.Sprite;
@@ -40,7 +42,8 @@ public class CardUIScript : MonoBehaviour
 			health.text = "" + unit.getHealth ();
 			attack.text = "" + unit.getAttack ();
 			defense.text = "" + unit.getDefense ();
-			movement.text = "" + unit.getMovement ();
+            range.text = "" + unit.getRange();
+            movement.text = "" + unit.getMovement ();
 			if (unitSprite != null) {
 				unitSprite.sprite = unit.Sprite;
 			}
