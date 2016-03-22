@@ -7,7 +7,7 @@ public class GameManagerScript : MonoBehaviour
 {
 
 	public static GameManagerScript instance;
-	public static MapManager Map;
+	public MapManager Map;
 
 	public GameObject EndTurn;
 	public GameObject AIPlayerPrefab;
@@ -15,16 +15,15 @@ public class GameManagerScript : MonoBehaviour
 	// Shop Canvas UI Element
 	public Canvas shopCanvas;
 
-	public static PlayerScript Player1;
-	public static PlayerScript Player2;
-	private static HandScript[] hand_display;
+	public PlayerScript Player1;
+	public PlayerScript Player2;
+	private HandScript[] hand_display;
 
 	public TurnIndicatorScript TurnIndicator;
 	public GameObject UI;
-	private static int turn;
+	private int turn;
 	private GameObject musicSlider;
-	public static bool paused = false;
-	private float timer;
+	public bool paused = false;
 
 	private float cardStartX = 0;
 	private float cardStartY = 0;
@@ -36,7 +35,7 @@ public class GameManagerScript : MonoBehaviour
 	private UnitScript p2Base;
 
 	// List of all the units in the game
-	static List <UnitScript> units;
+	private List <UnitScript> units;
 
 	// Set containing all hexes that a unit can move to
 	HashSet<HexScript> hexSet = new HashSet<HexScript>();
@@ -45,21 +44,21 @@ public class GameManagerScript : MonoBehaviour
 	HashSet<HexScript> visibleHexes = new HashSet<HexScript>();
 
 	// Clicking on a unit will make it focused
-	private static UnitScript focusedUnit;
-	private static HexScript focusedHex;
-	private static CardScript focusedCard;
-
-	static GameManagerScript() {
-		Map = new MapManager(SceneTransitionStorage.map_width, SceneTransitionStorage.map_height, SceneTransitionStorage.map_type);
-	}
+	private UnitScript focusedUnit;
+	private HexScript focusedHex;
+	private CardScript focusedCard;
 
 	void Awake () {
 		instance = this;
+
+		Map = new MapManager(SceneTransitionStorage.map_width, SceneTransitionStorage.map_height, SceneTransitionStorage.map_type);
+
+		// map setup
+		Map.generatePseudoRandomMap();
 	}
 	
 	// Use this for initialization
 	void Start () {
-		Debug.Log (SpriteManagerScript.pinkPlainsSprite == null);
 		// Initialize hand display
 		GameObject[] card_frames = GameObject.FindGameObjectsWithTag("Hand");
 		hand_display = new HandScript[DeckManager.MAX_HAND_SIZE];
@@ -74,9 +73,6 @@ public class GameManagerScript : MonoBehaviour
 
 		units = new List<UnitScript>();
 
-		// map setup
-		Map.generatePseudoRandomMap();
-
 		// give starting deck specifications
 		DeckManager d1 = new DeckManager( new CardScript.CardType[] {CardScript.CardType.Currency1, CardScript.CardType.Currency2, CardScript.CardType.HumanInfantry, CardScript.CardType.HumanTank}, new int[] {7, 2, 2, 1} );
 		DeckManager d2 = new DeckManager( new CardScript.CardType[] {CardScript.CardType.Currency1, CardScript.CardType.Currency2, CardScript.CardType.AlienInfantry, CardScript.CardType.AlienTank}, new int[] {7, 2, 2, 1} );
@@ -90,7 +86,7 @@ public class GameManagerScript : MonoBehaviour
 
 		getPlayer().getDeck().deal();
 		drawCards();
-		updateHexes();
+		
 		// place mobile bases
 		p1Base = placeUnit ( (int)UnitScript.Types.H_Base, 1, 2 );
 		p1Base.setPlayer (1);
@@ -118,8 +114,6 @@ public class GameManagerScript : MonoBehaviour
 			stupidFix++;
 			focusedUnit = null;
 		}
-
-		timer = Time.deltaTime;
 		
 		if (Input.GetKey ("w")) {
 			cardStartY += cardVelY;
@@ -163,42 +157,42 @@ public class GameManagerScript : MonoBehaviour
 	}
 
 	// Returns currently seletec unit
-	public static UnitScript getFocusedUnit () {
+	public UnitScript getFocusedUnit () {
 		return focusedUnit;
 	}
 
 	// Returns currently selected card
-	public static CardScript getFocusedCard() {
+	public CardScript getFocusedCard() {
 		return focusedCard;
 	}
 
 	// Gets the turn
-	public static int getTurn () {
+	public int getTurn () {
 		return turn;
 	}
 
 	/* Returns the current player's deck size */
-	public static int getDeckCount () {
+	public int getDeckCount () {
 		return getPlayer().getDeck().deck.getSize();
 	}
 
 	/* Returns the current player's discard pile size */
-	public static int getDiscardCount () {
+	public int getDiscardCount () {
 		return getPlayer().getDeck().discardPile.getSize();
 	}
 
 	/* Returns the current player. */
-	public static PlayerScript getPlayer() {
+	public PlayerScript getPlayer() {
 		return (turn == 1) ? Player1 : Player2;
 	}
 
 	/* Returns the hand of the current player. */
-	public static CardCollection currentHand() {
+	public CardCollection currentHand() {
 		return getPlayer().getDeck().hand;
 	}
 
 	// Updates the colors of the hexes
-	public static void updateHexes ()
+	public void updateHexes ()
 	{
 		foreach (List<HexScript> hexlist in Map.map) {
 			foreach (HexScript hex in hexlist) {
@@ -219,8 +213,8 @@ public class GameManagerScript : MonoBehaviour
 			}
                         // DOES NOTHING AT THE MOMENT
 			else if (!unit.hasMoved && unit.getPlayer () == turn) {
-				List<HexScript> mapRow = Map.map [(int)unit.getPosition ().x];
-				HexScript hex = mapRow [(int)unit.getPosition ().y];
+				//List<HexScript> mapRow = Map.map [(int)unit.getPosition ().x];
+				//HexScript hex = mapRow [(int)unit.getPosition ().y];
 			}
 		}
 	}
@@ -570,15 +564,12 @@ public class GameManagerScript : MonoBehaviour
 
 			if (idx == -1) {
 				Debug.Log("Invalid index!\n");
-				return false;
-			}
-				
-			if (placeUnit ((int)card.type, x, y) != null) {
+			} else if (placeUnit((int)card.type, x, y) != null) {
 				// use the card
 				hand_display[idx].reset(-1, CardScript.CardType.Empty);
-				getPlayer ().changeCurrency (-card.cost);
-			} else
-				return false;
+				getPlayer().changeCurrency(-card.cost);
+				return true;
+			}
 		}
 
 		return false;
@@ -587,8 +578,12 @@ public class GameManagerScript : MonoBehaviour
 	/* Places the unit of the given type at the given coordinate pair (x, y) on the map */
 	private UnitScript placeUnit(int type, int x, int y) {
 		if (paused) {
+			Debug.Log("Paused");
 			return null;
+		} else {
+			Debug.Log((UnitScript.Types)type);
 		}
+
 		UnitScript unit = null;
 		Object origin = null;
 		// Determines which prefab to use base on the type value
@@ -641,7 +636,7 @@ public class GameManagerScript : MonoBehaviour
 	/* Evaluates the card at the given index in the hand being clicked.
 	 * Sets focusedCard if the cards is not a currenct card.
 	 * Returns true if the card was currency, false otherwise. */
-	public static bool cardClicked(int idx) {
+	public bool cardClicked(int idx) {
 		if (paused) { // cards are unresponsive when the game is paused
 			return false;
 		}
@@ -761,8 +756,6 @@ public class GameManagerScript : MonoBehaviour
 	}
 
 	public void updateVisibleHexes() {
-		Debug.Log ("test");
-
 		UnitScript origFocusedUnit = focusedUnit;
 
 		visibleHexes = new HashSet<HexScript> ();

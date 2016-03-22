@@ -301,7 +301,7 @@ public class UnitScript : MonoBehaviour
 	// Update is called once per frame
 	void Update () {
 		// Disable the Unit in fog tiles
-		disable_in_fog( GameManagerScript.Map.map[(int)position.x][(int)position.y].covered_in_fog() );
+		disable_in_fog( GameManagerScript.instance.Map.map[(int)position.x][(int)position.y].covered_in_fog() );
 	}
 
 	/* Disable/Enable unit rendering and interaction with the mouse */
@@ -326,12 +326,12 @@ public class UnitScript : MonoBehaviour
 		// Unit not hidden in fog
 		if (_renderer.enabled) {
 			// deselect unit if it is already selected
-			if (GameManagerScript.getFocusedUnit() == this) {
+			if (GameManagerScript.instance.getFocusedUnit() == this) {
 				GameManagerScript.instance.selectFocus(null);
 			} else { // select a unit
-				if (GameManagerScript.getTurn() == player) {
+				if (GameManagerScript.instance.getTurn() == player) {
 					GameManagerScript.instance.selectFocus(this);
-					Debug.Log("Player selected");
+					//Debug.Log("Player selected");
 				} else {
 					GameManagerScript.instance.attack(this);
 				}

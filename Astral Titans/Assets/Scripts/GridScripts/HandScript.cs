@@ -34,7 +34,7 @@ public class HandScript : MonoBehaviour {
 
 	public void OnMouseDown() {
 		if (card != CardScript.CardType.Empty) {
-			bool cardRemoved = GameManagerScript.cardClicked(index);
+			bool cardRemoved = GameManagerScript.instance.cardClicked(index);
 			// Debug.Log(this.gameObject.layer);
 
 			if (cardRemoved) { // Card was removed

@@ -2,10 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class CardUIScript : MonoBehaviour
-{
-
-	public GameManagerScript game;
+public class CardUIScript : MonoBehaviour {
 	public Text health;
 	public Text attack;
 	public Text defense;
@@ -26,8 +23,8 @@ public class CardUIScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		if (game.getHoveredUnit () != null) {
-			unit = game.getHoveredUnit ();
+		if (GameManagerScript.instance.getHoveredUnit () != null) {
+			unit = GameManagerScript.instance.getHoveredUnit ();
 			health.text = "" + unit.getHealth ();
 			attack.text = "" + unit.getAttack ();
 			defense.text = "" + unit.getDefense ();
@@ -37,8 +34,8 @@ public class CardUIScript : MonoBehaviour
 				unitSprite.sprite = unit.Sprite;
 			}
 		}
-		else if (GameManagerScript.getFocusedUnit () != null) {
-			unit = GameManagerScript.getFocusedUnit ();
+		else if (GameManagerScript.instance.getFocusedUnit () != null) {
+			unit = GameManagerScript.instance.getFocusedUnit ();
 			health.text = "" + unit.getHealth ();
 			attack.text = "" + unit.getAttack ();
 			defense.text = "" + unit.getDefense ();
@@ -49,8 +46,8 @@ public class CardUIScript : MonoBehaviour
 			}
 		}
 
-		currency.text = "" + GameManagerScript.getPlayer().getCurrency();
-		deckCount.text = "" + GameManagerScript.getDeckCount ();
-		discardCount.text = "" + GameManagerScript.getDiscardCount ();
+		currency.text = "" + GameManagerScript.instance.getPlayer().getCurrency();
+		deckCount.text = "" + GameManagerScript.instance.getDeckCount ();
+		discardCount.text = "" + GameManagerScript.instance.getDiscardCount ();
 	}
 }

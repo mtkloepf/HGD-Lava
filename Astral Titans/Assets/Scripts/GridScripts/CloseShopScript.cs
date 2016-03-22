@@ -3,8 +3,6 @@ using System.Collections;
 
 public class CloseShopScript : MonoBehaviour {
 
-	public GameManagerScript game;
-
 	// Use this for initialization
 	void Start () {
 	
@@ -16,8 +14,8 @@ public class CloseShopScript : MonoBehaviour {
 	}
 
 	void OnMouseDown() {
-		if (GameManagerScript.paused) {
-			game.toggleShop ();
+		if (GameManagerScript.instance.paused) {
+			GameManagerScript.instance.toggleShop ();
 		}
 	}
 }

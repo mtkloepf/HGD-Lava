@@ -13,7 +13,7 @@ public static class SceneTransitionStorage {
 	public static int map_width;
 	public static int map_height;
 	/* List of valid map types */
-	private static readonly string[] MAP_TYPES = new string[] { "inland", "highland", "coastal", "mountain", "desert", "" };
+	private static readonly string[] MAP_TYPES = new string[] { "default", "desert", "mountain","" };
 	public static string map_type;
 
 	static SceneTransitionStorage() {

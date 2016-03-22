@@ -162,7 +162,7 @@ public class HexScript : MonoBehaviour {
 			}
 		}
 
-		Debug.Log("(" + position.x + " , " + position.y + ")\n");
+		//Debug.Log("(" + position.x + " , " + position.y + ")\n");
 	}
 
 	/* Creates a hex at the given row and column value on the map with the given type.

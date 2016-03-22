@@ -6,7 +6,6 @@ public class CardShopScript : MonoBehaviour {
 
 	public Sprite p1Sprite;
 	public Sprite p2Sprite;
-	public GameManagerScript game;
 	private Image image;
 	public Text cardCount;
 	public CardScript.CardType p1Type;
@@ -24,8 +23,8 @@ public class CardShopScript : MonoBehaviour {
 		if (!image.enabled) {
 			image.enabled = true;
 		}
-		if (GameManagerScript.getTurn() == 1) {
-			CardCollection cards = GameManagerScript.getPlayer().getDeck().getAllCards();
+		if (GameManagerScript.instance.getTurn() == 1) {
+			CardCollection cards = GameManagerScript.instance.getPlayer().getDeck().getAllCards();
 			int count = cards.getCount(p1Type);
 			cardCount.text = "" + count;
 			image.sprite = p1Sprite;
@@ -39,7 +38,7 @@ public class CardShopScript : MonoBehaviour {
 			}
 
 		} else {
-			CardCollection cards = GameManagerScript.getPlayer().getDeck().getAllCards();
+			CardCollection cards = GameManagerScript.instance.getPlayer().getDeck().getAllCards();
 			int count = cards.getCount(p2Type);
 			cardCount.text = "" + count;
 			image.sprite = p2Sprite;
@@ -55,11 +54,11 @@ public class CardShopScript : MonoBehaviour {
 	}
 
 	void OnMouseDown() {
-		if (GameManagerScript.getTurn() == 1) {
-			game.buyCard(p1Type);
+		if (GameManagerScript.instance.getTurn() == 1) {
+			GameManagerScript.instance.buyCard(p1Type);
 		}
-		else if (GameManagerScript.getTurn() == 2) {
-			game.buyCard (p2Type);
+		else if (GameManagerScript.instance.getTurn() == 2) {
+			GameManagerScript.instance.buyCard (p2Type);
 		}
 	}
 }
