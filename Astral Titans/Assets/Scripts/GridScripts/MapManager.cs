@@ -246,6 +246,57 @@ public class MapManager {
 		}
 	}
 
+	/* Given a unit, the tiles that can be seen by the unit are updated. */
+	public void update_field_of_view(UnitScript unit, bool fog) {
+		
+		if (unit != null) {
+			Queue<HexScript> hexes = new Queue<HexScript>();
+			SortedDictionary<HexScript, int> cur_values = new SortedDictionary<HexScript, int>(); 
+			// Initialize queue and dictionary entries
+			hexes.Enqueue( hex_of(unit) );
+			cur_values.Add( hex_of(unit), unit.getMovement() + 1);
+			// Only search hexes that are new, or that have a new path, from a different hex, with less vision cost
+			while (hexes.Count > 0) {
+				HexScript hex = hexes.Dequeue();
+				hex.set_fog_cover(fog);
+
+				int cur_val = 0;
+				// Find hex's current cost
+				cur_values.TryGetValue(hex, out cur_val);
+
+				// Possiblility to see adjacent hexes
+				if (cur_val > 0) {
+					// Sift through all valid adjacent hexes
+					for (int adj_idx = 0; adj_idx < 6; ++adj_idx) {
+						HexScript adj_hex = adjacentHexTo(hex, adj_idx);
+
+						if (adj_hex != null) {
+							// Find old vision value for the given hex (if exists)
+							int old_val = 0;
+							bool exists = cur_values.TryGetValue( adj_hex, out old_val);
+							// Calculate new vision after seeing through the adjacent hex
+							int new_val = cur_val - UnitScript.vision_cost(unit.unitType(), adj_hex.getType());
+							// Either add the hex if does not exists yet, or if the new value is less than the original
+							if ( !exists ) {
+								//Debug.Log(adj_hex.position + " : " + new_val + " ");
+
+								hexes.Enqueue(adj_hex);
+								cur_values.Add(adj_hex, new_val);
+							} else if (old_val > 0 && new_val > old_val) {
+								//Debug.Log(adj_hex.position + " : " + old_val + " -> " + new_val + " ");
+								cur_values[adj_hex] = new_val;
+							}
+						}
+
+					}
+
+					//Debug.Log("\n");
+				}
+			}
+		}
+	}
+
+	/* Finds all hexes within the given radius, centered at the center hex. */
 	public List<HexScript> findArea(HexScript center, int radius) {
 		return findArea(center, radius, null);
 	}
@@ -346,17 +397,7 @@ public class MapManager {
 
 	/* Verifies that the two hexes are at the same position in the map */
 	public static bool same_position(HexScript h1, HexScript h2) {
-		return (h1.position.x == h2.position.x) && (h1.position.y == h2.position.y);
-	}
-
-	/* Given a hex and a range and a fog flag, either fog is removed
-	 * or added to all hexes in the range. */
-	public void update_fog_cover(HexScript center, int range, bool fog) {
-		List<HexScript> area = findArea(center, range);
-
-		foreach(HexScript hex in area) {
-			hex.set_fog_cover(fog);
-		}
+			return h1 != null && h2 != null && (h1.position.x == h2.position.x) && (h1.position.y == h2.position.y);
 	}
 
 	/* Enable or disable fog of war. */

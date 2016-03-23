@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
-public class HexScript : MonoBehaviour {
+public class HexScript : MonoBehaviour, IComparable<HexScript> {
 
 	public Vector2 position = Vector2.zero;
 	public Sprite standardSprite;
@@ -222,8 +223,21 @@ public class HexScript : MonoBehaviour {
 
 		render.sprite = standardSprite;
 	}
-
+		
 	public override string ToString() {
 		return type.ToString () + ": (" + position.x + ", " + position.y + ")";
+	}
+
+	/* Returns an integer based on the x values and y values of this hex and the given hex.
+	 * Hexes are ordered first by x value, then by y value. */
+	public int CompareTo(HexScript h) {
+
+		if (h.position == null || position.x > h.position.x || (position.x == h.position.x && position.y > h.position.y)) {
+			return -1;
+		} else if (position.x == h.position.x && position.y == h.position.y) {
+			return 0;
+		} else {
+			return 1;
+		}
 	}
 }

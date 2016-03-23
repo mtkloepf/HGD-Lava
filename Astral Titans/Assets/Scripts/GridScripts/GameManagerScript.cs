@@ -215,7 +215,7 @@ public class GameManagerScript : MonoBehaviour
 				hex.makeDefault();
 				// restore vision to next player's units
 				if (unit.getPlayer() == getTurn()) {
-					Map.update_fog_cover(hex, unit.getMovement(), false);
+					Map.update_field_of_view(unit, false);
 				}
 			}
 
@@ -252,7 +252,7 @@ public class GameManagerScript : MonoBehaviour
 					//Debug.Log(focusedUnit.hasMoved);
 					// reveal new vision area
 					hex.setOccupied(true);
-					Map.update_fog_cover(hex, focusedUnit.getMovement(), false);
+					Map.update_field_of_view(focusedUnit, false);
 				}
 
 				updateHexes();
@@ -375,8 +375,8 @@ public class GameManagerScript : MonoBehaviour
 							}
 						}
 						if (!adj) {
-							int cost;
-							focusedUnit.terrainMap.TryGetValue (adjHex.getType (), out cost);
+							int cost = UnitScript.move_cost(focusedUnit.unitType(), adjHex.getType());
+							//focusedUnit.terrainMap.TryGetValue (adjHex.getType (), out cost);
 							if (movement - cost >= 0) {
 								findMovement (movement - cost, adjHex, true);
 							}
@@ -384,8 +384,8 @@ public class GameManagerScript : MonoBehaviour
 					}
 				} else if (!stopped) {
 					foreach (HexScript adjHex in adjSet) {
-						int cost;
-						focusedUnit.terrainMap.TryGetValue (adjHex.getType (), out cost);
+						int cost = UnitScript.move_cost(focusedUnit.unitType(), adjHex.getType());
+						//focusedUnit.terrainMap.TryGetValue (adjHex.getType (), out cost);
 						if (movement - cost >= 0) {
 							findMovement (movement - cost, adjHex, true);
 						}
@@ -597,7 +597,7 @@ public class GameManagerScript : MonoBehaviour
 			units.Add(unit);
 
 			// update vision of new unit
-			Map.update_fog_cover(Map.hex_of(unit), unit.getMovement(), false);
+			Map.update_field_of_view(unit, false);
 			//updateHexes();
 		}
 
