@@ -88,9 +88,9 @@ public class GameManagerScript : MonoBehaviour
 		drawCards();
 		
 		// place mobile bases
-		p1Base = placeUnit ( (int)UnitScript.Types.H_Base, 1, 2 );
+		p1Base = placeUnit ( UnitScript.Types.H_Base, 1, 2 );
 		p1Base.setPlayer (1);
-		p2Base = placeUnit ( (int)UnitScript.Types.A_Base, Map.width - 2, Map.height - 3 );
+		p2Base = placeUnit ( UnitScript.Types.A_Base, Map.width - 2, Map.height - 3 );
 		p2Base.setPlayer (2);
 	}
 
@@ -530,7 +530,8 @@ public class GameManagerScript : MonoBehaviour
 				moveCurrentUnit(hex);
 
 				return true;
-			} else if ( focusedCard != null && adjacent_to_base(hex) && placeUnitWithCard(focusedCard, (int)hex.position.x, (int)hex.position.y) ) {
+			// A space must be adjacent to the current Player's base and not a water tile
+			} else if ( focusedCard != null && adjacent_to_base(hex) && hex.getType() != HexScript.HexEnum.water && placeUnitWithCard(focusedCard, (int)hex.position.x, (int)hex.position.y) ) {
 					// Attempt to place the unit of the focusedCard
 					focusedCard = null;
 					return true;
@@ -564,7 +565,7 @@ public class GameManagerScript : MonoBehaviour
 
 			if (idx == -1) {
 				Debug.Log("Invalid index!\n");
-			} else if (placeUnit((int)card.type, x, y) != null) {
+			} else if (placeUnit((UnitScript.Types)((int)card.type), x, y) != null) {
 				// use the card
 				hand_display[idx].reset(-1, CardScript.CardType.Empty);
 				getPlayer().changeCurrency(-card.cost);
@@ -576,42 +577,41 @@ public class GameManagerScript : MonoBehaviour
 	}
 
 	/* Places the unit of the given type at the given coordinate pair (x, y) on the map */
-	private UnitScript placeUnit(int type, int x, int y) {
+	private UnitScript placeUnit(UnitScript.Types type, int x, int y) {
 		if (paused) {
-			Debug.Log("Paused");
 			return null;
-		} else {
-			Debug.Log((UnitScript.Types)type);
 		}
+
+		//Debug.Log((UnitScript.Types)type);
 
 		UnitScript unit = null;
 		Object origin = null;
 		// Determines which prefab to use base on the type value
-		if (type == (int)UnitScript.Types.H_Infantry) {
+		if (type == UnitScript.Types.H_Infantry) {
 			origin = PrefabManager.HumanInfantryPrefab;
-		} else if (type == (int)UnitScript.Types.H_Exo) {
+		} else if (type == UnitScript.Types.H_Exo) {
 			origin = PrefabManager.HumanExoPrefab;
-		} else if (type == (int)UnitScript.Types.H_Tank) {
+		} else if (type == UnitScript.Types.H_Tank) {
 			origin = PrefabManager.HumanTankPrefab;
-		} else if (type == (int)UnitScript.Types.H_Artillery) {
+		} else if (type == UnitScript.Types.H_Artillery) {
 			origin = PrefabManager.HumanArtilleryPrefab;
-		} else if (type == (int)UnitScript.Types.H_Base) {
+		} else if (type == UnitScript.Types.H_Base) {
 			origin = PrefabManager.HumanMobileBasePrefab;
-		} else if (type == (int)UnitScript.Types.A_Infantry) {
+		} else if (type == UnitScript.Types.A_Infantry) {
 			origin = PrefabManager.AlienInfantryPrefab;
-		} else if (type == (int)UnitScript.Types.A_Elite) {
+		} else if (type == UnitScript.Types.A_Elite) {
 			origin = PrefabManager.AlienElitePrefab;
-		} else if (type == (int)UnitScript.Types.A_Artillery) {
+		} else if (type == UnitScript.Types.A_Artillery) {
 			origin = PrefabManager.AlienArtilleryPrefab;
-		} else if (type == (int)UnitScript.Types.A_Tank) {
+		} else if (type == UnitScript.Types.A_Tank) {
 			origin = PrefabManager.AlienTankPrefab;
-		} else if (type == (int)UnitScript.Types.A_Base) {
+		} else if (type == UnitScript.Types.A_Base) {
 			origin = PrefabManager.AlienMobileBasePrefab;
 		}
 		// Create the Unit if its type is valid
-		if (origin != null && Map.map[x][y].getType() != HexScript.HexEnum.water) {
+		if (origin != null) {
 			unit = ((GameObject)Instantiate(origin, new Vector3(4 - Mathf.Floor(MapManager.size / 2), -5 + Mathf.Floor(MapManager.size / 2), -0.5f), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
-			unit.setType(type);
+			unit.setType((int)type);
 			unit.setPlayer(turn);
 			unit.move(Map.map[x][y]);
 			units.Add(unit);
