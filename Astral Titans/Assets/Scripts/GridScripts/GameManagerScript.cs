@@ -40,9 +40,6 @@ public class GameManagerScript : MonoBehaviour
 	// Set containing all hexes that a unit can move to
 	HashSet<HexScript> hexSet = new HashSet<HexScript>();
 
-	// Set containing all hexes that can be seen
-	HashSet<HexScript> visibleHexes = new HashSet<HexScript>();
-
 	// Clicking on a unit will make it focused
 	private UnitScript focusedUnit;
 	private HexScript focusedHex;
@@ -50,11 +47,6 @@ public class GameManagerScript : MonoBehaviour
 
 	void Awake () {
 		instance = this;
-
-		Map = new MapManager(SceneTransitionStorage.map_width, SceneTransitionStorage.map_height, SceneTransitionStorage.map_type);
-
-		// map setup
-		Map.generatePseudoRandomMap();
 	}
 	
 	// Use this for initialization
@@ -86,34 +78,25 @@ public class GameManagerScript : MonoBehaviour
 
 		getPlayer().getDeck().deal();
 		drawCards();
-		
+
+		Map = new MapManager(SceneTransitionStorage.map_width, SceneTransitionStorage.map_height, SceneTransitionStorage.map_type);
+
+		// map setup
+		Map.generatePseudoRandomMap();
+		updateHexes();
+
+		p2Base = placeUnit ( UnitScript.Types.A_Base, Map.width - 2, Map.height - 3 );
+		p2Base.setPlayer(2);
+
+		Map.fog_of_war(true);
+
 		// place mobile bases
 		p1Base = placeUnit ( UnitScript.Types.H_Base, 1, 2 );
-		p1Base.setPlayer (1);
-		p2Base = placeUnit ( UnitScript.Types.A_Base, Map.width - 2, Map.height - 3 );
-		p2Base.setPlayer (2);
+		p1Base.setPlayer(1);
 	}
-
-	int stupidFix = 0;
 
 	// Update is called once per frame
 	void Update () {
-		if (stupidFix == 0) {
-			stupidFix++;
-			selectFocus (p1Base);
-			updateVisibleHexes ();
-			foreach (List<HexScript> hexList in Map.map) {
-				foreach (HexScript tempHex in hexList) {
-					tempHex.checkForFog(); 
-					tempHex.makeDefault();
-				}
-			}
-			updateHexes ();
-		}
-		if (stupidFix == 1) {
-			stupidFix++;
-			focusedUnit = null;
-		}
 		
 		if (Input.GetKey ("w")) {
 			cardStartY += cardVelY;
@@ -196,60 +179,53 @@ public class GameManagerScript : MonoBehaviour
 	{
 		foreach (List<HexScript> hexlist in Map.map) {
 			foreach (HexScript hex in hexlist) {
-				hex.setFocus (false);
+				hex.setFocus(false);
+				hex.makeDefault();
 			}
 		}
-		foreach (UnitScript unit in units) {
-			if (unit.hasMoved && unit.getPlayer () == turn) {
-				// make hex red
-				List<HexScript> mapRow = Map.map [(int)unit.getPosition ().x];
-				HexScript hex = mapRow [(int)unit.getPosition ().y];
 
-				if (unit.getAttack() == 0 || unit.hasAttacked) {
-					hex.makeRed ();
+		foreach (UnitScript unit in units) {
+			if (unit.getPlayer() == getTurn()) {
+				Debug.Log(unit.unitType());
+				HexScript hex = Map.hex_of(unit);
+
+				if (unit.hasAttacked || ( unit.getAttack() == 0 && unit.hasMoved )) {
+					hex.makeRed();
 				} else if (unit.hasMoved) {
-					hex.makePink ();
+					hex.makePink();
 				}
-			}
-                        // DOES NOTHING AT THE MOMENT
-			else if (!unit.hasMoved && unit.getPlayer () == turn) {
-				//List<HexScript> mapRow = Map.map [(int)unit.getPosition ().x];
-				//HexScript hex = mapRow [(int)unit.getPosition ().y];
 			}
 		}
 	}
 
 	// Call at the end of a turn to update the game.
-	public void endTurn ()
-	{
+	public void endTurn() {
 		if (!paused) {
-			foreach (UnitScript unit in units) {
-				unit.updateTurn ();
-				List<HexScript> mapRow = Map.map [(int)unit.getPosition ().x];
-				HexScript hex = mapRow [(int)unit.getPosition ().y];
-				hex.makeDefault ();
-			}
-
 			// switch turns
 			turn = (turn) % 2 + 1;
+			TurnIndicator.updateTurn(turn);
 
-			getPlayer().getDeck().deal();
-
-			Player1.setCurrency(0);
-			Player2.setCurrency(0);
-
-
-			drawCards();
-			updateVisibleHexes();
-			foreach (List<HexScript> hexList in Map.map) {
-				foreach (HexScript tempHex in hexList) {
-					tempHex.checkForFog();
-					//tempHex.refreshFog ();
+			// revert all hexes to fog
+			Map.fog_of_war(true);
+			// reset all unit statuses
+			foreach (UnitScript unit in units) {
+				unit.updateTurn();
+				HexScript hex = Map.hex_of(unit);
+				hex.makeDefault();
+				// restore vision to next player's units
+				if (unit.getPlayer() == getTurn()) {
+					Map.update_fog_cover(hex, unit.getMovement(), false);
 				}
 			}
+
 			updateHexes();
 
-			TurnIndicator.updateTurn(turn);
+			// draw new hand
+			getPlayer().getDeck().deal();
+			drawCards();
+			// reset currencies for each player
+			Player1.setCurrency(0);
+			Player2.setCurrency(0);
 		}
 	}
 
@@ -266,19 +242,17 @@ public class GameManagerScript : MonoBehaviour
 			if (focusedUnit != null) {
 				// If the hex is in the set of moveable hexes, move to it
 				if (hexSet.Contains (hex)) {
-					Map.map[(int)focusedUnit.getPosition().x][(int)focusedUnit.getPosition().y].setOccupied(false);
+					// cover original vision in fog
+					HexScript prev_hex = Map.map [(int)focusedUnit.getPosition().x] [(int)focusedUnit.getPosition().y];
+					prev_hex.setOccupied(false);
+					//Map.update_fog_cover(prev_hex, focusedUnit.getMovement(), true);
+
 					focusedUnit.move(hex);
+					// reveal new vision area
 					hex.setOccupied(true);
+					Map.update_fog_cover(hex, focusedUnit.getMovement(), false);
 				}
 
-
-				updateVisibleHexes();
-				foreach (List<HexScript> hexList in Map.map) {
-					foreach (HexScript tempHex in hexList) {
-						tempHex.checkForFog (); 
-						tempHex.refreshFog ();
-					}
-				}
 				updateHexes();
 
 				focusedUnit = null;
@@ -288,7 +262,7 @@ public class GameManagerScript : MonoBehaviour
 	}
 
 	/* Display Current player's hand. */
-	void drawCards () {
+	void drawCards() {
 		for (int idx = 0; idx < currentHand().getSize(); ++idx) {
 			hand_display[idx].reset(idx, currentHand().getCards()[idx].type);
 		}
@@ -477,6 +451,7 @@ public class GameManagerScript : MonoBehaviour
 					if (unit.getHealth () <= 0) {
 						unit.destroyUnit ();
 						units.Remove (unit);
+						Map.hex_of(unit).setOccupied(false);
 						Destroy (unit);
 					}
 
@@ -489,7 +464,8 @@ public class GameManagerScript : MonoBehaviour
 			if (p1Base.getHealth () <= 0 || p2Base.getHealth () <= 0) {
 				Invoke ("endGame", 2.0f);
 			}
-			updateHexes ();
+
+			updateHexes();
 		}
 	}
 
@@ -531,7 +507,8 @@ public class GameManagerScript : MonoBehaviour
 
 				return true;
 			// A space must be adjacent to the current Player's base and not a water tile
-			} else if ( focusedCard != null && adjacent_to_base(hex) && hex.getType() != HexScript.HexEnum.water && placeUnitWithCard(focusedCard, (int)hex.position.x, (int)hex.position.y) ) {
+			} else if ( focusedCard != null && hex.getType() != HexScript.HexEnum.water &&
+						adjacent_to_base(hex) && placeUnitWithCard(focusedCard, (int)hex.position.x, (int)hex.position.y) ) {
 					// Attempt to place the unit of the focusedCard
 					focusedCard = null;
 					return true;
@@ -564,7 +541,7 @@ public class GameManagerScript : MonoBehaviour
 			int idx = currentHand().getCards().IndexOf(focusedCard);
 
 			if (idx == -1) {
-				Debug.Log("Invalid index!\n");
+				Debug.Log("Invalid card index!\n");
 			} else if (placeUnit((UnitScript.Types)((int)card.type), x, y) != null) {
 				// use the card
 				hand_display[idx].reset(-1, CardScript.CardType.Empty);
@@ -576,7 +553,8 @@ public class GameManagerScript : MonoBehaviour
 		return false;
 	}
 
-	/* Places the unit of the given type at the given coordinate pair (x, y) on the map */
+	/* Places the unit of the given type at the given coordinate pair (x, y) on the map
+	 * NOTE: this method is used to place the initial bases! */
 	private UnitScript placeUnit(UnitScript.Types type, int x, int y) {
 		if (paused) {
 			return null;
@@ -616,18 +594,9 @@ public class GameManagerScript : MonoBehaviour
 			unit.move(Map.map[x][y]);
 			units.Add(unit);
 
-			focusedUnit = unit;
 			// update vision of new unit
-			updateVisibleHexes();
-			foreach (List<HexScript> hexList in Map.map) {
-				foreach (HexScript tempHex in hexList) {
-					tempHex.checkForFog (); 
-					tempHex.refreshFog ();
-				}
-			}
-			updateHexes();
-
-			focusedUnit = null;
+			Map.update_fog_cover(Map.hex_of(unit), unit.getMovement(), false);
+			//updateHexes();
 		}
 
 		return unit;
@@ -750,30 +719,4 @@ public class GameManagerScript : MonoBehaviour
 			paused = false;
 		}
 	}
-
-	public HashSet<HexScript> getVisibleHexes() {
-		return visibleHexes;
-	}
-
-	public void updateVisibleHexes() {
-		UnitScript origFocusedUnit = focusedUnit;
-
-		visibleHexes = new HashSet<HexScript> ();
-
-		foreach (UnitScript unit in units) {
-			if (unit.player == turn) {
-				focusedUnit = unit;
-				List<HexScript> mapRow = Map.map [(int)unit.getPosition ().x];
-				HexScript curHex = mapRow [(int)unit.getPosition ().y];
-				List<HexScript> visible = Map.findArea (curHex, unit.getMovement());
-				// For each moveable hex, indicate that it is moveable
-				foreach (HexScript visibleHex in visible) {
-					visibleHexes.Add(visibleHex);
-				}
-			}
-		}
-		focusedUnit = origFocusedUnit;
-	}
-
-
 }

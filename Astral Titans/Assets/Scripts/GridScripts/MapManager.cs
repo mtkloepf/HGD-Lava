@@ -339,9 +339,35 @@ public class MapManager {
 		}
 	}
 
+	/* Returns the hex. on which the given unit is located. */
+	public HexScript hex_of(UnitScript unit) {
+		return map[(int)unit.position.x][(int)unit.position.y];
+	}
+
 	/* Verifies that the two hexes are at the same position in the map */
 	public static bool same_position(HexScript h1, HexScript h2) {
 		return (h1.position.x == h2.position.x) && (h1.position.y == h2.position.y);
+	}
+
+	/* Given a hex and a range and a fog flag, either fog is removed
+	 * or added to all hexes in the range. */
+	public void update_fog_cover(HexScript center, int range, bool fog) {
+		List<HexScript> area = findArea(center, range);
+
+		foreach(HexScript hex in area) {
+			hex.set_fog_cover(fog);
+		}
+	}
+
+	/* Enable or disable fog of war. */
+	public void fog_of_war(bool fog) {
+
+		foreach(List<HexScript> hex_list in map) {
+			foreach(HexScript hex in hex_list) {
+				hex.startRenderer();
+				hex.set_fog_cover(fog);
+			}
+		}
 	}
 
 	/* Removes all tiles from the map */

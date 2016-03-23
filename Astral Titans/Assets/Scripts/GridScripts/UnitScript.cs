@@ -6,13 +6,13 @@ public class UnitScript : MonoBehaviour
 {
 	public GameObject HPBar;
 
-	public Sprite Sprite;
 	public SortedDictionary<HexScript.HexEnum, int> terrainMap = new SortedDictionary<HexScript.HexEnum, int> ();
 	private Animator animator;
 	// Used to disable the Unit in fog tiles
 	private SpriteRenderer _renderer;
 
 	public Vector2 position = Vector2.zero;
+	private Types type;
 	public bool focus = false;
 	public int player;
 	public bool hasMoved;
@@ -50,6 +50,7 @@ public class UnitScript : MonoBehaviour
 		health =  MAX_HEALTH;
 		animator = GetComponent<Animator>();
 		_renderer = GetComponent<SpriteRenderer>();
+		type = Types.H_Infantry;
 		hasMoved = false;
 		hasAttacked = false;
 		// Fix local positioning of the unit
@@ -71,6 +72,8 @@ public class UnitScript : MonoBehaviour
 
 	// Set the unit type
 	public void setType(int type) {
+		this.type = (UnitScript.Types)type;
+
 		switch (type) {
 		
 		case (int)Types.H_Infantry:
@@ -188,6 +191,9 @@ public class UnitScript : MonoBehaviour
 			break;
 		}
 	}
+
+	/* Returns the unit's type. */
+	public UnitScript.Types unitType() { return type; }
 
 	// Gets the player of the unit
 	public int getPlayer ()

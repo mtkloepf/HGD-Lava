@@ -43,6 +43,8 @@ public class HandScript : MonoBehaviour {
 		}
 	}
 
+	/* Sets the index value and the card type of this card.
+	 * If the given card type is CardType.Empty, then the card is not displayed. */
 	public void reset(int idx, CardScript.CardType t) {
 		card = t;
 		index = idx;

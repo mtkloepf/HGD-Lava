@@ -22,8 +22,6 @@ public class HexScript : MonoBehaviour {
 	void Start () {
 		transform.SetParent (GameObject.Find("HexManager").transform);
         startRenderer();
-		fog_cover = false;
-
 		// Do not remove this or the hexes will not be displayed!!
 		gameObject.transform.localScale = new Vector3(1, 1, 0);
 	}
@@ -43,10 +41,10 @@ public class HexScript : MonoBehaviour {
 		occupied = occ;
 	}
 
-        // Returns if a hex cannot be traveled to
-        public bool getOccupied() {
-           return occupied;
-        }
+  	// Returns if a hex cannot be traveled to
+	public bool getOccupied() {
+		return occupied;
+	}
 
 	// Sets the position of the hex.
 	public void setPosition (Vector2 v2) {
@@ -67,13 +65,15 @@ public class HexScript : MonoBehaviour {
 	
     // Mouse leaves a hovered hex
     void OnMouseExit() {
-        if(!getFocus() && render.sprite != redSprite)
+		if (!getFocus() && render.sprite != redSprite) {
 			makeDefault();
+		}
 	}
 
 	// Sets the focus of the hex
 	public void setFocus (bool focused) {
 		focus = focused;
+
 		if (focused) {
 			makeFocused();
 		} else {
@@ -112,31 +112,13 @@ public class HexScript : MonoBehaviour {
 	/* Set if the tile is covered in fog */
 	public void set_fog_cover(bool covered) {
 		if (covered != fog_cover) {
-			if (covered) { // The tile is now covered in fog
+				fog_cover = covered;
 				makeDefault();
-			} else { // The tile is not covered in fog
-				if (occupied) {
-					makeRed();
-				} else {
-					makeDefault();
-				}
-			}
-
-			fog_cover = covered;
 		}
 	}
 
 	/* Return if the tile is covered in fog */
 	public bool covered_in_fog() { return fog_cover; }
-
-	public bool checkForFog() {
-		if (!GameManagerScript.instance.getVisibleHexes ().Contains (this)) {
-			set_fog_cover (true);
-		} else {
-			set_fog_cover (false);
-		}
-		return fog_cover;
-	}
 
 	// Gets the position of the transform of the hex
 	public Vector2 getTransformPosition() {
