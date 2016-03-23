@@ -186,12 +186,13 @@ public class GameManagerScript : MonoBehaviour
 
 		foreach (UnitScript unit in units) {
 			if (unit.getPlayer() == getTurn()) {
-				Debug.Log(unit.unitType());
+				//Debug.Log(unit.unitType());
 				HexScript hex = Map.hex_of(unit);
 
 				if (unit.hasAttacked || ( unit.getAttack() == 0 && unit.hasMoved )) {
 					hex.makeRed();
 				} else if (unit.hasMoved) {
+					//Debug.Log(" has moved\n");
 					hex.makePink();
 				}
 			}
@@ -235,7 +236,7 @@ public class GameManagerScript : MonoBehaviour
 		// DONE: Limit range of a unit's movement
 		// DONE: Zone of control
 		// DONE: Only allow unit's to be moved on their turn
-		// TODO: wacking
+		// TODO: wackingfocus
 
 		if (!paused) {
 			// Makes sure there is currently a focused unit
@@ -248,6 +249,7 @@ public class GameManagerScript : MonoBehaviour
 					//Map.update_fog_cover(prev_hex, focusedUnit.getMovement(), true);
 
 					focusedUnit.move(hex);
+					//Debug.Log(focusedUnit.hasMoved);
 					// reveal new vision area
 					hex.setOccupied(true);
 					Map.update_fog_cover(hex, focusedUnit.getMovement(), false);
@@ -256,7 +258,7 @@ public class GameManagerScript : MonoBehaviour
 				updateHexes();
 
 				focusedUnit = null;
-				focusedHex.setFocus (false);
+				focusedHex.setFocus(false);
 			}
 		}
 	}

@@ -12,12 +12,11 @@ public class UnitScript : MonoBehaviour
 	private SpriteRenderer _renderer;
 
 	public Vector2 position = Vector2.zero;
-	private Types type;
+	private Types type = Types.H_Infantry;
 	public bool focus = false;
 	public int player;
 	public bool hasMoved;
 
-	//public bool canAttack = true;
 	public bool hasAttacked;
 
 	public bool mouseOver = false;
@@ -50,7 +49,6 @@ public class UnitScript : MonoBehaviour
 		health =  MAX_HEALTH;
 		animator = GetComponent<Animator>();
 		_renderer = GetComponent<SpriteRenderer>();
-		type = Types.H_Infantry;
 		hasMoved = false;
 		hasAttacked = false;
 		// Fix local positioning of the unit
