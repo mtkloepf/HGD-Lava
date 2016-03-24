@@ -246,7 +246,12 @@ public class MapManager {
 		}
 	}
 
-	/* Given a unit, the tiles that can be seen by the unit are updated. */
+	/* Given a unit and a fog flag, this method flips all hexes within the unit's field
+	 * of vision to the given flag value. The unit's vison range is based off of its
+	 * movement value and the vision costs associated with a hex; both of which can be
+	 * found in the move_cost() and vision_cost() methods of the UnitScript class.
+	 * 
+	 * NOTE: Use sparingly, because this method is basically an iterative shortest path! */
 	public void update_field_of_view(UnitScript unit, bool fog) {
 		
 		if (unit != null) {
@@ -254,8 +259,8 @@ public class MapManager {
 			SortedDictionary<HexScript, int> cur_values = new SortedDictionary<HexScript, int>(); 
 			// Initialize queue and dictionary entries
 			hexes.Enqueue( hex_of(unit) );
-			cur_values.Add( hex_of(unit), unit.getMovement());
-			// Only search hexes that are new, or that have a new path, from a different hex, with less vision cost
+			cur_values.Add( hex_of(unit), unit.getMovement() );
+			// Only search hexes that are new, or that have a new path, from a different hex, with a greater vision value
 			while (hexes.Count > 0) {
 				HexScript hex = hexes.Dequeue();
 				hex.set_fog_cover(fog);
@@ -264,22 +269,21 @@ public class MapManager {
 				// Find hex's current cost
 				cur_values.TryGetValue(hex, out cur_val);
 
-				// Possiblility to see adjacent hexes
+				// Possibility to see adjacent hexes
 				if (cur_val > 0) {
 					// Sift through all valid adjacent hexes
 					for (int adj_idx = 0; adj_idx < 6; ++adj_idx) {
 						HexScript adj_hex = adjacentHexTo(hex, adj_idx);
 
 						if (adj_hex != null) {
-							// Find old vision value for the given hex (if exists)
+							// Find old vision value for the given hex (if it exists)
 							int old_val = 0;
 							bool exists = cur_values.TryGetValue( adj_hex, out old_val);
-							// Calculate new vision after seeing through the adjacent hex
+							// Calculate new vision after going through the adjacent hex
 							int new_val = cur_val - UnitScript.vision_cost(unit.unitType(), adj_hex.getType());
 							// Either add the hex if does not exists yet, or if the new value is less than the original
 							if ( !exists && new_val >= 0 ) {
 								//Debug.Log(adj_hex.position + " : " + new_val + " ");
-
 								hexes.Enqueue(adj_hex);
 								cur_values.Add(adj_hex, new_val);
 							} else if (old_val >= 0 && new_val > old_val) {

@@ -85,14 +85,16 @@ public class GameManagerScript : MonoBehaviour
 		Map.generatePseudoRandomMap();
 		updateHexes();
 		// place alien base
-		HexScript hex = Map.hex_at_offset_from(Map.map[0][0], false, false, System.Math.Min(Map.width, Map.height) / 2);
+		turn = 2;
+		HexScript hex = Map.hex_at_offset_from(Map.map[0][0], false, false, System.Math.Min(Map.width - 1, Map.height - 1));
 		p2Base = placeUnit ( UnitScript.Types.A_Base, (int)hex.position.x, (int)hex.position.y );
 		p2Base.setPlayer(2);
+		turn = 1;
 
 		Map.fog_of_war(true);
 
 		// place human base
-		hex = Map.hex_at_offset_from(Map.map[Map.width - 1][Map.height - 1], false, false, System.Math.Min(Map.width, Map.height) / 2);
+		hex = Map.hex_at_offset_from(Map.map[Map.width - 1][Map.height - 1], false, false, System.Math.Min(Map.width - 1, Map.height - 1));
 		p1Base = placeUnit ( UnitScript.Types.H_Base, (int)hex.position.x, (int)hex.position.y );
 		p1Base.setPlayer(1);
 	}
@@ -182,19 +184,19 @@ public class GameManagerScript : MonoBehaviour
 		foreach (List<HexScript> hexlist in Map.map) {
 			foreach (HexScript hex in hexlist) {
 				hex.setFocus(false);
+				hex.setOccupied(0);
 				hex.makeDefault();
 			}
 		}
 
 		foreach (UnitScript unit in units) {
 			if (unit.getPlayer() == getTurn()) {
-				//Debug.Log(unit.unitType());
 				HexScript hex = Map.hex_of(unit);
+				hex.setOccupied(unit.getPlayer());
 
-				if (unit.hasAttacked || ( unit.getAttack() == 0 && unit.hasMoved )) {
+				if (unit.getState() == 2 || (unit.getAttack() == 0 && unit.getState() == 1)) {//unit.hasAttacked || ( unit.getAttack() == 0 && unit.hasMoved )) {
 					hex.makeRed();
-				} else if (unit.hasMoved) {
-					//Debug.Log(" has moved\n");
+				} else if (unit.getState() == 1) {
 					hex.makePink();
 				}
 			}
@@ -247,13 +249,12 @@ public class GameManagerScript : MonoBehaviour
 				if (hexSet.Contains (hex)) {
 					// cover original vision in fog
 					HexScript prev_hex = Map.map [(int)focusedUnit.getPosition().x] [(int)focusedUnit.getPosition().y];
-					prev_hex.setOccupied(false);
+					prev_hex.setOccupied(0);
 					//Map.update_fog_cover(prev_hex, focusedUnit.getMovement(), true);
 
 					focusedUnit.move(hex);
-					//Debug.Log(focusedUnit.hasMoved);
 					// reveal new vision area
-					hex.setOccupied(true);
+					hex.setOccupied(focusedUnit.getPlayer());
 					Map.update_field_of_view(focusedUnit, false);
 				}
 
@@ -401,7 +402,7 @@ public class GameManagerScript : MonoBehaviour
 	public void attack (UnitScript unit)
 	{
 		if (!paused) {
-			if (focusedUnit != null && focusedUnit.getAttack() > 0 && !focusedUnit.hasAttacked) {
+			if (focusedUnit != null && focusedUnit.getAttack() > 0 && focusedUnit.getState() < 2) {//!focusedUnit.hasAttacked) {
 				bool inRange = false;
 				List<HexScript> focMapRow = Map.map [(int)focusedUnit.getPosition ().x];
 				HexScript focHex = focMapRow [(int)focusedUnit.getPosition ().y];
@@ -443,9 +444,8 @@ public class GameManagerScript : MonoBehaviour
 					dmg *= ( 100 + UnityEngine.Random.Range(-5, 5) ) / 100.0f;
 					unit.setHealth(h - (int)dmg);
 					//unit.setHealth ((int)(unit.getHealth () - (focusedUnit.getAttack () * (1 - unit.getDefense () / 100))));
-					focusedUnit.hasAttacked = true;
-					focusedUnit.hasMoved = true;
 
+					focusedUnit.setState(2);
 					Debug.Log ("Attack: " + focusedUnit.getAttack () + 
 						"\nDefense: " + unit.getDefense () + 
 						"\nPrevious health: " + h + 
@@ -455,11 +455,10 @@ public class GameManagerScript : MonoBehaviour
 					if (unit.getHealth () <= 0) {
 						unit.destroyUnit ();
 						units.Remove (unit);
-						Map.hex_of(unit).setOccupied(false);
+						Map.hex_of(unit).setOccupied(0);
 						Destroy (unit);
 					}
 
-					focusedUnit.setFocus (false);
 					focusedUnit = null;
 				}
 			} else {
@@ -592,12 +591,14 @@ public class GameManagerScript : MonoBehaviour
 		}
 		// Create the Unit if its type is valid
 		if (origin != null) {
+			// initialize unit stats
 			unit = ((GameObject)Instantiate(origin, new Vector3(4 - Mathf.Floor(MapManager.size / 2), -5 + Mathf.Floor(MapManager.size / 2), -0.5f), Quaternion.Euler(new Vector3()))).GetComponent<UnitScript>();
 			unit.setType((int)type);
 			unit.setPlayer(turn);
-			unit.move(Map.map[x][y]);
 			units.Add(unit);
-
+			// initialize unit on the map
+			unit.move(Map.map[x][y]);
+			Map.map[x][y].setOccupied(unit.getPlayer());
 			// update vision of new unit
 			Map.update_field_of_view(unit, false);
 			//updateHexes();
@@ -642,7 +643,7 @@ public class GameManagerScript : MonoBehaviour
 
 			focusedUnit = unit;
 			updateHexes ();
-			if (unit != null && !unit.hasMoved) {
+			if (unit != null && unit.getState() < 1) {
 				List<HexScript> mapRow = Map.map [(int)unit.getPosition ().x];
 				HexScript curHex = mapRow [(int)unit.getPosition ().y];
 				// Reinitialize the hexSet to an empty set

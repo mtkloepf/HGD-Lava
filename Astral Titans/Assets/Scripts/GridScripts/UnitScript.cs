@@ -12,11 +12,12 @@ public class UnitScript : MonoBehaviour
 
 	public Vector2 position = Vector2.zero;
 	private Types type = Types.H_Infantry;
-	public bool focus = false;
-	public int player;
-	public bool hasMoved;
 
-	public bool hasAttacked;
+	public int player;
+	/* 0 -> unit has not moved or attacked (default)
+	 * 1 -> unit has moved, but not attacked (pink)
+	 * 2 -> unit has moved and attacked (red) */
+	private int state;
 
 	public bool mouseOver = false;
 
@@ -48,17 +49,14 @@ public class UnitScript : MonoBehaviour
 		health =  MAX_HEALTH;
 		animator = GetComponent<Animator>();
 		_renderer = GetComponent<SpriteRenderer>();
-		hasMoved = false;
-		hasAttacked = false;
+
+		state = 0;
 		// Fix local positioning of the unit
 		Vector3 pos = gameObject.transform.localPosition;
 		gameObject.transform.localPosition = new Vector3(pos.x, pos.y, -0.5f);
 	}
 
-	public void updateTurn () {
-		hasMoved = false;
-		hasAttacked = false;
-	}
+	public void updateTurn () { state = 0; }
 
 	public void destroyUnit ()
 	{
@@ -170,12 +168,11 @@ public class UnitScript : MonoBehaviour
 		return movement;
 	}
 
-	// Moves the player to a hex, if the player has not moved yet.
-	public void move (HexScript hex)
-	{
-		if (!hasMoved) {
-			setPosition (hex);
-			hasMoved = true;
+	// Moves the player to a hex, if the player has not moved or attacked yet.
+	public void move (HexScript hex) {
+		if (state < 1) {
+			setPosition(hex);
+			state = 1;
 		}
 	}
 
@@ -246,13 +243,17 @@ public class UnitScript : MonoBehaviour
         return range;
     }
 
-	// Sets the unit to be focused.
-	// NOTE: I am not sure if this is necessary. We
-	//       may want to remove it later
-	public void setFocus (bool focus)
-	{
-		this.focus = focus;
+	/* If the given value is a valid state,
+	 * then the unit's state is set. */
+	public void setState(int transition) {
+		// A unit has only 3 states
+		if (transition < 3 && transition >= 0) {
+			state = transition;
+		}
 	}
+
+	/* Return's the unit's state. */
+	public int getState() { return state; }
 
 	public void attackEnemy ()
 	{

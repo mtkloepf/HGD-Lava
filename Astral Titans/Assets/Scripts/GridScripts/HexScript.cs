@@ -17,7 +17,9 @@ public class HexScript : MonoBehaviour, IComparable<HexScript> {
 
 	SpriteRenderer render;
 	bool focus = false;
-    bool occupied = false;
+	/* occupied = 0 => unoccupied,
+	 * occupied > 0 => occupied by given player. */
+    public int occupied = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -38,12 +40,13 @@ public class HexScript : MonoBehaviour, IComparable<HexScript> {
 	}
 
 	// Sets the occupied variable to the given value
-	public void setOccupied(bool occ) {
+	public void setOccupied(int occ) {
 		occupied = occ;
 	}
 
-  	// Returns if a hex cannot be traveled to
-	public bool getOccupied() {
+  	/* Returns if and what army of the
+  	 * unit occupying the hex. */
+	public int getOccupied() {
 		return occupied;
 	}
 
@@ -140,8 +143,7 @@ public class HexScript : MonoBehaviour, IComparable<HexScript> {
 		} else {
 			// Necessary for clicking hexes to work in test map generation scene
 			if (GameManagerScript.instance != null) {
-				bool occ = GameManagerScript.instance.hexClicked(this);
-				occupied = occ;
+				GameManagerScript.instance.hexClicked(this);
 			}
 		}
 
@@ -214,8 +216,7 @@ public class HexScript : MonoBehaviour, IComparable<HexScript> {
 	private void setType(HexEnum type, Sprite standard, 
 		Sprite red, Sprite blue, Sprite pink) {
 		this.type = type;
-		if(type == HexEnum.mountain || 
-			type == HexEnum.water) occupied = true;
+		
 		standardSprite = standard;
 		redSprite = red;
 		blueSprite = blue;
