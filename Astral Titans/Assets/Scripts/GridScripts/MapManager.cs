@@ -254,7 +254,7 @@ public class MapManager {
 			SortedDictionary<HexScript, int> cur_values = new SortedDictionary<HexScript, int>(); 
 			// Initialize queue and dictionary entries
 			hexes.Enqueue( hex_of(unit) );
-			cur_values.Add( hex_of(unit), unit.getMovement() + 1);
+			cur_values.Add( hex_of(unit), unit.getMovement());
 			// Only search hexes that are new, or that have a new path, from a different hex, with less vision cost
 			while (hexes.Count > 0) {
 				HexScript hex = hexes.Dequeue();
@@ -277,13 +277,14 @@ public class MapManager {
 							// Calculate new vision after seeing through the adjacent hex
 							int new_val = cur_val - UnitScript.vision_cost(unit.unitType(), adj_hex.getType());
 							// Either add the hex if does not exists yet, or if the new value is less than the original
-							if ( !exists ) {
+							if ( !exists && new_val >= 0 ) {
 								//Debug.Log(adj_hex.position + " : " + new_val + " ");
 
 								hexes.Enqueue(adj_hex);
 								cur_values.Add(adj_hex, new_val);
-							} else if (old_val > 0 && new_val > old_val) {
+							} else if (old_val >= 0 && new_val > old_val) {
 								//Debug.Log(adj_hex.position + " : " + old_val + " -> " + new_val + " ");
+								hexes.Enqueue(adj_hex);
 								cur_values[adj_hex] = new_val;
 							}
 						}

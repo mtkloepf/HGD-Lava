@@ -84,14 +84,16 @@ public class GameManagerScript : MonoBehaviour
 		// map setup
 		Map.generatePseudoRandomMap();
 		updateHexes();
-
-		p2Base = placeUnit ( UnitScript.Types.A_Base, Map.width - 2, Map.height - 3 );
+		// place alien base
+		HexScript hex = Map.hex_at_offset_from(Map.map[0][0], false, false, System.Math.Min(Map.width, Map.height) / 2);
+		p2Base = placeUnit ( UnitScript.Types.A_Base, (int)hex.position.x, (int)hex.position.y );
 		p2Base.setPlayer(2);
 
 		Map.fog_of_war(true);
 
-		// place mobile bases
-		p1Base = placeUnit ( UnitScript.Types.H_Base, 1, 2 );
+		// place human base
+		hex = Map.hex_at_offset_from(Map.map[Map.width - 1][Map.height - 1], false, false, System.Math.Min(Map.width, Map.height) / 2);
+		p1Base = placeUnit ( UnitScript.Types.H_Base, (int)hex.position.x, (int)hex.position.y );
 		p1Base.setPlayer(1);
 	}
 
