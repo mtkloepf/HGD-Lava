@@ -16,12 +16,13 @@ public class InputPrompt : MonoBehaviour {
 	private Rect[] components;
 	private string in_1, in_2, in_3;
 	private string msg_1, msg_2, msg_3;
+	private bool fog_enabled;
 	/* [ width min, width max, height min, height max ] */
 	private int[] bounds;
 
 	void Start() {
 		window_dimensions = new Rect(100, 100, 100, 100);
-		components = new Rect[11];
+		components = new Rect[12];
 
 		in_1 = "";
 		in_2 = "";
@@ -29,6 +30,7 @@ public class InputPrompt : MonoBehaviour {
 		msg_1 = "";
 		msg_2 = "";
 		msg_3 = "";
+		fog_enabled = false;
 
 		bounds = new int[] { 12, 46, 12, 46 };
 	}
@@ -69,8 +71,10 @@ public class InputPrompt : MonoBehaviour {
 		components[7] = new Rect(components[4].x + components[4].width + 6, components[4].y, 146, 22);
 		components[8] = new Rect(components[5].x + components[5].width + 6, components[5].y, 146, 22);
 		components[9] = new Rect(components[6].x + components[6].width + 6, components[6].y, 146, 22);
+		// dimensions for fog of war toggle
+		components[10] = new Rect(components[0].x, components[3].y + 32, 80, 22);
 		// dimensions for button
-		components[10] = new Rect(components[0].x, components[6].y + components[6].height + 30, 56, 26);
+		components[11] = new Rect(components[0].x, components[10].y + components[10].height + 26, 56, 26);
 	}
 
 	/**
@@ -88,8 +92,10 @@ public class InputPrompt : MonoBehaviour {
 		in_1 = GUI.TextField(components[4], in_1, 3);
 		in_2 = GUI.TextField(components[5], in_2, 3);
 		in_3 = GUI.TextField(components[6], in_3);
+		/* Draw Fog of War toggle button */
+		fog_enabled = GUI.Toggle(components[10], fog_enabled, "Fog of War");
 
-		if ( GUI.Button (components[10], "Confirm") ) {
+		if ( GUI.Button (components[11], "Confirm") ) {
 			int w_in = -1;
 			int h_in = -1;
 
@@ -130,6 +136,7 @@ public class InputPrompt : MonoBehaviour {
 				/* if all input fields are valid, then jump to creation of the map */
 				if (w_in > 0 && h_in > 0) {
 					SceneTransitionStorage.map_type = in_3;
+					SceneTransitionStorage.fog = fog_enabled;
 					SceneManager.LoadScene("grid_scene");
 				}
 
