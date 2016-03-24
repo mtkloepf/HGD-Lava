@@ -82,7 +82,7 @@ public class UnitScript : MonoBehaviour
 			attack = 4;
 			defense = 3;
             range = 1;
-			movement = 2;
+			movement = 3;
 			break;
 		
 		case (int)Types.H_Tank:
@@ -103,7 +103,7 @@ public class UnitScript : MonoBehaviour
 			attack = 0;
 			defense = 9;
             range = 1;
-			movement = 3;
+			movement = 2;
 			break;
 		
 		case (int)Types.A_Infantry:
@@ -117,7 +117,7 @@ public class UnitScript : MonoBehaviour
 			attack = 4;
 			defense = 3;
             range = 1;
-			movement = 2;
+			movement = 3;
 			break;
 
 		case (int)Types.A_Tank:
@@ -138,7 +138,7 @@ public class UnitScript : MonoBehaviour
 			attack = 0;
 			defense = 9;
             range = 1;
-			movement = 3;
+			movement = 2;
 			break;
 		
 		default:
@@ -318,7 +318,7 @@ public class UnitScript : MonoBehaviour
 		if (u_type == Types.H_Infantry || u_type == Types.A_Infantry) {
 			switch (h_type) {
 				case HexScript.HexEnum.plains:		return 1;
-				case HexScript.HexEnum.desert:		return 2;
+				case HexScript.HexEnum.desert:		return 1;
 				case HexScript.HexEnum.mountain:	return 3;
 				case HexScript.HexEnum.water:		return 9999;
 			}
@@ -363,23 +363,23 @@ public class UnitScript : MonoBehaviour
 		if (u_type == Types.H_Infantry || u_type == Types.A_Infantry) {
 			switch (h_type) {
 			case HexScript.HexEnum.plains:		return 1;
-			case HexScript.HexEnum.desert:		return 2;
+			case HexScript.HexEnum.desert:		return 1;
 			case HexScript.HexEnum.mountain:	return 3;
-			case HexScript.HexEnum.water:		return 2;
+			case HexScript.HexEnum.water:		return 3;
 			}
 		} else if (u_type == Types.H_Exo || u_type == Types.A_Elite) {
 			switch (h_type) {
 			case HexScript.HexEnum.plains:		return 1;
 			case HexScript.HexEnum.desert:		return 1;
 			case HexScript.HexEnum.mountain:	return 1;
-			case HexScript.HexEnum.water:		return 3;
+			case HexScript.HexEnum.water:		return 2;
 			}
 		} else if (u_type == Types.H_Tank || u_type == Types.A_Tank) {
 			switch (h_type) {
 			case HexScript.HexEnum.plains:		return 1;
 			case HexScript.HexEnum.desert:		return 2;
 			case HexScript.HexEnum.mountain:	return 3;
-			case HexScript.HexEnum.water:		return 3;
+			case HexScript.HexEnum.water:		return 2;
 			}
 		} else if (u_type == Types.H_Artillery || u_type == Types.A_Artillery) {
 			switch (h_type) {

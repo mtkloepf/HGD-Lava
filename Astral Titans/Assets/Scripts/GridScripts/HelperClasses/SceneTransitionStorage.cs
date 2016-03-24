@@ -15,11 +15,13 @@ public static class SceneTransitionStorage {
 	/* List of valid map types */
 	private static readonly string[] MAP_TYPES = new string[] { "default", "desert", "mountain","" };
 	public static string map_type;
+	public static bool fog;
 
 	static SceneTransitionStorage() {
 		map_width = 8;
 		map_height = 32;
 		map_type = "";
+		fog = false;
 	}
 
 	/* Determines if the given type is a valid map type */

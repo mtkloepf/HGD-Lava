@@ -35,7 +35,7 @@ public class CycleMap : MonoBehaviour {
 				Map.removeHexes();
 			}
 
-			Map = new MapManager(map_width, map_height, map_type);
+			Map = new MapManager(map_width, map_height, map_type, false);
 			Map.generatePseudoRandomMap();
 		}
 	}

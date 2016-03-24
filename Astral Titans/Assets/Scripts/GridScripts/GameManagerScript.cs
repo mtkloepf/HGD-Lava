@@ -79,7 +79,7 @@ public class GameManagerScript : MonoBehaviour
 		getPlayer().getDeck().deal();
 		drawCards();
 
-		Map = new MapManager(SceneTransitionStorage.map_width, SceneTransitionStorage.map_height, SceneTransitionStorage.map_type);
+		Map = new MapManager(SceneTransitionStorage.map_width, SceneTransitionStorage.map_height, SceneTransitionStorage.map_type, SceneTransitionStorage.fog);
 
 		// map setup
 		Map.generatePseudoRandomMap();
@@ -91,7 +91,7 @@ public class GameManagerScript : MonoBehaviour
 		p2Base.setPlayer(2);
 		turn = 1;
 
-		Map.fog_of_war(true);
+		if (Map.FOG_OF_WAR) { Map.fog_of_war(true); }
 
 		// place human base
 		hex = Map.hex_at_offset_from(Map.map[Map.width - 1][Map.height - 1], false, false, System.Math.Min(Map.width - 1, Map.height - 1));
@@ -210,16 +210,18 @@ public class GameManagerScript : MonoBehaviour
 			turn = (turn) % 2 + 1;
 			TurnIndicator.updateTurn(turn);
 
-			// revert all hexes to fog
-			Map.fog_of_war(true);
-			// reset all unit statuses
-			foreach (UnitScript unit in units) {
-				unit.updateTurn();
-				HexScript hex = Map.hex_of(unit);
-				hex.makeDefault();
-				// restore vision to next player's units
-				if (unit.getPlayer() == getTurn()) {
-					Map.update_field_of_view(unit, false);
+			if (Map.FOG_OF_WAR) {
+				// revert all hexes to fog
+				Map.fog_of_war(true);
+				// reset all unit statuses
+				foreach (UnitScript unit in units) {
+					unit.updateTurn();
+					HexScript hex = Map.hex_of(unit);
+					hex.makeDefault();
+					// restore vision to next player's units
+					if (unit.getPlayer() == getTurn()) {
+						Map.update_field_of_view(unit, false);
+					}
 				}
 			}
 
@@ -254,8 +256,10 @@ public class GameManagerScript : MonoBehaviour
 
 					focusedUnit.move(hex);
 					// reveal new vision area
-					hex.setOccupied(focusedUnit.getPlayer());
-					Map.update_field_of_view(focusedUnit, false);
+					if (Map.FOG_OF_WAR) {
+						hex.setOccupied(focusedUnit.getPlayer());
+						Map.update_field_of_view(focusedUnit, false);
+					}
 				}
 
 				updateHexes();
@@ -599,8 +603,11 @@ public class GameManagerScript : MonoBehaviour
 			// initialize unit on the map
 			unit.move(Map.map[x][y]);
 			Map.map[x][y].setOccupied(unit.getPlayer());
-			// update vision of new unit
-			Map.update_field_of_view(unit, false);
+
+			if (Map.FOG_OF_WAR) {
+				// update vision of new unit
+				Map.update_field_of_view(unit, false);
+			}
 			//updateHexes();
 		}
 

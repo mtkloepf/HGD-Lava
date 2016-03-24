@@ -10,6 +10,9 @@ using System.Collections.Generic;
  * 29 February 2016
  */
 public class MapManager {
+	// Determines if the map is fog of war
+	public readonly bool FOG_OF_WAR;
+
 	/* Copy of the map */
 	public List<List<HexScript>> map;
 	/* the dimensions of the map to create (within the bounds of [12, 46] */
@@ -26,7 +29,8 @@ public class MapManager {
 	}
 
 	/* Creates a map of the given dimensions and type */
-	public MapManager(int w, int h, string m_type) {
+	public MapManager(int w, int h, string m_type, bool fog) {
+		FOG_OF_WAR = fog;
 		width = w;
 		height = h;
 		map_type = m_type;
