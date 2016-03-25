@@ -88,7 +88,7 @@ public class GameManagerScript : MonoBehaviour
 		turn = 2;
 		HexScript hex = Map.hex_at_offset_from(Map.map[0][0], false, false, System.Math.Min(Map.width - 1, Map.height - 1));
 		p2Base = placeUnit ( UnitScript.Types.A_Base, (int)hex.position.x, (int)hex.position.y );
-		/*int unit = 4;
+		int unit = 4;
 		// place one of each unit
 		for (int adj_idx = 0; adj_idx < 6; ++adj_idx) {
 			HexScript adj_hex = Map.adjacentHexTo(hex, adj_idx);
@@ -99,7 +99,7 @@ public class GameManagerScript : MonoBehaviour
 			}
 
 			if (unit > 7) { break; }
-		}*/
+		}
 
 		turn = 1;
 
@@ -109,7 +109,7 @@ public class GameManagerScript : MonoBehaviour
 		hex = Map.hex_at_offset_from(Map.map[Map.width - 1][Map.height - 1], false, false, System.Math.Min(Map.width - 1, Map.height - 1));
 		p1Base = placeUnit ( UnitScript.Types.H_Base, (int)hex.position.x, (int)hex.position.y );
 		// place one of each unit
-		/*unit = 0;
+		unit = 0;
 		for (int adj_idx = 0; adj_idx < 6; ++adj_idx) {
 			HexScript adj_hex = Map.adjacentHexTo(hex, adj_idx);
 
@@ -119,7 +119,7 @@ public class GameManagerScript : MonoBehaviour
 			}
 
 			if (unit > 3) { break; }
-		}*/
+		}
 	}
 
 	// Update is called once per frame
