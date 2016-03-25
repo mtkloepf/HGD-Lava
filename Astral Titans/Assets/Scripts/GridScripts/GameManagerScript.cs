@@ -83,12 +83,24 @@ public class GameManagerScript : MonoBehaviour
 
 		// map setup
 		Map.generatePseudoRandomMap();
-		updateHexes();
+
 		// place alien base
 		turn = 2;
 		HexScript hex = Map.hex_at_offset_from(Map.map[0][0], false, false, System.Math.Min(Map.width - 1, Map.height - 1));
 		p2Base = placeUnit ( UnitScript.Types.A_Base, (int)hex.position.x, (int)hex.position.y );
-		p2Base.setPlayer(2);
+		/*int unit = 4;
+		// place one of each unit
+		for (int adj_idx = 0; adj_idx < 6; ++adj_idx) {
+			HexScript adj_hex = Map.adjacentHexTo(hex, adj_idx);
+
+			if (adj_hex != null && adj_hex.getOccupied() == 0) {
+				placeUnit((UnitScript.Types)unit, (int)adj_hex.position.x, (int)adj_hex.position.y );
+				++unit;
+			}
+
+			if (unit > 7) { break; }
+		}*/
+
 		turn = 1;
 
 		if (Map.FOG_OF_WAR) { Map.fog_of_war(true); }
@@ -96,7 +108,18 @@ public class GameManagerScript : MonoBehaviour
 		// place human base
 		hex = Map.hex_at_offset_from(Map.map[Map.width - 1][Map.height - 1], false, false, System.Math.Min(Map.width - 1, Map.height - 1));
 		p1Base = placeUnit ( UnitScript.Types.H_Base, (int)hex.position.x, (int)hex.position.y );
-		p1Base.setPlayer(1);
+		// place one of each unit
+		/*unit = 0;
+		for (int adj_idx = 0; adj_idx < 6; ++adj_idx) {
+			HexScript adj_hex = Map.adjacentHexTo(hex, adj_idx);
+
+			if (adj_hex != null && adj_hex.getOccupied() == 0) {
+				placeUnit((UnitScript.Types)unit, (int)adj_hex.position.x, (int)adj_hex.position.y );
+				++unit;
+			}
+
+			if (unit > 3) { break; }
+		}*/
 	}
 
 	// Update is called once per frame
@@ -179,22 +202,23 @@ public class GameManagerScript : MonoBehaviour
 	}
 
 	// Updates the colors of the hexes
-	public void updateHexes ()
-	{
+	public void updateHexes () {
+		
 		foreach (List<HexScript> hexlist in Map.map) {
 			foreach (HexScript hex in hexlist) {
 				hex.setFocus(false);
-				hex.setOccupied(0);
-				hex.makeDefault();
+
+				if (hex.getOccupied() == 0) {
+					hex.makeDefault();
+				}
 			}
 		}
 
 		foreach (UnitScript unit in units) {
 			if (unit.getPlayer() == getTurn()) {
 				HexScript hex = Map.hex_of(unit);
-				hex.setOccupied(unit.getPlayer());
 
-				if (unit.getState() == 2 || (unit.getAttack() == 0 && unit.getState() == 1)) {//unit.hasAttacked || ( unit.getAttack() == 0 && unit.hasMoved )) {
+				if (unit.getState() == 2 || (unit.getAttack() == 0 && unit.getState() == 1)) {
 					hex.makeRed();
 				} else if (unit.getState() == 1) {
 					hex.makePink();
@@ -210,18 +234,17 @@ public class GameManagerScript : MonoBehaviour
 			turn = (turn) % 2 + 1;
 			TurnIndicator.updateTurn(turn);
 
-			if (Map.FOG_OF_WAR) {
-				// revert all hexes to fog
-				Map.fog_of_war(true);
-				// reset all unit statuses
-				foreach (UnitScript unit in units) {
-					unit.updateTurn();
-					HexScript hex = Map.hex_of(unit);
-					hex.makeDefault();
-					// restore vision to next player's units
-					if (unit.getPlayer() == getTurn()) {
-						Map.update_field_of_view(unit, false);
-					}
+			// revert all hexes to fog
+			if (Map.FOG_OF_WAR) { Map.fog_of_war(true); }
+
+			// reset all unit statuses
+			foreach (UnitScript unit in units) {
+				unit.updateTurn();
+				HexScript hex = Map.hex_of(unit);
+				hex.makeDefault();
+				// restore vision to next player's units
+				if (Map.FOG_OF_WAR && unit.getPlayer() == getTurn()) {
+					Map.update_field_of_view(unit, false);
 				}
 			}
 
@@ -262,10 +285,9 @@ public class GameManagerScript : MonoBehaviour
 					}
 				}
 
-				updateHexes();
-
 				focusedUnit = null;
 				focusedHex.setFocus(false);
+				updateHexes();
 			}
 		}
 	}
@@ -418,7 +440,7 @@ public class GameManagerScript : MonoBehaviour
                 HashSet<HexScript> tempRange = findAdj(curHex);
                 HashSet<HexScript> totalRange = new HashSet<HexScript>();
                 int range = focusedUnit.getRange();
-                Debug.Log("attack " + range);
+                //Debug.Log("attack " + range);
                 if (range != 1)
                 {
                     attackRange(range - 1, tempRange, totalRange);
@@ -436,7 +458,7 @@ public class GameManagerScript : MonoBehaviour
                 }
             
 				if (inRange) {
-					Debug.Log (focusedUnit.getPosition () + " attacked " + unit.getPosition ());
+					//Debug.Log (focusedUnit.getPosition () + " attacked " + unit.getPosition ());
 
 					int h = unit.getHealth ();
 					focusedUnit.attackEnemy ();
@@ -445,7 +467,7 @@ public class GameManagerScript : MonoBehaviour
 					var dmg = 2 * ( (float)focusedUnit.getAttack() / unit.getDefense() ) - 2 * ( (float)unit.getDefense() / focusedUnit.getAttack() ) +
 							  3 * focusedUnit.getAttack() - 2 * unit.getDefense() + 38;
 					// damage randomness
-					dmg *= ( 100 + UnityEngine.Random.Range(-5, 5) ) / 100.0f;
+					dmg *= ( 100 + UnityEngine.Random.Range(-8, 8) ) / 100.0f;
 					unit.setHealth(h - (int)dmg);
 					//unit.setHealth ((int)(unit.getHealth () - (focusedUnit.getAttack () * (1 - unit.getDefense () / 100))));
 
@@ -504,25 +526,22 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
-    // Returns if the hex that was clicked is occupied by a unit
-    public bool hexClicked (HexScript hex) {
-		// TODO handle fog tiles
+    /* Determines the action to take if a hex is clicked. */
+    public void hexClicked (HexScript hex) {
+		
 		if (!paused) {
 			
 			if (focusedUnit != null) {
 				moveCurrentUnit(hex);
 
-				return true;
 			// A space must be adjacent to the current Player's base and not a water tile
 			} else if ( focusedCard != null && hex.getType() != HexScript.HexEnum.water &&
 						adjacent_to_base(hex) && placeUnitWithCard(focusedCard, (int)hex.position.x, (int)hex.position.y) ) {
 					// Attempt to place the unit of the focusedCard
 					focusedCard = null;
-					return true;
 			}
-			return false;
-		} else
-			return false;
+
+		}
 	}
 
 	/* Determines if the given hex is adjacent to current's player's base */
@@ -562,7 +581,7 @@ public class GameManagerScript : MonoBehaviour
 
 	/* Places the unit of the given type at the given coordinate pair (x, y) on the map
 	 * NOTE: this method is used to place the initial bases! */
-	private UnitScript placeUnit(UnitScript.Types type, int x, int y) {
+	public UnitScript placeUnit(UnitScript.Types type, int x, int y) {
 		if (paused) {
 			return null;
 		}
@@ -602,13 +621,13 @@ public class GameManagerScript : MonoBehaviour
 			units.Add(unit);
 			// initialize unit on the map
 			unit.move(Map.map[x][y]);
+			unit.updateTurn();
 			Map.map[x][y].setOccupied(unit.getPlayer());
 
 			if (Map.FOG_OF_WAR) {
 				// update vision of new unit
 				Map.update_field_of_view(unit, false);
 			}
-			//updateHexes();
 		}
 
 		return unit;
@@ -625,7 +644,7 @@ public class GameManagerScript : MonoBehaviour
 		CardScript c = currentHand().getCards()[idx];
 
 		focusedUnit = null;
-		updateHexes();
+
 		// Determine if the card is currency and if so add to the player's currency and return true
 		if (c.type == CardScript.CardType.Currency1) {
 			getPlayer().changeCurrency(1);
@@ -649,7 +668,8 @@ public class GameManagerScript : MonoBehaviour
 		if (!paused) {
 
 			focusedUnit = unit;
-			updateHexes ();
+			updateHexes();
+
 			if (unit != null && unit.getState() < 1) {
 				List<HexScript> mapRow = Map.map [(int)unit.getPosition ().x];
 				HexScript curHex = mapRow [(int)unit.getPosition ().y];

@@ -164,12 +164,12 @@ public class MapManager {
 		int average = (2 * width + height / 2) / 2;
 
 		/* build 1 ~ 3 pontentially large deserts */
-		counter = (int)( (2.0f * width + height / 2.0f) / 30.0f + 0.5f );
+		counter = (int)( 0.068f * average + 0.5f );
 		while (--counter >= 0) {
 			pos_x = UnityEngine.Random.Range(0, width - 1);
 			pos_y = UnityEngine.Random.Range (0, height - 1);
 
-			area = findArea(map[pos_x][pos_y], System.Math.Max(2 * width, height / 2) / 3, null);
+			area = findArea(map[pos_x][pos_y], (int)(0.4f * average), new Probability(0.78f, 0.13f));
 
 			foreach (HexScript h in area) {
 				h.setType((int)HexScript.HexEnum.desert);
@@ -177,12 +177,13 @@ public class MapManager {
 		}
 
 		/* build a few medium lakes */
-		counter = 3;
+		counter = (int)(0.085f * average + 0.825f);
 		while (--counter >= 0) {
 			pos_x = UnityEngine.Random.Range(0, width - 1);
 			pos_y = UnityEngine.Random.Range (0, height - 1);
 
-			area = findArea(map[pos_x][pos_y], 2, null);
+
+			area = findArea(map[pos_x][pos_y], System.Math.Min(2 * width, height / 2) / 5, new Probability(0.8f, 0.2f));
 
 			foreach (HexScript h in area) {
 				h.setType((int)HexScript.HexEnum.water);
@@ -195,7 +196,8 @@ public class MapManager {
 			pos_x = width / 2;
 			pos_y = height / 2;
 			// Debug.Log("(" + pos_x + " , " + pos_y + ") " + (2 * height / 10) + "\n");
-			area = findArea(map[pos_x][pos_y], (int)(0.8f * average - 0.3f) / 2, new Probability(0.72f, 0.08f));
+			float percent = (1.2f * average + 40f) / 100f;
+			area = findArea(map[pos_x][pos_y], (int)(0.7f * System.Math.Max(2 * width, height / 2)), new Probability(percent, 0.08f));
 
 			foreach (HexScript h in area) {
 				// leave outside margins passable by non-infantry units

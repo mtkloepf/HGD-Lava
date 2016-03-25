@@ -93,8 +93,8 @@ public class UnitScript : MonoBehaviour
 			break;
 			
 		case (int)Types.H_Artillery:
-			attack = 8;
-			defense = 2;
+			attack = 9;
+			defense = 4;
             range = 3;
 			movement = 4;
 			break;
@@ -128,8 +128,8 @@ public class UnitScript : MonoBehaviour
 			break;
 
 		case (int)Types.A_Artillery:
-			attack = 8;
-			defense = 2;
+			attack = 9;
+			defense = 4;
             range = 3;
 			movement = 4;
 			break;
@@ -289,15 +289,23 @@ public class UnitScript : MonoBehaviour
 	void OnMouseDown () {
 		// Unit not hidden in fog
 		if (_renderer.enabled) {
-			// deselect unit if it is already selected
-			if (GameManagerScript.instance.getFocusedUnit() == this) {
-				GameManagerScript.instance.selectFocus(null);
-			} else { // select a unit
-				if (GameManagerScript.instance.getTurn() == player) {
-					GameManagerScript.instance.selectFocus(this);
-					//Debug.Log("Player selected");
-				} else {
-					GameManagerScript.instance.attack(this);
+			// Refresh a unit in editor mode
+			if (HexManagerScript.edit_hex()) { health = MAX_HEALTH; }
+
+			if (HexManagerScript.edit_hex() && state != 0) {
+				updateTurn();
+				GameManagerScript.instance.updateHexes();
+			} else {
+				// deselect unit if it is already selected
+				if (GameManagerScript.instance.getFocusedUnit() == this) {
+					GameManagerScript.instance.selectFocus(null);
+				} else { // select a unit
+					if (GameManagerScript.instance.getTurn() == player) {
+						GameManagerScript.instance.selectFocus(this);
+						//Debug.Log("Player selected");
+					} else {
+						GameManagerScript.instance.attack(this);
+					}
 				}
 			}
 		}

@@ -62,14 +62,14 @@ public class HexScript : MonoBehaviour, IComparable<HexScript> {
 	
     // Mouse is hovered over a hex
     void OnMouseEnter() {
-		if (!getFocus () && render.sprite != redSprite) {
-			makeFocused ();
+		if (!focus && render.sprite != redSprite && render.sprite != pinkSprite) {
+			makeFocused();
 		}
 	}
 	
     // Mouse leaves a hovered hex
     void OnMouseExit() {
-		if (!getFocus() && render.sprite != redSprite) {
+		if (!focus && render.sprite != redSprite && render.sprite != pinkSprite) {
 			makeDefault();
 		}
 	}
@@ -97,11 +97,13 @@ public class HexScript : MonoBehaviour, IComparable<HexScript> {
 
 	// Makes the hex pink, indicating that the unit has already moved but can still attack
 	public void makePink() {
+		//Debug.Log(position + ": pink");
 		render.sprite = (fog_cover) ? SpriteManagerScript.fogSprite : pinkSprite;
 	}
 
 	// Makes the hex the default color
 	public void makeDefault() {
+		//Debug.Log(position + ": default");
 		render.sprite = (fog_cover) ? SpriteManagerScript.fogSprite : standardSprite;
 	}
 
