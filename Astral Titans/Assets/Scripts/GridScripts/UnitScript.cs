@@ -290,7 +290,7 @@ public class UnitScript : MonoBehaviour
 		// Unit not hidden in fog
 		if (_renderer.enabled) {
 			// Refresh a unit in editor mode
-			if (HexManagerScript.edit_hex()) { health = MAX_HEALTH; }
+			if (HexManagerScript.edit_hex()) { setHealth(MAX_HEALTH); }
 
 			if (HexManagerScript.edit_hex() && state != 0) {
 				updateTurn();
