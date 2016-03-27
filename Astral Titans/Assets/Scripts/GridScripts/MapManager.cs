@@ -197,7 +197,8 @@ public class MapManager {
 			pos_y = height / 2;
 			// Debug.Log("(" + pos_x + " , " + pos_y + ") " + (2 * height / 10) + "\n");
 			float percent = (1.2f * average + 40f) / 100f;
-			area = findArea(map[pos_x][pos_y], (int)(0.7f * System.Math.Max(2 * width, height / 2)), new Probability(percent, 0.08f));
+			int max = System.Math.Max(width * 2, height / 2);
+			area = findArea(map[pos_x][pos_y], (int)(0.015f * max * max +  0.15f * max), new Probability(percent, 0.08f));
 
 			foreach (HexScript h in area) {
 				// leave outside margins passable by non-infantry units
