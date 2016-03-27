@@ -86,7 +86,7 @@ public class GameManagerScript : MonoBehaviour
 
 		// place alien base
 		turn = 2;
-		HexScript hex = Map.hex_at_offset_from(Map.map[0][0], false, false, System.Math.Min(Map.width - 1, Map.height - 1));
+		HexScript hex = Map.hex_at_offset_from(Map.map[0][0], false, false, System.Math.Min(Map.width / 2, Map.height / 2));
 		p2Base = placeUnit ( UnitScript.Types.A_Base, (int)hex.position.x, (int)hex.position.y );
 		int unit = 4;
 		// place one of each unit
@@ -106,7 +106,7 @@ public class GameManagerScript : MonoBehaviour
 		if (Map.FOG_OF_WAR) { Map.fog_of_war(true); }
 
 		// place human base
-		hex = Map.hex_at_offset_from(Map.map[Map.width - 1][Map.height - 1], false, false, System.Math.Min(Map.width - 1, Map.height - 1));
+		hex = Map.hex_at_offset_from(Map.map[Map.width - 1][Map.height - 1], false, false, System.Math.Min(Map.width / 2, Map.height / 2));
 		p1Base = placeUnit ( UnitScript.Types.H_Base, (int)hex.position.x, (int)hex.position.y );
 		// place one of each unit
 		unit = 0;
@@ -259,13 +259,8 @@ public class GameManagerScript : MonoBehaviour
 		}
 	}
 
-	// Moves a unit to a hex
-	public void moveCurrentUnit (HexScript hex)
-	{
-		// DONE: Limit range of a unit's movement
-		// DONE: Zone of control
-		// DONE: Only allow unit's to be moved on their turn
-		// TODO: wackingfocus
+	/* Moves the current focused unit to the given hex, if possible. */
+	public void moveCurrentUnit (HexScript hex) {
 
 		if (!paused) {
 			// Makes sure there is currently a focused unit
@@ -278,15 +273,12 @@ public class GameManagerScript : MonoBehaviour
 					//Map.update_fog_cover(prev_hex, focusedUnit.getMovement(), true);
 
 					focusedUnit.move(hex);
+					hex.setOccupied(focusedUnit.getPlayer());
 					// reveal new vision area
-					if (Map.FOG_OF_WAR) {
-						hex.setOccupied(focusedUnit.getPlayer());
-						Map.update_field_of_view(focusedUnit, false);
-					}
+					if (Map.FOG_OF_WAR) { Map.update_field_of_view(focusedUnit, false); }
 				}
 
 				focusedUnit = null;
-				focusedHex.setFocus(false);
 				updateHexes();
 			}
 		}
@@ -674,15 +666,16 @@ public class GameManagerScript : MonoBehaviour
 				List<HexScript> mapRow = Map.map [(int)unit.getPosition ().x];
 				HexScript curHex = mapRow [(int)unit.getPosition ().y];
 				// Reinitialize the hexSet to an empty set
-				hexSet = new HashSet<HexScript> ();
+				hexSet = new HashSet<HexScript>();
 				// Populate the hexSet with moveable hexes
-				findMovement (focusedUnit.getMovement (), (Map.map [(int)focusedUnit.getPosition ().x]) [(int)focusedUnit.getPosition ().y], false);
+				hexSet = Map.unit_move_range(focusedUnit, true);
+				//findMovement (focusedUnit.getMovement (), (Map.map [(int)focusedUnit.getPosition ().x]) [(int)focusedUnit.getPosition ().y], false);
 				// For each moveable hex, indicate that it is moveable
-				foreach (HexScript moveable in hexSet) {
+				/*foreach (HexScript moveable in hexSet) {
 					moveable.setFocus (true);
-				}
+				}*/
 				focusedHex = curHex;
-				curHex.setFocus (true);
+				curHex.setFocus(true);
 			}
 		}
 	}

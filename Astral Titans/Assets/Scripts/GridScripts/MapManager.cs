@@ -235,7 +235,7 @@ public class MapManager {
 
 		List<HexScript> area = findArea(map[pos_x][pos_y], offset, null);
 		// Find a random hex at a radius of the given offset away from the given hex
-		int hex_idx = UnityEngine.Random.Range(0, area.Count);
+		int hex_idx = UnityEngine.Random.Range(0, area.Count - 1);
 
 		return area[hex_idx];
 	}
@@ -253,12 +253,85 @@ public class MapManager {
 		}
 	}
 
+	/* This method calculates the movement range of the given unit based on the unit's maximum movement and the movement costs
+	 * of terrian for the give unit. It also sets the focus value of all hexes in the unit's movement to the value of set_focus.
+	 * A HashSet of all hexes that the unit can move to is returned. */
+	public HashSet<HexScript> unit_move_range(UnitScript unit, bool set_focus) {
+		HashSet<HexScript> reachable_hexes = new HashSet<HexScript>();
+
+		if (unit != null) {
+			Queue<HexScript> potential_hexes = new Queue<HexScript>();
+			SortedDictionary<HexScript, int> cur_values = new SortedDictionary<HexScript, int>(); 
+			// Initialize queue and dictionary entries
+			potential_hexes.Enqueue( hex_of(unit) );
+			cur_values.Add( hex_of(unit), unit.getMovement() );
+			// Only search hexes that are new, or that have a new path, from a different hex, with a greater movement value
+			while (potential_hexes.Count > 0) {
+				HexScript hex = potential_hexes.Dequeue();
+
+				int cur_val = -1;
+				// Find hex's current cost
+				cur_values.TryGetValue(hex, out cur_val);
+
+				// Possibility to move to adjacent hexes
+				if (cur_val > 0) {
+					// Sift through all valid adjacent hexes
+					for (int adj_idx = 0; adj_idx < 6; ++adj_idx) {
+						HexScript adj_hex = adjacentHexTo(hex, adj_idx);
+
+						if (adj_hex != null) {
+							// Find a movement value for moving through this hex via a different path, if one exists
+							int old_val = -1;
+							bool exists = cur_values.TryGetValue( adj_hex, out old_val);
+							// Calculate the new excess movement value after moving through the adjacent hex
+							int new_val = cur_val - UnitScript.move_cost(unit.unitType(), adj_hex.getType());
+
+							if (new_val >= 0) {
+								
+								// check if the current adj_hex is adjacent to a hex occupied by an enemy unit
+								for (int idx = 0; idx < 6; ++idx) {
+									HexScript adj_hex_2 = adjacentHexTo(adj_hex, idx);
+									// reduce the new movement value to 0, when the hex is adjacent to an enemy
+									if (adj_hex_2 != null && adj_hex_2.getOccupied() > 0 && adj_hex_2.getOccupied() != unit.getPlayer()) {
+										new_val = 0;
+										break;
+									}
+								}
+
+								/* Only add hexes for which the cost of moving through subtracted from the current movement value yields a non-negative result.
+								 * Also, the space cannot already be occupied. */
+								if (!exists && (adj_hex.getOccupied() == 0 || adj_hex.getOccupied() == unit.getPlayer())) {
+									//Debug.Log(adj_hex.position + " : " + new_val + " ");
+									// Set the hex focus value of hexes within the units movement range and add them to the list of reachable hexes
+									if (adj_hex.getOccupied() == 0) {
+										reachable_hexes.Add(adj_hex);
+										adj_hex.setFocus(set_focus);
+									}
+
+									potential_hexes.Enqueue(adj_hex);
+									cur_values.Add(adj_hex, new_val);
+								} else if (old_val >= 0 && new_val > old_val) {
+									//Debug.Log(adj_hex.position + " : " + old_val + " -> " + new_val + " ");
+									potential_hexes.Enqueue(adj_hex);
+									cur_values [adj_hex] = new_val;
+								}
+							}
+						}
+
+					}
+
+					//Debug.Log("\n");
+				}
+			}
+		}
+
+		return reachable_hexes;
+	}
+
 	/* Given a unit and a fog flag, this method flips all hexes within the unit's field
 	 * of vision to the given flag value. The unit's vison range is based off of its
 	 * movement value and the vision costs associated with a hex; both of which can be
-	 * found in the move_cost() and vision_cost() methods of the UnitScript class.
-	 * 
-	 * NOTE: Use sparingly, because this method is basically an iterative shortest path! */
+	 * found in the move_cost() and vision_cost() methods of the UnitScript class. */
 	public void update_field_of_view(UnitScript unit, bool fog) {
 		
 		if (unit != null) {
