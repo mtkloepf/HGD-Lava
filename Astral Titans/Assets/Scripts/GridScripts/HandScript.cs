@@ -10,8 +10,8 @@ using System.Collections;
  * 27 February 2016
  */
 public class HandScript : MonoBehaviour {
-	
-	public AudioClip coin_sound;
+	// Set of sounds to play for currency cards
+	public AudioClip[] coin_sounds;
 	// The card to display
 	public CardScript.CardType card;
 	public int index;
@@ -37,7 +37,12 @@ public class HandScript : MonoBehaviour {
 	public void OnMouseDown() {
 		if (card != CardScript.CardType.Empty) {
 			if (card == CardScript.CardType.Currency1 || card == CardScript.CardType.Currency2 || card == CardScript.CardType.Currency3) {
-				GetComponent<AudioSource>().PlayOneShot(coin_sound);
+				
+				if (coin_sounds.Length > 0) {
+					int idx = Random.Range(0, coin_sounds.Length);
+
+					GetComponent<AudioSource>().PlayOneShot(coin_sounds[idx]);
+				}
 			}
 
 			bool cardRemoved = GameManagerScript.instance.cardClicked(index);
