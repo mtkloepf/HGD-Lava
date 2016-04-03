@@ -9,6 +9,7 @@ public class GameManagerScript : MonoBehaviour
 	public static GameManagerScript instance;
 	public MapManager Map;
 
+	public GameObject Transition_Screen;
 	public GameObject EndTurn;
 	public GameObject AIPlayerPrefab;
 
@@ -235,7 +236,11 @@ public class GameManagerScript : MonoBehaviour
 			TurnIndicator.updateTurn(turn);
 
 			// revert all hexes to fog
-			if (Map.FOG_OF_WAR) { Map.fog_of_war(true); }
+			if (Map.FOG_OF_WAR) {
+				// Create intermediate screen
+				Transition_Screen.GetComponent<ScreenImageToggle>().reset();
+				Map.fog_of_war(true);
+			}
 
 			// reset all unit statuses
 			foreach (UnitScript unit in units) {
