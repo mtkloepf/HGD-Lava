@@ -25,6 +25,7 @@ public class MapManager {
 
 	/* Initialize the size of the map */
 	static MapManager() {
+		UnityEngine.Random.seed = (int)Time.unscaledDeltaTime;
 		size = 4;
 	}
 
