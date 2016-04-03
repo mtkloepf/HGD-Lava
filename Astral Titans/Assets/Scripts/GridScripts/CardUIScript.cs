@@ -11,6 +11,7 @@ public class CardUIScript : MonoBehaviour {
 	public Text deckCount;
 	public Text discardCount;
 	public Text currency;
+	public Text unitName;
 	public Image unitSprite;
 	UnitScript unit;
 
@@ -30,6 +31,11 @@ public class CardUIScript : MonoBehaviour {
 			defense.text = "" + unit.getDefense ();
             range.text = "" + unit.getRange();
 			movement.text = "" + unit.getMovement ();
+			if (unitName != null) {
+				string unitText = unit.unitType ().ToString();
+				unitText = unitText.Substring (2);
+				unitName.text = unitText;
+			}
 			if (unitSprite != null) {
 				unitSprite.sprite = unit.gameObject.GetComponent<SpriteRenderer>().sprite;
 			}
@@ -41,6 +47,11 @@ public class CardUIScript : MonoBehaviour {
 			defense.text = "" + unit.getDefense ();
             range.text = "" + unit.getRange();
             movement.text = "" + unit.getMovement ();
+			if (unitName != null) {
+				string unitText = unit.unitType ().ToString();
+				unitText = unitText.Substring (2);
+				unitName.text = unitText;
+			}
 			if (unitSprite != null) {
 				unitSprite.sprite = unit.gameObject.GetComponent<SpriteRenderer>().sprite;
 			}
