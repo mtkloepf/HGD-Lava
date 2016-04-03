@@ -258,6 +258,7 @@ public class GameManagerScript : MonoBehaviour {
 			// draw new hand
 			getPlayer().getDeck().deal();
 			drawCards();
+			Debug.Log(getPlayer().getDeck().hand.getSize());
 			// reset currencies for each player
 			Player1.setCurrency(0);
 			Player2.setCurrency(0);
