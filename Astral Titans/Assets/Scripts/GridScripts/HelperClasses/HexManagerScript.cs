@@ -21,8 +21,8 @@ public class HexManagerScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		// enable or disable hex editing by pressing e
-		if (Input.GetKeyDown(KeyCode.E)) {
+		// enable or disable hex editing by pressing p
+		if (Input.GetKeyDown(KeyCode.P)) {
 			EDIT_HEX = !EDIT_HEX;
 			Debug.Log( "Hex editing " + ((EDIT_HEX) ? "enabled" : "disabled") );
 		}

@@ -10,6 +10,9 @@ using System.Collections.Generic;
  * 29 February 2016
  */
 public class MapManager {
+	// Determines if the map is fog of war
+	public readonly bool FOG_OF_WAR;
+
 	/* Copy of the map */
 	public List<List<HexScript>> map;
 	/* the dimensions of the map to create (within the bounds of [12, 46] */
@@ -26,7 +29,8 @@ public class MapManager {
 	}
 
 	/* Creates a map of the given dimensions and type */
-	public MapManager(int w, int h, string m_type) {
+	public MapManager(int w, int h, string m_type, bool fog) {
+		FOG_OF_WAR = fog;
 		width = w;
 		height = h;
 		map_type = m_type;
@@ -160,12 +164,12 @@ public class MapManager {
 		int average = (2 * width + height / 2) / 2;
 
 		/* build 1 ~ 3 pontentially large deserts */
-		counter = (int)( (2.0f * width + height / 2.0f) / 30.0f + 0.5f );
+		counter = (int)( 0.068f * average + 0.5f );
 		while (--counter >= 0) {
 			pos_x = UnityEngine.Random.Range(0, width - 1);
 			pos_y = UnityEngine.Random.Range (0, height - 1);
 
-			area = findArea(map[pos_x][pos_y], System.Math.Max(2 * width, height / 2) / 3, null);
+			area = findArea(map[pos_x][pos_y], (int)(0.4f * average), new Probability(0.78f, 0.13f));
 
 			foreach (HexScript h in area) {
 				h.setType((int)HexScript.HexEnum.desert);
@@ -173,12 +177,13 @@ public class MapManager {
 		}
 
 		/* build a few medium lakes */
-		counter = 3;
+		counter = (int)(0.085f * average + 0.825f);
 		while (--counter >= 0) {
 			pos_x = UnityEngine.Random.Range(0, width - 1);
 			pos_y = UnityEngine.Random.Range (0, height - 1);
 
-			area = findArea(map[pos_x][pos_y], 2, null);
+
+			area = findArea(map[pos_x][pos_y], System.Math.Min(2 * width, height / 2) / 5, new Probability(0.8f, 0.2f));
 
 			foreach (HexScript h in area) {
 				h.setType((int)HexScript.HexEnum.water);
@@ -191,7 +196,9 @@ public class MapManager {
 			pos_x = width / 2;
 			pos_y = height / 2;
 			// Debug.Log("(" + pos_x + " , " + pos_y + ") " + (2 * height / 10) + "\n");
-			area = findArea(map[pos_x][pos_y], (int)(0.8f * average - 0.3f) / 2, new Probability(0.72f, 0.08f));
+			float percent = (1.2f * average + 40f) / 100f;
+			int max = System.Math.Max(width * 2, height / 2);
+			area = findArea(map[pos_x][pos_y], (int)(0.015f * max * max +  0.15f * max), new Probability(percent, 0.08f));
 
 			foreach (HexScript h in area) {
 				// leave outside margins passable by non-infantry units
@@ -228,7 +235,7 @@ public class MapManager {
 
 		List<HexScript> area = findArea(map[pos_x][pos_y], offset, null);
 		// Find a random hex at a radius of the given offset away from the given hex
-		int hex_idx = UnityEngine.Random.Range(0, area.Count);
+		int hex_idx = UnityEngine.Random.Range(0, area.Count - 1);
 
 		return area[hex_idx];
 	}
@@ -246,6 +253,135 @@ public class MapManager {
 		}
 	}
 
+	/* This method calculates the movement range of the given unit based on the unit's maximum movement and the movement costs
+	 * of terrian for the give unit. It also sets the focus value of all hexes in the unit's movement to the value of set_focus.
+	 * A HashSet of all hexes that the unit can move to is returned. */
+	public HashSet<HexScript> unit_move_range(UnitScript unit, bool set_focus) {
+		HashSet<HexScript> reachable_hexes = new HashSet<HexScript>();
+
+		if (unit != null) {
+			Queue<HexScript> potential_hexes = new Queue<HexScript>();
+			SortedDictionary<HexScript, int> cur_values = new SortedDictionary<HexScript, int>(); 
+			// Initialize queue and dictionary entries
+			potential_hexes.Enqueue( hex_of(unit) );
+			cur_values.Add( hex_of(unit), unit.getMovement() );
+			// Only search hexes that are new, or that have a new path, from a different hex, with a greater movement value
+			while (potential_hexes.Count > 0) {
+				HexScript hex = potential_hexes.Dequeue();
+
+				int cur_val = -1;
+				// Find hex's current cost
+				cur_values.TryGetValue(hex, out cur_val);
+
+				// Possibility to move to adjacent hexes
+				if (cur_val > 0) {
+					// Sift through all valid adjacent hexes
+					for (int adj_idx = 0; adj_idx < 6; ++adj_idx) {
+						HexScript adj_hex = adjacentHexTo(hex, adj_idx);
+
+						if (adj_hex != null) {
+							// Find a movement value for moving through this hex via a different path, if one exists
+							int old_val = -1;
+							bool exists = cur_values.TryGetValue( adj_hex, out old_val);
+							// Calculate the new excess movement value after moving through the adjacent hex
+							int new_val = cur_val - UnitScript.move_cost(unit.unitType(), adj_hex.getType());
+
+							if (new_val >= 0) {
+								
+								// check if the current adj_hex is adjacent to a hex occupied by an enemy unit
+								for (int idx = 0; idx < 6; ++idx) {
+									HexScript adj_hex_2 = adjacentHexTo(adj_hex, idx);
+									// reduce the new movement value to 0, when the hex is adjacent to an enemy
+									if (adj_hex_2 != null && adj_hex_2.getOccupied() > 0 && adj_hex_2.getOccupied() != unit.getPlayer()) {
+										new_val = 0;
+										break;
+									}
+								}
+
+								/* Only add hexes for which the cost of moving through subtracted from the current movement value yields a non-negative result.
+								 * Also, the space cannot already be occupied. */
+								if (!exists && (adj_hex.getOccupied() == 0 || adj_hex.getOccupied() == unit.getPlayer())) {
+									//Debug.Log(adj_hex.position + " : " + new_val + " ");
+									// Set the hex focus value of hexes within the units movement range and add them to the list of reachable hexes
+									if (adj_hex.getOccupied() == 0) {
+										reachable_hexes.Add(adj_hex);
+										adj_hex.setFocus(set_focus);
+									}
+
+									potential_hexes.Enqueue(adj_hex);
+									cur_values.Add(adj_hex, new_val);
+								} else if (old_val >= 0 && new_val > old_val) {
+									//Debug.Log(adj_hex.position + " : " + old_val + " -> " + new_val + " ");
+									potential_hexes.Enqueue(adj_hex);
+									cur_values [adj_hex] = new_val;
+								}
+							}
+						}
+
+					}
+
+					//Debug.Log("\n");
+				}
+			}
+		}
+
+		return reachable_hexes;
+	}
+
+	/* Given a unit and a fog flag, this method flips all hexes within the unit's field
+	 * of vision to the given flag value. The unit's vison range is based off of its
+	 * movement value and the vision costs associated with a hex; both of which can be
+	 * found in the move_cost() and vision_cost() methods of the UnitScript class. */
+	public void update_field_of_view(UnitScript unit, bool fog) {
+		
+		if (unit != null) {
+			Queue<HexScript> hexes = new Queue<HexScript>();
+			SortedDictionary<HexScript, int> cur_values = new SortedDictionary<HexScript, int>(); 
+			// Initialize queue and dictionary entries
+			hexes.Enqueue( hex_of(unit) );
+			cur_values.Add( hex_of(unit), unit.getMovement() );
+			// Only search hexes that are new, or that have a new path, from a different hex, with a greater vision value
+			while (hexes.Count > 0) {
+				HexScript hex = hexes.Dequeue();
+				hex.set_fog_cover(fog);
+
+				int cur_val = 0;
+				// Find hex's current cost
+				cur_values.TryGetValue(hex, out cur_val);
+
+				// Possibility to see adjacent hexes
+				if (cur_val > 0) {
+					// Sift through all valid adjacent hexes
+					for (int adj_idx = 0; adj_idx < 6; ++adj_idx) {
+						HexScript adj_hex = adjacentHexTo(hex, adj_idx);
+
+						if (adj_hex != null) {
+							// Find old vision value for the given hex (if it exists)
+							int old_val = 0;
+							bool exists = cur_values.TryGetValue( adj_hex, out old_val);
+							// Calculate new vision after going through the adjacent hex
+							int new_val = cur_val - UnitScript.vision_cost(unit.unitType(), adj_hex.getType());
+							// Either add the hex if does not exists yet, or if the new value is less than the original
+							if ( !exists && new_val >= 0 ) {
+								//Debug.Log(adj_hex.position + " : " + new_val + " ");
+								hexes.Enqueue(adj_hex);
+								cur_values.Add(adj_hex, new_val);
+							} else if (old_val >= 0 && new_val > old_val) {
+								//Debug.Log(adj_hex.position + " : " + old_val + " -> " + new_val + " ");
+								hexes.Enqueue(adj_hex);
+								cur_values[adj_hex] = new_val;
+							}
+						}
+
+					}
+
+					//Debug.Log("\n");
+				}
+			}
+		}
+	}
+
+	/* Finds all hexes within the given radius, centered at the center hex. */
 	public List<HexScript> findArea(HexScript center, int radius) {
 		return findArea(center, radius, null);
 	}
@@ -339,9 +475,25 @@ public class MapManager {
 		}
 	}
 
+	/* Returns the hex. on which the given unit is located. */
+	public HexScript hex_of(UnitScript unit) {
+		return map[(int)unit.position.x][(int)unit.position.y];
+	}
+
 	/* Verifies that the two hexes are at the same position in the map */
 	public static bool same_position(HexScript h1, HexScript h2) {
-		return (h1.position.x == h2.position.x) && (h1.position.y == h2.position.y);
+			return h1 != null && h2 != null && (h1.position.x == h2.position.x) && (h1.position.y == h2.position.y);
+	}
+
+	/* Enable or disable fog of war. */
+	public void fog_of_war(bool fog) {
+
+		foreach(List<HexScript> hex_list in map) {
+			foreach(HexScript hex in hex_list) {
+				hex.startRenderer();
+				hex.set_fog_cover(fog);
+			}
+		}
 	}
 
 	/* Removes all tiles from the map */

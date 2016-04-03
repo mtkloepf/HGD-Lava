@@ -6,19 +6,18 @@ public class UnitScript : MonoBehaviour
 {
 	public GameObject HPBar;
 
-	public Sprite Sprite;
-	public SortedDictionary<HexScript.HexEnum, int> terrainMap = new SortedDictionary<HexScript.HexEnum, int> ();
 	private Animator animator;
 	// Used to disable the Unit in fog tiles
 	private SpriteRenderer _renderer;
 
 	public Vector2 position = Vector2.zero;
-	public bool focus = false;
-	public int player;
-	public bool hasMoved;
+	private Types type = Types.H_Infantry;
 
-	//public bool canAttack = true;
-	public bool hasAttacked;
+	public int player;
+	/* 0 -> unit has not moved or attacked (default)
+	 * 1 -> unit has moved, but not attacked (pink)
+	 * 2 -> unit has moved and attacked (red) */
+	private int state;
 
 	public bool mouseOver = false;
 
@@ -50,17 +49,14 @@ public class UnitScript : MonoBehaviour
 		health =  MAX_HEALTH;
 		animator = GetComponent<Animator>();
 		_renderer = GetComponent<SpriteRenderer>();
-		hasMoved = false;
-		hasAttacked = false;
+
+		state = 0;
 		// Fix local positioning of the unit
 		Vector3 pos = gameObject.transform.localPosition;
 		gameObject.transform.localPosition = new Vector3(pos.x, pos.y, -0.5f);
 	}
 
-	public void updateTurn () {
-		hasMoved = false;
-		hasAttacked = false;
-	}
+	public void updateTurn () { state = 0; }
 
 	public void destroyUnit ()
 	{
@@ -71,6 +67,8 @@ public class UnitScript : MonoBehaviour
 
 	// Set the unit type
 	public void setType(int type) {
+		this.type = (UnitScript.Types)type;
+
 		switch (type) {
 		
 		case (int)Types.H_Infantry:
@@ -78,10 +76,6 @@ public class UnitScript : MonoBehaviour
 			defense = 1;
             range = 2;
 			movement = 4;
-			terrainMap.Add(HexScript.HexEnum.water, 100);
-			terrainMap.Add(HexScript.HexEnum.mountain, 2);
-			terrainMap.Add(HexScript.HexEnum.plains, 1);
-			terrainMap.Add(HexScript.HexEnum.desert, 2);
 			break;
 		
 		case (int)Types.H_Exo:
@@ -89,10 +83,6 @@ public class UnitScript : MonoBehaviour
 			defense = 3;
             range = 1;
 			movement = 3;
-			terrainMap.Add (HexScript.HexEnum.water, 100);
-			terrainMap.Add (HexScript.HexEnum.mountain, 1);
-			terrainMap.Add (HexScript.HexEnum.plains, 1);
-			terrainMap.Add (HexScript.HexEnum.desert, 1);
 			break;
 		
 		case (int)Types.H_Tank:
@@ -100,32 +90,20 @@ public class UnitScript : MonoBehaviour
 			defense = 8;
             range = 1;
 			movement = 5;
-			terrainMap.Add (HexScript.HexEnum.water, 100);
-			terrainMap.Add (HexScript.HexEnum.mountain, 100);
-			terrainMap.Add (HexScript.HexEnum.plains, 1);
-			terrainMap.Add (HexScript.HexEnum.desert, 2);
 			break;
 			
 		case (int)Types.H_Artillery:
-			attack = 8;
-			defense = 2;
+			attack = 9;
+			defense = 4;
             range = 3;
-			movement = 3;
-			terrainMap.Add (HexScript.HexEnum.water, 100);
-			terrainMap.Add (HexScript.HexEnum.mountain, 100);
-			terrainMap.Add (HexScript.HexEnum.plains, 1);
-			terrainMap.Add (HexScript.HexEnum.desert, 3);
+			movement = 4;
 			break;
 		
 		case (int)Types.H_Base:
 			attack = 0;
 			defense = 9;
             range = 1;
-			movement = 4;
-			terrainMap.Add (HexScript.HexEnum.water, 1);
-			terrainMap.Add (HexScript.HexEnum.mountain, 1);
-			terrainMap.Add (HexScript.HexEnum.plains, 1);
-			terrainMap.Add (HexScript.HexEnum.desert, 1);
+			movement = 2;
 			break;
 		
 		case (int)Types.A_Infantry:
@@ -133,10 +111,6 @@ public class UnitScript : MonoBehaviour
 			defense = 1;
             range = 2;
 			movement = 4;
-			terrainMap.Add(HexScript.HexEnum.water, 100);
-			terrainMap.Add(HexScript.HexEnum.mountain, 2);
-			terrainMap.Add(HexScript.HexEnum.plains, 1);
-			terrainMap.Add(HexScript.HexEnum.desert, 2);
 			break;
 
 		case (int)Types.A_Elite:
@@ -144,10 +118,6 @@ public class UnitScript : MonoBehaviour
 			defense = 3;
             range = 1;
 			movement = 3;
-			terrainMap.Add (HexScript.HexEnum.water, 100);
-			terrainMap.Add (HexScript.HexEnum.mountain, 1);
-			terrainMap.Add (HexScript.HexEnum.plains, 1);
-			terrainMap.Add (HexScript.HexEnum.desert, 1);
 			break;
 
 		case (int)Types.A_Tank:
@@ -155,32 +125,20 @@ public class UnitScript : MonoBehaviour
 			defense = 8;
             range = 1;
 			movement = 5;
-			terrainMap.Add (HexScript.HexEnum.water, 100);
-			terrainMap.Add (HexScript.HexEnum.mountain, 100);
-			terrainMap.Add (HexScript.HexEnum.plains, 1);
-			terrainMap.Add (HexScript.HexEnum.desert, 2);
 			break;
 
 		case (int)Types.A_Artillery:
-			attack = 8;
-			defense = 2;
+			attack = 9;
+			defense = 4;
             range = 3;
-			movement = 3;
-			terrainMap.Add (HexScript.HexEnum.water, 100);
-			terrainMap.Add (HexScript.HexEnum.mountain, 100);
-			terrainMap.Add (HexScript.HexEnum.plains, 1);
-			terrainMap.Add (HexScript.HexEnum.desert, 3);
+			movement = 4;
 			break;
 
 		case (int)Types.A_Base:
 			attack = 0;
 			defense = 9;
             range = 1;
-			movement = 4;
-			terrainMap.Add (HexScript.HexEnum.water, 1);
-			terrainMap.Add (HexScript.HexEnum.mountain, 1);
-			terrainMap.Add (HexScript.HexEnum.plains, 1);
-			terrainMap.Add (HexScript.HexEnum.desert, 1);
+			movement = 2;
 			break;
 		
 		default:
@@ -188,6 +146,9 @@ public class UnitScript : MonoBehaviour
 			break;
 		}
 	}
+
+	/* Returns the unit's type. */
+	public UnitScript.Types unitType() { return type; }
 
 	// Gets the player of the unit
 	public int getPlayer ()
@@ -207,12 +168,11 @@ public class UnitScript : MonoBehaviour
 		return movement;
 	}
 
-	// Moves the player to a hex, if the player has not moved yet.
-	public void move (HexScript hex)
-	{
-		if (!hasMoved) {
-			setPosition (hex);
-			hasMoved = true;
+	// Moves the player to a hex, if the player has not moved or attacked yet.
+	public void move (HexScript hex) {
+		if (state < 1) {
+			setPosition(hex);
+			state = 1;
 		}
 	}
 
@@ -283,13 +243,17 @@ public class UnitScript : MonoBehaviour
         return range;
     }
 
-	// Sets the unit to be focused.
-	// NOTE: I am not sure if this is necessary. We
-	//       may want to remove it later
-	public void setFocus (bool focus)
-	{
-		this.focus = focus;
+	/* If the given value is a valid state,
+	 * then the unit's state is set. */
+	public void setState(int transition) {
+		// A unit has only 3 states
+		if (transition < 3 && transition >= 0) {
+			state = transition;
+		}
 	}
+
+	/* Return's the unit's state. */
+	public int getState() { return state; }
 
 	public void attackEnemy ()
 	{
@@ -325,15 +289,23 @@ public class UnitScript : MonoBehaviour
 	void OnMouseDown () {
 		// Unit not hidden in fog
 		if (_renderer.enabled) {
-			// deselect unit if it is already selected
-			if (GameManagerScript.instance.getFocusedUnit() == this) {
-				GameManagerScript.instance.selectFocus(null);
-			} else { // select a unit
-				if (GameManagerScript.instance.getTurn() == player) {
-					GameManagerScript.instance.selectFocus(this);
-					//Debug.Log("Player selected");
-				} else {
-					GameManagerScript.instance.attack(this);
+			// Refresh a unit in editor mode
+			if (HexManagerScript.edit_hex()) { setHealth(MAX_HEALTH); }
+
+			if (HexManagerScript.edit_hex() && state != 0) {
+				updateTurn();
+				GameManagerScript.instance.updateHexes();
+			} else {
+				// deselect unit if it is already selected
+				if (GameManagerScript.instance.getFocusedUnit() == this) {
+					GameManagerScript.instance.selectFocus(null);
+				} else { // select a unit
+					if (GameManagerScript.instance.getTurn() == player) {
+						GameManagerScript.instance.selectFocus(this);
+						//Debug.Log("Player selected");
+					} else {
+						GameManagerScript.instance.attack(this);
+					}
 				}
 			}
 		}
@@ -347,5 +319,93 @@ public class UnitScript : MonoBehaviour
 	// Check if the mouse has left the unit and stop displaying the stats if it has
 	void OnMouseExit() {
 		mouseOver = false;
+	}
+
+	/* Given a unit type and hex type, the cost of the given unit moving through the tile is returned. */
+	public static int move_cost(UnitScript.Types u_type, HexScript.HexEnum h_type) {
+		if (u_type == Types.H_Infantry || u_type == Types.A_Infantry) {
+			switch (h_type) {
+				case HexScript.HexEnum.plains:		return 1;
+				case HexScript.HexEnum.desert:		return 1;
+				case HexScript.HexEnum.mountain:	return 3;
+				case HexScript.HexEnum.water:		return 9999;
+			}
+		} else if (u_type == Types.H_Exo || u_type == Types.A_Elite) {
+			switch (h_type) {
+				case HexScript.HexEnum.plains:		return 1;
+				case HexScript.HexEnum.desert:		return 1;
+				case HexScript.HexEnum.mountain:	return 1;
+				case HexScript.HexEnum.water:		return 9999;
+			}
+		} else if (u_type == Types.H_Tank || u_type == Types.A_Tank) {
+			switch (h_type) {
+				case HexScript.HexEnum.plains:		return 1;
+				case HexScript.HexEnum.desert:		return 2;
+				case HexScript.HexEnum.mountain:	return 9999;
+				case HexScript.HexEnum.water:		return 9999;
+			}
+		} else if (u_type == Types.H_Artillery || u_type == Types.A_Artillery) {
+			switch (h_type) {
+				case HexScript.HexEnum.plains:		return 1;
+				case HexScript.HexEnum.desert:		return 3;
+				case HexScript.HexEnum.mountain:	return 9999;
+				case HexScript.HexEnum.water:		return 9999;
+			}
+		} else if (u_type == Types.H_Base || u_type == Types.A_Base) {
+			switch (h_type) {
+				case HexScript.HexEnum.plains:		return 1;
+				case HexScript.HexEnum.desert:		return 1;
+				case HexScript.HexEnum.mountain:	return 1;
+				case HexScript.HexEnum.water:		return 1;
+			}
+		}
+
+		// not a valid unit type
+		return 9999;
+	}
+
+	/* Given a unit type and hex type, the cost of the given unit moving through the tile is returned.
+	 * NOTE: In order for vision to stay above movement range, each value can be at MOST the respective
+	 * value for the unit's move_cost() for the given hex type! */
+	public static int vision_cost(UnitScript.Types u_type, HexScript.HexEnum h_type) {
+		if (u_type == Types.H_Infantry || u_type == Types.A_Infantry) {
+			switch (h_type) {
+			case HexScript.HexEnum.plains:		return 1;
+			case HexScript.HexEnum.desert:		return 1;
+			case HexScript.HexEnum.mountain:	return 3;
+			case HexScript.HexEnum.water:		return 3;
+			}
+		} else if (u_type == Types.H_Exo || u_type == Types.A_Elite) {
+			switch (h_type) {
+			case HexScript.HexEnum.plains:		return 1;
+			case HexScript.HexEnum.desert:		return 1;
+			case HexScript.HexEnum.mountain:	return 1;
+			case HexScript.HexEnum.water:		return 2;
+			}
+		} else if (u_type == Types.H_Tank || u_type == Types.A_Tank) {
+			switch (h_type) {
+			case HexScript.HexEnum.plains:		return 1;
+			case HexScript.HexEnum.desert:		return 2;
+			case HexScript.HexEnum.mountain:	return 3;
+			case HexScript.HexEnum.water:		return 2;
+			}
+		} else if (u_type == Types.H_Artillery || u_type == Types.A_Artillery) {
+			switch (h_type) {
+			case HexScript.HexEnum.plains:		return 1;
+			case HexScript.HexEnum.desert:		return 3;
+			case HexScript.HexEnum.mountain:	return 3;
+			case HexScript.HexEnum.water:		return 2;
+			}
+		} else if (u_type == Types.H_Base || u_type == Types.A_Base) {
+			switch (h_type) {
+			case HexScript.HexEnum.plains:		return 1;
+			case HexScript.HexEnum.desert:		return 1;
+			case HexScript.HexEnum.mountain:	return 1;
+			case HexScript.HexEnum.water:		return 1;
+			}
+		}
+
+		// not a valid unit type
+		return 9999;
 	}
 }

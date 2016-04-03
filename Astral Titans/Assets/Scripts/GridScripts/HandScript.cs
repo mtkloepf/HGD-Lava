@@ -10,6 +10,8 @@ using System.Collections;
  * 27 February 2016
  */
 public class HandScript : MonoBehaviour {
+	
+	public AudioClip coin_sound;
 	// The card to display
 	public CardScript.CardType card;
 	public int index;
@@ -34,6 +36,10 @@ public class HandScript : MonoBehaviour {
 
 	public void OnMouseDown() {
 		if (card != CardScript.CardType.Empty) {
+			if (card == CardScript.CardType.Currency1 || card == CardScript.CardType.Currency2 || card == CardScript.CardType.Currency3) {
+				GetComponent<AudioSource>().PlayOneShot(coin_sound);
+			}
+
 			bool cardRemoved = GameManagerScript.instance.cardClicked(index);
 			// Debug.Log(this.gameObject.layer);
 
@@ -43,6 +49,8 @@ public class HandScript : MonoBehaviour {
 		}
 	}
 
+	/* Sets the index value and the card type of this card.
+	 * If the given card type is CardType.Empty, then the card is not displayed. */
 	public void reset(int idx, CardScript.CardType t) {
 		card = t;
 		index = idx;

@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
-public class HexScript : MonoBehaviour {
+public class HexScript : MonoBehaviour, IComparable<HexScript> {
 
 	public Vector2 position = Vector2.zero;
 	public Sprite standardSprite;
@@ -16,14 +17,14 @@ public class HexScript : MonoBehaviour {
 
 	SpriteRenderer render;
 	bool focus = false;
-    bool occupied = false;
+	/* occupied = 0 => unoccupied,
+	 * occupied > 0 => occupied by given player. */
+    public int occupied = 0;
 
 	// Use this for initialization
 	void Start () {
 		transform.SetParent (GameObject.Find("HexManager").transform);
         startRenderer();
-		fog_cover = false;
-
 		// Do not remove this or the hexes will not be displayed!!
 		gameObject.transform.localScale = new Vector3(1, 1, 0);
 	}
@@ -39,14 +40,15 @@ public class HexScript : MonoBehaviour {
 	}
 
 	// Sets the occupied variable to the given value
-	public void setOccupied(bool occ) {
+	public void setOccupied(int occ) {
 		occupied = occ;
 	}
 
-        // Returns if a hex cannot be traveled to
-        public bool getOccupied() {
-           return occupied;
-        }
+  	/* Returns if and what army of the
+  	 * unit occupying the hex. */
+	public int getOccupied() {
+		return occupied;
+	}
 
 	// Sets the position of the hex.
 	public void setPosition (Vector2 v2) {
@@ -60,20 +62,22 @@ public class HexScript : MonoBehaviour {
 	
     // Mouse is hovered over a hex
     void OnMouseEnter() {
-		if (!getFocus () && render.sprite != redSprite) {
-			makeFocused ();
+		if (!focus && render.sprite != redSprite && render.sprite != pinkSprite) {
+			makeFocused();
 		}
 	}
 	
     // Mouse leaves a hovered hex
     void OnMouseExit() {
-        if(!getFocus() && render.sprite != redSprite)
+		if (!focus && render.sprite != redSprite && render.sprite != pinkSprite) {
 			makeDefault();
+		}
 	}
 
 	// Sets the focus of the hex
 	public void setFocus (bool focused) {
 		focus = focused;
+
 		if (focused) {
 			makeFocused();
 		} else {
@@ -93,11 +97,13 @@ public class HexScript : MonoBehaviour {
 
 	// Makes the hex pink, indicating that the unit has already moved but can still attack
 	public void makePink() {
+		//Debug.Log(position + ": pink");
 		render.sprite = (fog_cover) ? SpriteManagerScript.fogSprite : pinkSprite;
 	}
 
 	// Makes the hex the default color
 	public void makeDefault() {
+		//Debug.Log(position + ": default");
 		render.sprite = (fog_cover) ? SpriteManagerScript.fogSprite : standardSprite;
 	}
 
@@ -112,31 +118,13 @@ public class HexScript : MonoBehaviour {
 	/* Set if the tile is covered in fog */
 	public void set_fog_cover(bool covered) {
 		if (covered != fog_cover) {
-			if (covered) { // The tile is now covered in fog
+				fog_cover = covered;
 				makeDefault();
-			} else { // The tile is not covered in fog
-				if (occupied) {
-					makeRed();
-				} else {
-					makeDefault();
-				}
-			}
-
-			fog_cover = covered;
 		}
 	}
 
 	/* Return if the tile is covered in fog */
 	public bool covered_in_fog() { return fog_cover; }
-
-	public bool checkForFog() {
-		if (!GameManagerScript.instance.getVisibleHexes ().Contains (this)) {
-			set_fog_cover (true);
-		} else {
-			set_fog_cover (false);
-		}
-		return fog_cover;
-	}
 
 	// Gets the position of the transform of the hex
 	public Vector2 getTransformPosition() {
@@ -157,8 +145,7 @@ public class HexScript : MonoBehaviour {
 		} else {
 			// Necessary for clicking hexes to work in test map generation scene
 			if (GameManagerScript.instance != null) {
-				bool occ = GameManagerScript.instance.hexClicked(this);
-				occupied = occ;
+				GameManagerScript.instance.hexClicked(this);
 			}
 		}
 
@@ -231,8 +218,7 @@ public class HexScript : MonoBehaviour {
 	private void setType(HexEnum type, Sprite standard, 
 		Sprite red, Sprite blue, Sprite pink) {
 		this.type = type;
-		if(type == HexEnum.mountain || 
-			type == HexEnum.water) occupied = true;
+		
 		standardSprite = standard;
 		redSprite = red;
 		blueSprite = blue;
@@ -240,8 +226,21 @@ public class HexScript : MonoBehaviour {
 
 		render.sprite = standardSprite;
 	}
-
+		
 	public override string ToString() {
 		return type.ToString () + ": (" + position.x + ", " + position.y + ")";
+	}
+
+	/* Returns an integer based on the x values and y values of this hex and the given hex.
+	 * Hexes are ordered first by x value, then by y value. */
+	public int CompareTo(HexScript h) {
+
+		if (h.position == null || position.x > h.position.x || (position.x == h.position.x && position.y > h.position.y)) {
+			return -1;
+		} else if (position.x == h.position.x && position.y == h.position.y) {
+			return 0;
+		} else {
+			return 1;
+		}
 	}
 }

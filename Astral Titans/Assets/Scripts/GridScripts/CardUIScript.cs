@@ -31,7 +31,7 @@ public class CardUIScript : MonoBehaviour {
             range.text = "" + unit.getRange();
 			movement.text = "" + unit.getMovement ();
 			if (unitSprite != null) {
-				unitSprite.sprite = unit.Sprite;
+				unitSprite.sprite = unit.gameObject.GetComponent<SpriteRenderer>().sprite;
 			}
 		}
 		else if (GameManagerScript.instance.getFocusedUnit () != null) {
@@ -42,7 +42,7 @@ public class CardUIScript : MonoBehaviour {
             range.text = "" + unit.getRange();
             movement.text = "" + unit.getMovement ();
 			if (unitSprite != null) {
-				unitSprite.sprite = unit.Sprite;
+				unitSprite.sprite = unit.gameObject.GetComponent<SpriteRenderer>().sprite;
 			}
 		}
 

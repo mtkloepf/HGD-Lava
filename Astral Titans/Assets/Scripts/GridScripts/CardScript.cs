@@ -35,10 +35,11 @@ public class CardScript {
 			case CardType.HumanInfantry:		return 1;
 			case CardType.HumanTank:			return 4;
 			case CardType.HumanExo:				return 2;
-			case CardType.HumanArtillery:		return 5;
+			case CardType.HumanArtillery:		return 7;
 			case CardType.AlienInfantry:		return 1;
 			case CardType.AlienTank:			return 4;
 			case CardType.AlienElite:			return 2;
+			case CardType.AlienArtillery:		return 7;
 			case CardType.Currency1:			return 1;
 			case CardType.Currency2:			return 5;
 			case CardType.Currency3:			return 10;
