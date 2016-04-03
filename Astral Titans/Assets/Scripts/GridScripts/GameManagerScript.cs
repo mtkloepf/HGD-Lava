@@ -3,8 +3,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
-public class GameManagerScript : MonoBehaviour
-{
+public class GameManagerScript : MonoBehaviour {
 
 	public static GameManagerScript instance;
 	public MapManager Map;
@@ -12,6 +11,7 @@ public class GameManagerScript : MonoBehaviour
 	public GameObject Transition_Screen;
 	public GameObject EndTurn;
 	public GameObject AIPlayerPrefab;
+	public AudioClip[] coin_sounds;
 
 	// Shop Canvas UI Element
 	public Canvas shopCanvas;
@@ -566,6 +566,11 @@ public class GameManagerScript : MonoBehaviour
 			if (idx == -1) {
 				Debug.Log("Invalid card index!\n");
 			} else if (placeUnit((UnitScript.Types)((int)card.type), x, y) != null) {
+				// play a sound when the card is used
+				if (coin_sounds.Length > 0) {
+					int sound = UnityEngine.Random.Range(0, coin_sounds.Length);
+					GetComponent<AudioSource>().PlayOneShot(coin_sounds[sound]);
+				}
 				// use the card
 				hand_display[idx].reset(-1, CardScript.CardType.Empty);
 				getPlayer().changeCurrency(-card.cost);
