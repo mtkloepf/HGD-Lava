@@ -283,7 +283,7 @@ public class GameManagerScript : MonoBehaviour
 					if (Map.FOG_OF_WAR) { Map.update_field_of_view(focusedUnit, false); }
 				}
 
-				focusedUnit = null;
+				//focusedUnit = null;
 				updateHexes();
 			}
 		}
