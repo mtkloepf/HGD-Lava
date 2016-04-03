@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 /**
@@ -14,13 +15,23 @@ public class ScreenImageToggle : MonoBehaviour {
 
 	/* Remove the black screen when it is clicked on */
 	public void OnMouseDown() {
-		GetComponent<SpriteRenderer>().enabled = false;
+		GetComponent<Image>().enabled = false;
 		gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+
+		Text txt = GetComponentInChildren<Text>();
+		if (txt != null) { txt.enabled = false; }
 	}
 
 	/* Restore the black screen */
 	public void reset() {
-			GetComponent<SpriteRenderer>().enabled = true;
-			gameObject.layer = LayerMask.NameToLayer("Transition Screen");
+		GetComponent<Image>().enabled = true;
+		gameObject.layer = LayerMask.NameToLayer("Transition Screen");
+
+		Text txt = GetComponentInChildren<Text>();
+		// Display turn number for the current player
+		if (txt != null) {
+			txt.text = "Player " + (GameManagerScript.instance.getTurn()) + "'s Turn";
+			txt.enabled = true;
+		}
 	}
 }

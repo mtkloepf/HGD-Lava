@@ -8,7 +8,7 @@ public class GameManagerScript : MonoBehaviour {
 	public static GameManagerScript instance;
 	public MapManager Map;
 
-	public GameObject Transition_Screen;
+	public GameObject Turn_Transition;
 	public GameObject EndTurn;
 	public GameObject AIPlayerPrefab;
 	public AudioClip[] coin_sounds;
@@ -238,7 +238,7 @@ public class GameManagerScript : MonoBehaviour {
 			// revert all hexes to fog
 			if (Map.FOG_OF_WAR) {
 				// Create intermediate screen
-				Transition_Screen.GetComponent<ScreenImageToggle>().reset();
+				Turn_Transition.GetComponent<ScreenImageToggle>().reset();
 				Map.fog_of_war(true);
 			}
 
