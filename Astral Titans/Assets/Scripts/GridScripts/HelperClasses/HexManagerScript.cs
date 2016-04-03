@@ -8,6 +8,8 @@ using System.Collections;
  * 1 March 2016
  */
 public class HexManagerScript : MonoBehaviour {
+	public static readonly bool SUPPRESS_EDITING = true;
+
 	// Used for changing hex types at runtime
 	private static bool EDIT_HEX;
 	private static bool FOG_TOGGLE;
@@ -21,21 +23,23 @@ public class HexManagerScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		// enable or disable hex editing by pressing p
-		if (Input.GetKeyDown(KeyCode.P)) {
-			EDIT_HEX = !EDIT_HEX;
-			Debug.Log( "Hex editing " + ((EDIT_HEX) ? "enabled" : "disabled") );
-		}
+		if (!SUPPRESS_EDITING) {
+			// enable or disable hex editing by pressing p
+			if (Input.GetKeyDown(KeyCode.P)) {
+				EDIT_HEX = !EDIT_HEX;
+				Debug.Log("Hex editing " + ((EDIT_HEX) ? "enabled" : "disabled"));
+			}
 
-		if (Input.GetKeyDown(KeyCode.F)) {
-			FOG_TOGGLE = !FOG_TOGGLE;
-			Debug.Log( "Fog tiles " + ((FOG_TOGGLE) ? "enabled" : "disabled") );
-		}
+			if (Input.GetKeyDown(KeyCode.F)) {
+				FOG_TOGGLE = !FOG_TOGGLE;
+				Debug.Log("Fog tiles " + ((FOG_TOGGLE) ? "enabled" : "disabled"));
+			}
 
-		// cycle through terrain types by pressing r
-		if (Input.GetKeyDown(KeyCode.R)) {
-			EDIT_TYPE = (EDIT_TYPE + 1) % 4;
-			Debug.Log("Edit type: " + (HexScript.HexEnum)EDIT_TYPE);
+			// cycle through terrain types by pressing r
+			if (Input.GetKeyDown(KeyCode.R)) {
+				EDIT_TYPE = (EDIT_TYPE + 1) % 4;
+				Debug.Log("Edit type: " + (HexScript.HexEnum)EDIT_TYPE);
+			}
 		}
 	}
 
