@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
 using System.Collections;
@@ -37,6 +38,8 @@ public class InputPrompt : MonoBehaviour {
 
 	/* Draws the window for the prompt */
 	void OnGUI() {
+		//GetComponent<ScrollRect>().content = window_dimensions;
+
 		var limbo = new Rect(window_dimensions.x, window_dimensions.y, window_dimensions.width, window_dimensions.height);
 		window_dimensions = resizeWindow();
 		// resizes the components of the window if the window's dimensions changed
@@ -51,16 +54,17 @@ public class InputPrompt : MonoBehaviour {
 	/* Resize the window based on the size of the screen */
 	private Rect resizeWindow() {
 		// minimum value for window width is 400
-		float width = Mathf.Max(2.0f * Screen.width / 5.0f, 400.0f);
-		return new Rect((Screen.width - width) / 2.0f, Screen.height / 5, width, 3 * Screen.height / 5);
+		float width = Mathf.Max(2.0f * Screen.width / 5.0f, 450.0f);
+		float height = Mathf.Max(3 * Screen.height / 5, 400f);
+		return new Rect((Screen.width - width) / 2f, (Screen.height - height) / 2f, width, height);
 	}
 
 	/* Reconfigures the positions of all elements in the window. */
 	private void updateComponents() {
 		// dimensions for the general description
-		components[0] = new Rect(45, 45, window_dimensions.width - 90, 128);
+		components[0] = new Rect(45, 45, window_dimensions.width - 90, 100);
 		// dimensions for the labels
-		components[1] = new Rect(components[0].x, components[0].y + components[0].height + 22, 110, 22);
+		components[1] = new Rect(components[0].x, components[0].y + components[0].height + 10, 110, 22);
 		components[2] = new Rect(components[1].x, components[1].y + components[1].height + 10, 110, 22);
 		components[3] = new Rect(components[2].x, components[2].y + components[2].height + 10, 110, 22);
 		// dimensions for the input fields
