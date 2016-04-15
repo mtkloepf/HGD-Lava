@@ -283,19 +283,23 @@ public class MapManager {
 						if (adj_hex != null) {
 							// Find a movement value for moving through this hex via a different path, if one exists
 							int old_val = -1;
-							bool exists = cur_values.TryGetValue( adj_hex, out old_val);
+							bool exists = cur_values.TryGetValue(adj_hex, out old_val);
 							// Calculate the new excess movement value after moving through the adjacent hex
 							int new_val = cur_val - UnitScript.move_cost(unit.unitType(), adj_hex.getType());
 
 							if (new_val >= 0) {
-								
-								// check if the current adj_hex is adjacent to a hex occupied by an enemy unit
-								for (int idx = 0; idx < 6; ++idx) {
-									HexScript adj_hex_2 = adjacentHexTo(adj_hex, idx);
-									// reduce the new movement value to 0, when the hex is adjacent to an enemy
-									if (adj_hex_2 != null && adj_hex_2.getOccupied() > 0 && adj_hex_2.getOccupied() != unit.getPlayer()) {
-										new_val = 0;
-										break;
+								// check if the current hex is occupied by an enemy unit
+								if (adj_hex.getOccupied() > 0 && adj_hex.getOccupied() != unit.getPlayer()) {
+									new_val = 0;
+								} else {
+									// check if the current adj_hex is adjacent to a hex occupied by an enemy unit
+									for (int idx = 0; idx < 6; ++idx) {
+										HexScript adj_hex_2 = adjacentHexTo(adj_hex, idx);
+										// reduce the new movement value to 0, when the hex is adjacent to an enemy
+										if (adj_hex_2 != null && adj_hex_2.getOccupied() > 0 && adj_hex_2.getOccupied() != unit.getPlayer()) {
+											new_val = 0;
+											break;
+										}
 									}
 								}
 

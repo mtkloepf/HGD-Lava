@@ -89,9 +89,9 @@ public class GameManagerScript : MonoBehaviour {
 		turn = 2;
 		HexScript hex = Map.hex_at_offset_from(Map.map[0][0], false, false, System.Math.Min(Map.width / 2, Map.height / 2));
 		p2Base = placeUnit ( UnitScript.Types.A_Base, (int)hex.position.x, (int)hex.position.y );
-		int unit = 4;
+		//int unit = 4;
 		// place one of each unit
-		for (int adj_idx = 0; adj_idx < 6; ++adj_idx) {
+		/*for (int adj_idx = 0; adj_idx < 6; ++adj_idx) {
 			HexScript adj_hex = Map.adjacentHexTo(hex, adj_idx);
 
 			if (adj_hex != null && adj_hex.getOccupied() == 0) {
@@ -100,7 +100,7 @@ public class GameManagerScript : MonoBehaviour {
 			}
 
 			if (unit > 7) { break; }
-		}
+		}*/
 
 		turn = 1;
 
@@ -110,7 +110,7 @@ public class GameManagerScript : MonoBehaviour {
 		hex = Map.hex_at_offset_from(Map.map[Map.width - 1][Map.height - 1], false, false, System.Math.Min(Map.width / 2, Map.height / 2));
 		p1Base = placeUnit ( UnitScript.Types.H_Base, (int)hex.position.x, (int)hex.position.y );
 		// place one of each unit
-		unit = 0;
+		/*unit = 0;
 		for (int adj_idx = 0; adj_idx < 6; ++adj_idx) {
 			HexScript adj_hex = Map.adjacentHexTo(hex, adj_idx);
 
@@ -120,7 +120,7 @@ public class GameManagerScript : MonoBehaviour {
 			}
 
 			if (unit > 3) { break; }
-		}
+		}*/
 	}
 
 	// Update is called once per frame
@@ -146,20 +146,20 @@ public class GameManagerScript : MonoBehaviour {
 		 */
 		if (Input.GetKey("c")) {
 			if (Input.GetKeyDown("2")) {
-				Debug.Log( "Bronze: " + getPlayer().getDeck().discardPile.getCount(CardScript.CardType.Currency1) + "\n" );
+				//Debug.Log( "Bronze: " + getPlayer().getDeck().discardPile.getCount(CardScript.CardType.Currency1) + "\n" );
 
 				if (getPlayer().getCurrency() >= 3 && getPlayer().getDeck().discardPile.getCount(CardScript.CardType.Currency1) >= 5) {
 					int removed = getPlayer().getDeck().removeCardsFromDiscard(CardScript.CardType.Currency1, 5);
-					Debug.Log("Removed: " + removed + "\n");
+					//Debug.Log("Removed: " + removed + "\n");
 					getPlayer().getDeck().discardPile.add( new CardScript(CardScript.CardType.Currency2) );
 					getPlayer().changeCurrency(-3);
 				} 
 			} else if (Input.GetKeyDown("3")) {
-				Debug.Log( "Silver: " + getPlayer().getDeck().discardPile.getCount(CardScript.CardType.Currency2) + "\n" );
+				//Debug.Log( "Silver: " + getPlayer().getDeck().discardPile.getCount(CardScript.CardType.Currency2) + "\n" );
 
 				if (getPlayer().getCurrency() >= 7 && getPlayer().getDeck().discardPile.getCount(CardScript.CardType.Currency2) >= 2) {
 					int removed = getPlayer().getDeck().removeCardsFromDiscard(CardScript.CardType.Currency2, 2);
-					Debug.Log("Removed: " + removed + "\n");
+					//Debug.Log("Removed: " + removed + "\n");
 					getPlayer().getDeck().discardPile.add( new CardScript(CardScript.CardType.Currency3) );
 					getPlayer ().changeCurrency(-7);
 				}
@@ -207,6 +207,7 @@ public class GameManagerScript : MonoBehaviour {
 		
 		foreach (List<HexScript> hexlist in Map.map) {
 			foreach (HexScript hex in hexlist) {
+				hex.setOccupied(0);
 				hex.setFocus(false);
 
 				if (hex.getOccupied() == 0) {
@@ -216,9 +217,11 @@ public class GameManagerScript : MonoBehaviour {
 		}
 
 		foreach (UnitScript unit in units) {
-			if (unit.getPlayer() == getTurn()) {
-				HexScript hex = Map.hex_of(unit);
+			HexScript hex = Map.hex_of(unit);
+			hex.setOccupied(unit.getPlayer());
 
+			if (unit.getPlayer() == getTurn()) {
+				// Update hex colors
 				if (unit.getState() == 2 || (unit.getAttack() == 0 && unit.getState() == 1)) {
 					hex.makeRed();
 				} else if (unit.getState() == 1) {
@@ -284,7 +287,7 @@ public class GameManagerScript : MonoBehaviour {
 					if (Map.FOG_OF_WAR) { Map.update_field_of_view(focusedUnit, false); }
 				}
 
-				//focusedUnit = null;
+				focusedUnit = null;
 				updateHexes();
 			}
 		}
@@ -470,10 +473,10 @@ public class GameManagerScript : MonoBehaviour {
 					//unit.setHealth ((int)(unit.getHealth () - (focusedUnit.getAttack () * (1 - unit.getDefense () / 100))));
 
 					focusedUnit.setState(2);
-					Debug.Log ("Attack: " + focusedUnit.getAttack () + 
+					/*Debug.Log ("Attack: " + focusedUnit.getAttack () + 
 						"\nDefense: " + unit.getDefense () + 
 						"\nPrevious health: " + h + 
-						"\nResulting health lost: " + (focusedUnit.getAttack () * (1 - unit.getDefense () / 100)));
+						"\nResulting health lost: " + (focusedUnit.getAttack () * (1 - unit.getDefense () / 100)));*/
 
 					// If the unit is out of health, destroy it
 					if (unit.getHealth () <= 0) {
@@ -486,7 +489,7 @@ public class GameManagerScript : MonoBehaviour {
 					focusedUnit = null;
 				}
 			} else {
-				Debug.Log ("No unit currently focused...");
+				//Debug.Log ("No unit currently focused...");
 			}
 			if (p1Base.getHealth () <= 0 || p2Base.getHealth () <= 0) {
 				Invoke ("endGame", 2.0f);
@@ -500,11 +503,11 @@ public class GameManagerScript : MonoBehaviour {
     {
         if (range == 0)
         {
-            Debug.Log("end attackrange method");
+           // Debug.Log("end attackrange method");
         }
         else
         {
-            Debug.Log("attackRange " + range);
+           // Debug.Log("attackRange " + range);
             HashSet<HexScript> prevHexes = new HashSet<HexScript>();
             foreach (HexScript hex in tempRange)
             {
@@ -646,7 +649,11 @@ public class GameManagerScript : MonoBehaviour {
 
 		CardScript c = currentHand().getCards()[idx];
 
-		focusedUnit = null;
+		if (focusedUnit != null) {
+			Map.unit_move_range(focusedUnit, false);
+			Map.hex_of(focusedUnit).setFocus(false);
+			focusedUnit = null;
+		}
 
 		// Determine if the card is currency and if so add to the player's currency and return true
 		if (c.type == CardScript.CardType.Currency1) {
@@ -719,7 +726,7 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	public void endGame() {			
-		Debug.Log ("Game Over!");
+		//Debug.Log ("Game Over!");
 		SceneManager.LoadScene("start_menu");
 	}
 

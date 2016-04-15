@@ -87,7 +87,7 @@ public class InputPrompt : MonoBehaviour {
 	 */
 	void EvaluateInput(int ID) {
 		/* Display general guidelines */
-		GUI.Label(components[0], "Please input the size and type of the map you wish to create: width and height must be within the bounds of 12 and 46 inclusive and the width must be even.\n\nGame types: " + SceneTransitionStorage.allTypes() );
+		GUI.Label(components[0], "Please input the size and type of the map you wish to create: width and height must be within the bounds of 12 and 46 inclusive and the width must be even.\n\nMap types: " + SceneTransitionStorage.allTypes() );
 		/* Display width and height prompts */
 		GUI.Label(components[1], "Width of the map?");
 		GUI.Label(components[2], "Height of the map?");
